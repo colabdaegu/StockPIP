@@ -113,9 +113,9 @@ SW파일럿 최종프로젝트
 ⸻
 
 ✅ 사용 기술
-•	언어: Java 17 이상
-•	GUI: JavaFX (투명 창, 애니메이션, 이벤트 처리 등)
-•	API: REST 기반 (Finnhub, 한국투자증권 Open API 등)
+•	언어: Java 21
+•	GUI: JavaFX 21 (투명 창, 애니메이션, 이벤트 처리 등)
+•	API: REST 기반 (Finnhub)
 •	JSON 파싱: Gson 또는 Jackson
 •	저장 방식: JSON 파일 또는 Preferences API
 •	배포: .jar, .exe (Launch4j, jpackage 등)

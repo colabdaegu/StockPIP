@@ -1,4 +1,4 @@
-// SettingsWindow.java
+package ui.controller;// ui.controller.SettingsWindow.java
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

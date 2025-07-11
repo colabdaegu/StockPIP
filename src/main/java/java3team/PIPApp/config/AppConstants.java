@@ -12,6 +12,6 @@ public final class AppConstants {
     public static final String API_BASE_URL = "https://finnhub.io/api/v1";
     public static final String API_KEY = "d1m5qppr01qvvurkadhgd1m5qppr01qvvurkadi0";
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-    public static final Gson gson;
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 }

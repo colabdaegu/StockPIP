@@ -14,4 +14,22 @@ public final class AppConstants {
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+
+
+    public static String name;
+    public static double targetPrice;
+    public static double stopPrice;
+    public static int refresh;
+    public static int refreshMinute;
+    public static int refreshSecond;
+
+    // 초기화 메서드
+    public static void resetData() {
+        name = "";
+        targetPrice = 0.0;
+        stopPrice = 0.0;
+        refresh = 0;
+        refreshMinute = 0;
+        refreshSecond = 0;
+    }
 }

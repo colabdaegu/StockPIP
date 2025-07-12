@@ -1,5 +1,6 @@
 package ui;
 
+import config.AppConstants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +18,7 @@ import java.util.List;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 
-public class Home_Controller extends _GrobalVariableData {
+public class Home_Controller {
     @FXML private TextField nameField;
     @FXML private TextField targetPriceField;
     @FXML private TextField stopPriceField;
@@ -62,19 +63,19 @@ public class Home_Controller extends _GrobalVariableData {
 
 
         // 기존 코드 Clear
-        resetData();
+        AppConstants.resetData();
 
 
 
         // 이름 유효성 검사
         ////(추가 필요)
-        name = name_Str;
+        AppConstants.name = name_Str;
         /// 해당하는 이름의 회사가 존재하지 않으면 작업을 중단하는 예외처리 필요
 
 
         // 목표가 유효성 검사
         try {
-            targetPrice = Double.parseDouble(targetPriceStr);
+            AppConstants.targetPrice = Double.parseDouble(targetPriceStr);
         } catch (NumberFormatException e) {
             warningMessageLabel.setVisible(true);
             warningMessageLabel.setText("목표가는 숫자 형식으로 입력해 주세요.");
@@ -84,7 +85,7 @@ public class Home_Controller extends _GrobalVariableData {
 
         // 손절가 유효성 검사
         try {
-            stopPrice = Double.parseDouble(stopPriceStr);
+            AppConstants.stopPrice = Double.parseDouble(stopPriceStr);
         } catch (NumberFormatException e) {
             warningMessageLabel.setVisible(true);
             warningMessageLabel.setText("손절가는 숫자 형식으로 입력해 주세요.");
@@ -95,7 +96,7 @@ public class Home_Controller extends _GrobalVariableData {
         // 새로고침 주기-분은 입력된 경우에만 파싱 시도
         if (!refreshMinuteStr.isEmpty()) {
             try {
-                refreshMinute = Integer.parseInt(refreshMinuteStr);
+                AppConstants.refreshMinute = Integer.parseInt(refreshMinuteStr);
             } catch (NumberFormatException e) {
                 warningMessageLabel.setVisible(true);
                 warningMessageLabel.setText("숫자(정수) 형식으로 입력해 주세요.");
@@ -107,7 +108,7 @@ public class Home_Controller extends _GrobalVariableData {
         // 새로고림 주기-초는 입력된 경우에만 파싱 시도
         if (!refreshSecondStr.isEmpty()) {
             try {
-                refreshSecond = Integer.parseInt(refreshSecondStr);
+                AppConstants.refreshSecond = Integer.parseInt(refreshSecondStr);
             } catch (NumberFormatException e) {
                 warningMessageLabel.setVisible(true);
                 warningMessageLabel.setText("숫자(정수) 형식으로 입력해 주세요.");
@@ -118,10 +119,10 @@ public class Home_Controller extends _GrobalVariableData {
 
 
         // 최종 결과 출력
-        System.out.println("종목명: " + name);
-        System.out.println("목표가: " + targetPrice);
-        System.out.println("손절가: " + stopPrice);
-        System.out.println("새로고침: " + refreshMinute + "분 " + refreshSecond + "초");
+        System.out.println("종목명: " + AppConstants.name);
+        System.out.println("목표가: " + AppConstants.targetPrice);
+        System.out.println("손절가: " + AppConstants.stopPrice);
+        System.out.println("새로고침: " + AppConstants.refreshMinute + "분 " + AppConstants.refreshSecond + "초");
         System.out.println();
 
         // 저장완료 팝업
@@ -154,7 +155,7 @@ public class Home_Controller extends _GrobalVariableData {
         refreshField_Second.clear();
 
         // 기존 코드 Clear
-        resetData();
+        AppConstants.resetData();
 
         System.out.println("초기화됨\n\n");
     }

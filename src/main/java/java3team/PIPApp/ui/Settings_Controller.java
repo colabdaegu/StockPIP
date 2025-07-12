@@ -3,6 +3,7 @@ package ui;
 import com.gluonhq.charm.glisten.control.ToggleButtonGroup;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.controls.JFXToggleNode;
+import config.AppConstants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 
-public class Settings_Controller extends _GrobalVariableData {
+public class Settings_Controller {
     @FXML private JFXToggleButton pipToggle;
 
     @FXML private Slider fontSizeSlider;

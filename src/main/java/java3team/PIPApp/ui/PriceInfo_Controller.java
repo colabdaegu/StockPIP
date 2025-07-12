@@ -12,7 +12,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 
-public class PriceInfo_Controller extends _GrobalVariableData {
+public class PriceInfo_Controller {
     @FXML private Label tickerLabel;    // 티커
 
     @FXML private Label currentPriceLabel;  // 현재가
@@ -28,15 +28,16 @@ public class PriceInfo_Controller extends _GrobalVariableData {
     /*
     @FXML
     public void initialize() {
-        tickerLabel.setText(ticker);
+        Object AppConstants;
+        tickerLabel.setText(AppConstants.ticker);
 
-        currentPriceLabel.setText(currentPrice);
-        openPriceLabel.setText(openPrice);
-        highPriceLabel.setText(highPrice);
-        lowPriceLabel.setText(lowPrice);
-        previousClosePriceLabel.setText(previousClosePrice);
+        currentPriceLabel.setText(AppConstants.currentPrice);
+        openPriceLabel.setText(AppConstants.openPrice);
+        highPriceLabel.setText(AppConstants.highPrice);
+        lowPriceLabel.setText(AppConstants.lowPrice);
+        previousClosePriceLabel.setText(AppConstants.previousClosePrice);
 
-        refreshTimeLabel.setText(refreshTime);
+        refreshTimeLabel.setText(AppConstants.refreshTime);
     }
     */
 

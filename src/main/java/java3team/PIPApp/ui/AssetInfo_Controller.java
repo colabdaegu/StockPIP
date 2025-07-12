@@ -12,8 +12,9 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import config.AppConstants;
 
-public class AssetInfo_Controller extends _GrobalVariableData {
+public class AssetInfo_Controller {
     @FXML private Label nameLabel;      // 회사명
     @FXML private Label tickerLabel;    // 티커
     @FXML private Label industryLabel;  // 산업군
@@ -27,17 +28,18 @@ public class AssetInfo_Controller extends _GrobalVariableData {
 
 
     /// API 연동 이후 빈칸 라벨에 셋
+
     /*
     @FXML
     public void initialize() {
-        nameLabel.setText(name);
-        tickerLabel.setText(ticker);
-        industryLabel.setText(industry);
-        countryLabel.setText(country);
-        currencyLabel.setText(currency);
-        exchangeLabel.setText(exchange);
-        ipoDateLabel.setText(ipoDate);
-        marketCapitalizationLabel.setText(marketCapitalization);
+        nameLabel.setText(AppConstants.name);
+        tickerLabel.setText(AppConstants.ticker);
+        industryLabel.setText(AppConstants.industry);
+        countryLabel.setText(AppConstants.country);
+        currencyLabel.setText(AppConstants.currency);
+        exchangeLabel.setText(AppConstants.exchange);
+        ipoDateLabel.setText(AppConstants.ipoDate);
+        marketCapitalizationLabel.setText(AppConstants.marketCapitalization);
 
 
     }

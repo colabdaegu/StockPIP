@@ -7,38 +7,22 @@
       <sourceFolder url="file://$MODULE_DIR$/개발환경테스트" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" generated="true" />
     </content>
+    <content url="jar://$USER_HOME$/Downloads/gson-2.10.1.jar!/" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="charm-glisten-5.0.1" level="project" />
+    <orderEntry type="library" name="gson-2.10.1" level="project" />
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$USER_HOME$/문서/javafx-sdk-21.0.7/lib" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-        <jarDirectory url="file://$USER_HOME$/문서/javafx-sdk-21.0.7/lib" recursive="false" />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="jfoenix-9.0.10" level="project" />
-    <orderEntry type="library" name="charm-glisten-5.0.0" level="project" />
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/controlsfx-11.2.2.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/controlsfx-11.2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="library" name="controlsfx-11.2.2" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/gson-2.10.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="jfoenix-9.0.10" level="project" />
   </component>
 </module>

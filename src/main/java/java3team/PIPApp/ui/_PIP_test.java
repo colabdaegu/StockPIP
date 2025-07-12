@@ -47,7 +47,7 @@ public class _PIP_test {
                 ex.printStackTrace();
             }
         });
-        /// //
+
         // 오른쪽 상단 버튼 묶음
         HBox buttonBox = new HBox(8, settingsBtn, closeBtn);
         buttonBox.setAlignment(Pos.TOP_RIGHT);

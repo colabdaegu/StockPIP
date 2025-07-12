@@ -54,8 +54,6 @@ replay_pid*
 
 
 # IntelliJ IDEA 관련 파일 (IDE 자동 생성 및 관리 파일)
-.idea/                     # IntelliJ IDEA 프로젝트 설정 디렉터리 전체 무시
-*.iml                      # IntelliJ IDEA 모듈 파일 무시
 out/                       # 컴파일된 클래스 파일 및 빌드 결과물 폴더 무시
 production/                # IntelliJ IDEA 빌드 시 생성될 수 있는 폴더 무시
 .vscode/                   # VS Code 설정 파일 (협업 시 사용하지 않는다면 추가)

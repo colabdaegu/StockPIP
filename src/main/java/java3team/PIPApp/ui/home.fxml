@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="rootLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Home_Controller">
+   <left>
+      <VBox prefHeight="200.0" prefWidth="340.0" spacing="50.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER" prefHeight="202.0" prefWidth="340.0" spacing="15.0">
+               <VBox.margin>
+                  <Insets top="50.0" />
+               </VBox.margin>
+               <children>
+                  <Button fx:id="pipButton" contentDisplay="TOP" graphicTextGap="10" onAction="#pipClick" prefHeight="173.0" prefWidth="286.0" styleClass="buttonPIP" stylesheets="@../values/styles.css" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="106.0" fitWidth="112.0">
+                           <image>
+                              <Image url="@../img/PIP.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font name="Malgun Gothic Bold" size="25.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="320.0" prefWidth="340.0" spacing="15.0">
+               <children>
+                  <HBox fx:id="homeBox" alignment="CENTER" onMouseClicked="#handleHomeClick" prefHeight="45.0" prefWidth="200.0" stylesheets="@../values/styles.css">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Home_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="홈" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                     <styleClass>
+                        <String fx:value="selected" />
+                        <String fx:value="selected-border" />
+                     </styleClass>
+                  </HBox>
+                  <HBox fx:id="assetInfoBox" alignment="CENTER" onMouseClicked="#handleAssetInfoClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Document_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="종목 정보" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="priceInfoBox" alignment="CENTER" onMouseClicked="#handlePriceInfoClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Chart_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="시세 정보" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="settingsBox" alignment="CENTER" onMouseClicked="#handleSettingsClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Settings_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="설정" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="externalBox" alignment="CENTER" onMouseClicked="#handleExternalClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/ExternalLink_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="외부 사이트" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="50.0" styleClass="secondary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
+         <children>
+            <Label prefHeight="12.0" prefWidth="900.0" text="Stock PIP App" textFill="WHITE">
+               <font>
+                  <Font name="Malgun Gothic Bold" size="30.0" />
+               </font>
+               <effect>
+                  <DropShadow color="rgba(0,0,0,0.8)" offsetX="2" offsetY="2" radius="4" />
+               </effect>
+            </Label>
+            <VBox prefHeight="115.0" prefWidth="780.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="12.0" prefWidth="900.0" text="종목 이름" textFill="WHITE">
+                     <font>
+                        <Font name="Malgun Gothic Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" prefHeight="6.0" prefWidth="780.0">
+                     <children>
+                        <Label prefHeight="24.0" prefWidth="200.0" text="이름" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="17.0" />
+                           </font>
+                        </Label>
+                        <Pane prefHeight="200.0" prefWidth="35.0" />
+                        <TextField fx:id="nameField" prefHeight="22.0" prefWidth="322.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="224.0" prefWidth="780.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="12.0" prefWidth="900.0" text="세부 설정" textFill="WHITE">
+                     <font>
+                        <Font name="Malgun Gothic Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" prefHeight="16.0" prefWidth="780.0">
+                     <children>
+                        <Label prefHeight="24.0" prefWidth="200.0" text="목표가" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="17.0" />
+                           </font>
+                        </Label>
+                        <Pane prefHeight="200.0" prefWidth="35.0" />
+                        <TextField fx:id="targetPriceField" prefHeight="22.0" prefWidth="322.0" promptText="예) 300.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="16.0" prefWidth="780.0">
+                     <children>
+                        <Label prefHeight="24.0" prefWidth="200.0" text="손절가" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="17.0" />
+                           </font>
+                        </Label>
+                        <Pane prefHeight="200.0" prefWidth="35.0" />
+                        <TextField fx:id="stopPriceField" prefHeight="22.0" prefWidth="322.0" promptText="예) 200.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="6.0" prefWidth="780.0">
+                     <children>
+                        <Label prefHeight="24.0" prefWidth="200.0" text="새로고침 주기" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="17.0" />
+                           </font>
+                        </Label>
+                        <Pane prefHeight="200.0" prefWidth="35.0" />
+                        <Label prefHeight="24.0" prefWidth="30.0" text="분 :" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="refreshField_Minute" prefHeight="22.0" prefWidth="121.0" />
+                        <Pane prefHeight="200.0" prefWidth="10.0" />
+                        <Label prefHeight="24.0" prefWidth="30.0" text="초 :" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="refreshField_Second" prefHeight="22.0" prefWidth="131.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="92.0" prefWidth="780.0">
+               <children>
+                  <Label fx:id="warningMessageLabel" alignment="CENTER" prefHeight="23.0" prefWidth="431.0" textFill="RED">
+                     <font>
+                        <Font name="Malgun Gothic Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="77.0" prefWidth="780.0" spacing="80.0">
+                     <children>
+                        <Button fx:id="resetButton" styleClass="button-home" mnemonicParsing="false" onAction="#resetClick" prefHeight="50.0" prefWidth="155.0" text="초기화" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="18.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="saveButton" styleClass="button-home" mnemonicParsing="false" onAction="#saveClick" prefHeight="50.0" prefWidth="155.0" text="저장" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="20.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>

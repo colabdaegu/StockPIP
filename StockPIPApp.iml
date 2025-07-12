@@ -10,7 +10,7 @@
     <content url="jar://$USER_HOME$/Downloads/gson-2.10.1.jar!/" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/controlsfx-11.2.2.jar!/" />
@@ -19,8 +19,8 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="charm-glisten-5.0.0" level="project" />
-    <orderEntry type="module-library">
+    <orderEntry type="library" exported="" name="charm-glisten-5.0.0" level="project" />
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/gson-2.10.1.jar!/" />
@@ -29,14 +29,14 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="file://$USER_HOME$/문서/javafx-sdk-21.0.7/lib" />
+          <root url="file://$MODULE_DIR$/../../../JavaFX/javafx-sdk-21.0.7/lib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$USER_HOME$/문서/javafx-sdk-21.0.7/lib" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../../JavaFX/javafx-sdk-21.0.7/lib" recursive="false" />
       </library>
     </orderEntry>
   </component>

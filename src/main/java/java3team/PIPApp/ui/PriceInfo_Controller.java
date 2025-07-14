@@ -1,5 +1,6 @@
 package ui;
 
+import config.AppConstants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 
 public class PriceInfo_Controller {
-    @FXML private Label tickerLabel;    // 티커
+    @FXML private Label nameLabel;    // 티커
 
     @FXML private Label currentPriceLabel;  // 현재가
     @FXML private Label openPriceLabel;     // 시가
@@ -25,21 +26,43 @@ public class PriceInfo_Controller {
 
 
     /// API 연동 이후 빈칸 라벨에 셋
-    /*
+
     @FXML
     public void initialize() {
-        Object AppConstants;
-        tickerLabel.setText(AppConstants.ticker);
+        nameLabel.setText(AppConstants.name);
 
-        currentPriceLabel.setText(AppConstants.currentPrice);
-        openPriceLabel.setText(AppConstants.openPrice);
-        highPriceLabel.setText(AppConstants.highPrice);
-        lowPriceLabel.setText(AppConstants.lowPrice);
-        previousClosePriceLabel.setText(AppConstants.previousClosePrice);
+        currentPriceLabel.setText(String.valueOf(AppConstants.currentPrice));
+        openPriceLabel.setText(String.valueOf(AppConstants.openPrice));
+        highPriceLabel.setText(String.valueOf(AppConstants.highPrice));
+        lowPriceLabel.setText(String.valueOf(AppConstants.lowPrice));
+        previousClosePriceLabel.setText(String.valueOf(AppConstants.previousClosePrice));
 
-        refreshTimeLabel.setText(AppConstants.refreshTime);
+        refreshTimeLabel.setText(String.valueOf(AppConstants.refreshTime));
+
+
+
+
+
+        // name이 있을 때만 항목에 보임
+        if (!AppConstants.name.isEmpty()) {
+            nameLabel.setVisible(true);
+            currentPriceLabel.setVisible(true);
+            openPriceLabel.setVisible(true);
+            highPriceLabel.setVisible(true);
+            lowPriceLabel.setVisible(true);
+            previousClosePriceLabel.setVisible(true);
+            refreshTimeLabel.setVisible(true);
+        } else {
+            nameLabel.setVisible(false);
+            currentPriceLabel.setVisible(false);
+            openPriceLabel.setVisible(false);
+            highPriceLabel.setVisible(false);
+            lowPriceLabel.setVisible(false);
+            previousClosePriceLabel.setVisible(false);
+            refreshTimeLabel.setVisible(false);
+        }
     }
-    */
+
 
 
 
@@ -53,7 +76,7 @@ public class PriceInfo_Controller {
 
         // 새 PIP 스테이지 열기
         Stage pipStage = new Stage();
-        _PIP_test pipWindow = new _PIP_test();
+        _PIP_Main pipWindow = new _PIP_Main();
         pipWindow.pip_On(pipStage);
     }
 

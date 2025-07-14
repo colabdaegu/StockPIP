@@ -29,7 +29,7 @@ public class AssetInfo_Controller {
 
     /// API 연동 이후 빈칸 라벨에 셋
 
-    /*
+
     @FXML
     public void initialize() {
         nameLabel.setText(AppConstants.name);
@@ -38,12 +38,40 @@ public class AssetInfo_Controller {
         countryLabel.setText(AppConstants.country);
         currencyLabel.setText(AppConstants.currency);
         exchangeLabel.setText(AppConstants.exchange);
-        ipoDateLabel.setText(AppConstants.ipoDate);
-        marketCapitalizationLabel.setText(AppConstants.marketCapitalization);
+        ipoDateLabel.setText(String.valueOf(AppConstants.ipoDate));
+        marketCapitalizationLabel.setText(String.valueOf(AppConstants.marketCapitalization));
+
+        //logoUrlLabel.setImage(AppConstants.logoUrl.getImage());
 
 
+
+
+        // name이 있을 때만 항목에 보임
+        if (!AppConstants.name.isEmpty()) {
+            nameLabel.setVisible(true);
+            tickerLabel.setVisible(true);
+            industryLabel.setVisible(true);
+            countryLabel.setVisible(true);
+            currencyLabel.setVisible(true);
+            exchangeLabel.setVisible(true);
+            ipoDateLabel.setVisible(true);
+            marketCapitalizationLabel.setVisible(true);
+
+            //logoUrlLabel.setVisible(true);
+        } else {
+            nameLabel.setVisible(false);
+            tickerLabel.setVisible(false);
+            industryLabel.setVisible(false);
+            countryLabel.setVisible(false);
+            currencyLabel.setVisible(false);
+            exchangeLabel.setVisible(false);
+            ipoDateLabel.setVisible(false);
+            marketCapitalizationLabel.setVisible(false);
+
+            //logoUrlLabel.setVisible(false);
+        }
     }
-    */
+
 
 
 
@@ -57,7 +85,7 @@ public class AssetInfo_Controller {
 
         // 새 PIP 스테이지 열기
         Stage pipStage = new Stage();
-        _PIP_test pipWindow = new _PIP_test();
+        _PIP_Main pipWindow = new _PIP_Main();
         pipWindow.pip_On(pipStage);
     }
 

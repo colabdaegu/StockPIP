@@ -177,7 +177,7 @@ public class Home_Controller {
 
         // 새 PIP 스테이지 열기
         Stage pipStage = new Stage();
-        _PIP_test pipWindow = new _PIP_test();
+        _PIP_Main pipWindow = new _PIP_Main();
         pipWindow.pip_On(pipStage);
     }
 

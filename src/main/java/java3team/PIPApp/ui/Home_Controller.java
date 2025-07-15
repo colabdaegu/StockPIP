@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
@@ -19,6 +20,8 @@ import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 
 public class Home_Controller {
+    @FXML private ListView<String> listViewId;
+
     @FXML private TextField nameField;
     @FXML private TextField targetPriceField;
     @FXML private TextField stopPriceField;
@@ -31,7 +34,8 @@ public class Home_Controller {
     /// API 연동 및 보완 필요 . 회사이름 -> 자동 완성 모듈. 회사 이름만 받아와서 리스트 형태로 담고 있음
     @FXML
     public void initialize() {
-        System.out.println(AppConstants.name);
+        listViewId.getItems().addAll(AppConstants.NameList);    // 이름 리스트 불러오기
+
         List<String> companyNames = List.of("Apple", "Alphabet Inc.", "Amazon", "Adobe"); // 임시(테스트용)
         // nameField에 자동완성 붙이기
         TextFields.bindAutoCompletion(nameField, companyNames);
@@ -149,6 +153,14 @@ public class Home_Controller {
         System.out.println("새로고침: " + AppConstants.refreshMinute + "분 " + AppConstants.refreshSecond + "초");
         System.out.println();
 
+
+        /// 이름 리스트
+        if (!AppConstants.NameList.contains(AppConstants.name)) {
+            AppConstants.NameList.add(AppConstants.name);
+            listViewId.getItems().add(AppConstants.name);
+        }
+
+
         // 저장완료 팝업
         showAlert("StockPIP", "성공적으로 저장되었습니다!");
     }
@@ -169,6 +181,19 @@ public class Home_Controller {
         // ✅ 초기화 시 경고 메시지 숨김
         warningMessageLabel.setVisible(false);
         warningMessageLabel.setText("");
+
+
+        // 현재 입력된 이름
+        String currentName = nameField.getText().trim();
+
+        // NameList와 ListView에서 해당 이름이 있을 때만 삭제
+        if (AppConstants.NameList.contains(currentName)) {
+            AppConstants.NameList.remove(currentName);
+            listViewId.getItems().remove(currentName);
+            System.out.println("입력된 이름 삭제됨: " + currentName);
+        } else {
+            System.out.println("입력된 이름은 NameList에 존재하지 않음: " + currentName);
+        }
 
 
         // 사용자 입력 필드 초기화

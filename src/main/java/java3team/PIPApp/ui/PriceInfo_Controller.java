@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -24,11 +25,23 @@ public class PriceInfo_Controller {
 
     @FXML private Label refreshTimeLabel;   // 최근 갱신 시간
 
+    @FXML private ComboBox<String> comboBoxID;  // 콤보박스
+
 
     /// API 연동 이후 빈칸 라벨에 셋
 
     @FXML
     public void initialize() {
+        // ComboBox에 NameList 넣기 (이름 목록만 보여줌)
+        comboBoxID.getItems().setAll(AppConstants.NameList);
+
+        // 현재 선택된 name이 있다면 그것도 선택해줌 (선택 유지 목적)
+        if (AppConstants.NameList.contains(AppConstants.name)) {
+            comboBoxID.setValue(AppConstants.name);
+        }
+
+
+
         nameLabel.setText(AppConstants.name);
 
         currentPriceLabel.setText(String.valueOf(AppConstants.currentPrice));

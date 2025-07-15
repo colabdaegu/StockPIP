@@ -6,10 +6,30 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java/java3team/PIPApp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/개발환경테스트" isTestSource="false" />
     </content>
-    <content url="jar://$USER_HOME$/Downloads/gson-2.10.1.jar!/" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="library" name="charm-glisten-5.0.0" level="project" />
+    <orderEntry type="library" name="controlsfx-11.2.2" level="project" />
+    <orderEntry type="library" name="jfoenix-9.0.10" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../SettingWindow/lib/gson-2.10.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../SettingWindow/lib/controlsfx-11.2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="file://$USER_HOME$/문서/javafx-sdk-21.0.7/lib" />

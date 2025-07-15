@@ -152,7 +152,7 @@
                         <DropShadow color="rgba(0,0,0,0.8)" offsetX="2" offsetY="2" radius="4" />
                      </effect>
                   </Label>
-                  <ComboBox fx:id="comboBoxID" prefWidth="150.0" />
+                  <ComboBox fx:id="comboBoxId" prefWidth="150.0" />
                </children>
             </HBox>
             <VBox prefHeight="101.0" prefWidth="780.0">

@@ -241,7 +241,7 @@
                   </Label>
                   <HBox alignment="CENTER" prefHeight="77.0" prefWidth="780.0" spacing="80.0">
                      <children>
-                        <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetClick" prefHeight="50.0" prefWidth="155.0" styleClass="button-home" text="삭제" textFill="WHITE">
+                        <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetClick" prefHeight="50.0" prefWidth="155.0" styleClass="button-home" text="초기화" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="18.0" />
                            </font>

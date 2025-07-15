@@ -1,9 +1,11 @@
 package ui;
 
+import config.AppConstants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -13,7 +15,7 @@ import java.io.IOException;
 import java.net.URI;
 
 public class PriceInfo_Controller {
-    @FXML private Label tickerLabel;    // 티커
+    @FXML private Label nameLabel;    // 티커
 
     @FXML private Label currentPriceLabel;  // 현재가
     @FXML private Label openPriceLabel;     // 시가
@@ -23,23 +25,57 @@ public class PriceInfo_Controller {
 
     @FXML private Label refreshTimeLabel;   // 최근 갱신 시간
 
+    @FXML private ComboBox<String> comboBoxID;  // 콤보박스
+
 
     /// API 연동 이후 빈칸 라벨에 셋
-    /*
+
     @FXML
     public void initialize() {
-        Object AppConstants;
-        tickerLabel.setText(AppConstants.ticker);
+        // ComboBox에 NameList 넣기 (이름 목록만 보여줌)
+        comboBoxID.getItems().setAll(AppConstants.NameList);
 
-        currentPriceLabel.setText(AppConstants.currentPrice);
-        openPriceLabel.setText(AppConstants.openPrice);
-        highPriceLabel.setText(AppConstants.highPrice);
-        lowPriceLabel.setText(AppConstants.lowPrice);
-        previousClosePriceLabel.setText(AppConstants.previousClosePrice);
+        // 현재 선택된 name이 있다면 그것도 선택해줌 (선택 유지 목적)
+        if (AppConstants.NameList.contains(AppConstants.name)) {
+            comboBoxID.setValue(AppConstants.name);
+        }
 
-        refreshTimeLabel.setText(AppConstants.refreshTime);
+
+
+        nameLabel.setText(AppConstants.name);
+
+        currentPriceLabel.setText(String.valueOf(AppConstants.currentPrice));
+        openPriceLabel.setText(String.valueOf(AppConstants.openPrice));
+        highPriceLabel.setText(String.valueOf(AppConstants.highPrice));
+        lowPriceLabel.setText(String.valueOf(AppConstants.lowPrice));
+        previousClosePriceLabel.setText(String.valueOf(AppConstants.previousClosePrice));
+
+        refreshTimeLabel.setText(String.valueOf(AppConstants.refreshTime));
+
+
+
+
+
+        // name이 있을 때만 항목에 보임
+        if (!AppConstants.name.isEmpty()) {
+            nameLabel.setVisible(true);
+            currentPriceLabel.setVisible(true);
+            openPriceLabel.setVisible(true);
+            highPriceLabel.setVisible(true);
+            lowPriceLabel.setVisible(true);
+            previousClosePriceLabel.setVisible(true);
+            refreshTimeLabel.setVisible(true);
+        } else {
+            nameLabel.setVisible(false);
+            currentPriceLabel.setVisible(false);
+            openPriceLabel.setVisible(false);
+            highPriceLabel.setVisible(false);
+            lowPriceLabel.setVisible(false);
+            previousClosePriceLabel.setVisible(false);
+            refreshTimeLabel.setVisible(false);
+        }
     }
-    */
+
 
 
 
@@ -53,7 +89,7 @@ public class PriceInfo_Controller {
 
         // 새 PIP 스테이지 열기
         Stage pipStage = new Stage();
-        _PIP_test pipWindow = new _PIP_test();
+        _PIP_Main pipWindow = new _PIP_Main();
         pipWindow.pip_On(pipStage);
     }
 

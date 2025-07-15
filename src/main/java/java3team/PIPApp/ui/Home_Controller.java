@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
@@ -19,6 +20,8 @@ import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 
 public class Home_Controller {
+    @FXML private ListView<String> listViewId;
+
     @FXML private TextField nameField;
     @FXML private TextField targetPriceField;
     @FXML private TextField stopPriceField;
@@ -31,10 +34,29 @@ public class Home_Controller {
     /// API 연동 및 보완 필요 . 회사이름 -> 자동 완성 모듈. 회사 이름만 받아와서 리스트 형태로 담고 있음
     @FXML
     public void initialize() {
-        List<String> companyNames = List.of("Apple", "Alphabet Inc.", "Amazon", "Adobe"); // 임시(테스트용)
+        listViewId.getItems().addAll(AppConstants.NameList);    // 이름 리스트 불러오기
 
+        List<String> companyNames = List.of("Apple", "Alphabet Inc.", "Amazon", "Adobe"); // 임시(테스트용)
         // nameField에 자동완성 붙이기
         TextFields.bindAutoCompletion(nameField, companyNames);
+
+
+        // 저장된 값이 있다면 불러오기
+        if (!AppConstants.name.isEmpty()) {
+            nameField.setText(AppConstants.name);
+            if (AppConstants.targetPrice != 0.0) {
+                targetPriceField.setText(String.format("%.10f", AppConstants.targetPrice).replaceAll("\\.?0+$", ""));
+            }
+            if (AppConstants.stopPrice != 0.0) {
+                stopPriceField.setText(String.format("%.10f", AppConstants.stopPrice).replaceAll("\\.?0+$", ""));
+            }
+            if (AppConstants.refreshMinute != 0) {
+                refreshField_Minute.setText(String.valueOf(AppConstants.refreshMinute));
+            }
+            if (AppConstants.refreshSecond != 0) {
+                refreshField_Second.setText(String.valueOf(AppConstants.refreshSecond));
+            }
+        }
     }
 
 
@@ -54,9 +76,9 @@ public class Home_Controller {
         String refreshSecondStr = refreshField_Second.getText().trim();
 
         // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
-        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty() || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty())){
+        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty() || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty()) || ((!refreshMinuteStr.isEmpty() && !refreshMinuteStr.matches("\\d+")) || (!refreshSecondStr.isEmpty() && !refreshSecondStr.matches("\\d+"))) || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("모든 항목을 입력해 주세요.");
+            warningMessageLabel.setText("모든 항목을 올바르게 입력해 주세요.");
             System.out.println("⚠⚠ 입력 누락\n\n");
             return;
         }
@@ -104,8 +126,7 @@ public class Home_Controller {
                 return;
             }
         }
-
-        // 새로고림 주기-초는 입력된 경우에만 파싱 시도
+        // 새로고침 주기-초는 입력된 경우에만 파싱 시도
         if (!refreshSecondStr.isEmpty()) {
             try {
                 AppConstants.refreshSecond = Integer.parseInt(refreshSecondStr);
@@ -116,6 +137,13 @@ public class Home_Controller {
                 return;
             }
         }
+        // 새로고침 값이 0이면 유효성 처리
+        if ((AppConstants.refreshMinute + AppConstants.refreshSecond) == 0) {
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("새로고침 주기는 0이 될 수 없습니다.");
+            System.out.println("⚠ 새로고침 주기는 0이 될 수 없음\n");
+            return;
+        }
 
 
         // 최종 결과 출력
@@ -124,6 +152,14 @@ public class Home_Controller {
         System.out.println("손절가: " + AppConstants.stopPrice);
         System.out.println("새로고침: " + AppConstants.refreshMinute + "분 " + AppConstants.refreshSecond + "초");
         System.out.println();
+
+
+        /// 이름 리스트
+        if (!AppConstants.NameList.contains(AppConstants.name)) {
+            AppConstants.NameList.add(AppConstants.name);
+            listViewId.getItems().add(AppConstants.name);
+        }
+
 
         // 저장완료 팝업
         showAlert("StockPIP", "성공적으로 저장되었습니다!");
@@ -145,6 +181,19 @@ public class Home_Controller {
         // ✅ 초기화 시 경고 메시지 숨김
         warningMessageLabel.setVisible(false);
         warningMessageLabel.setText("");
+
+
+        // 현재 입력된 이름
+        String currentName = nameField.getText().trim();
+
+        // NameList와 ListView에서 해당 이름이 있을 때만 삭제
+        if (AppConstants.NameList.contains(currentName)) {
+            AppConstants.NameList.remove(currentName);
+            listViewId.getItems().remove(currentName);
+            System.out.println("입력된 이름 삭제됨: " + currentName);
+        } else {
+            System.out.println("입력된 이름은 NameList에 존재하지 않음: " + currentName);
+        }
 
 
         // 사용자 입력 필드 초기화
@@ -177,7 +226,7 @@ public class Home_Controller {
 
         // 새 PIP 스테이지 열기
         Stage pipStage = new Stage();
-        _PIP_test pipWindow = new _PIP_test();
+        _PIP_Main pipWindow = new _PIP_Main();
         pipWindow.pip_On(pipStage);
     }
 

@@ -24,47 +24,52 @@ public class _PIP_test {
 
     public void pip_On(Stage stage) {
         Label priceLabel = new Label("₩ 10,000");
-        priceLabel.setStyle("-fx-font-size: 28px; -fx-text-fill: red;");
 
-        // ✕ 닫기 버튼
+        double fontSize = SettingsFontSize.getFontSize();  // 저장된 크기 불러오기
+        priceLabel.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: red;");
+
+        // 기준값: SettingsFontSize 내부의 기본값과 동일하게 28.0 사용
+        double baseFontSize = 28.0;
+        double baseWidth = 300;
+        double baseHeight = 120;
+
+        // 폰트 비율로 확대
+        double ratio = fontSize / baseFontSize;
+
+        // 오버레이 창 크기를 비례해서 확대
+        double newWidth = Math.max(baseWidth, baseWidth * ratio);
+        double newHeight = Math.max(baseHeight, baseHeight * ratio);
+
         Button closeBtn = new Button("✕");
-        closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;");
+        closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
         closeBtn.setOnAction(e -> stage.close());
 
-        // ⚙ 설정 버튼
         Button settingsBtn = new Button("⚙");
-        settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;");
+        settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
         settingsBtn.setOnAction(e -> {
-            stage.close(); // 현재 PIP 창 닫기
+            stage.close();
 
             try {
-                // fxml 로드
                 Parent homeRoot = FXMLLoader.load(getClass().getResource("home.fxml"));
 
                 Main.mainStage.setScene(new Scene(homeRoot, 1220, 740));
-                Main.mainStage.show(); // 닫혀 있었다면 다시 보여줌
+                Main.mainStage.show();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-        /// //
-        // 오른쪽 상단 버튼 묶음
+
         HBox buttonBox = new HBox(8, settingsBtn, closeBtn);
         buttonBox.setAlignment(Pos.TOP_RIGHT);
         buttonBox.setPadding(new Insets(8));
-        buttonBox.setVisible(false); // 기본은 숨김
+        buttonBox.setVisible(false);
 
-        // 중앙 텍스트
         StackPane center = new StackPane(priceLabel);
         center.setAlignment(Pos.CENTER);
 
         StackPane root = new StackPane(center, buttonBox);
         root.setStyle("-fx-background-color: transparent;");
 
-        Scene scene = new Scene(root, initWidth, initHeight);
-        scene.setFill(Color.TRANSPARENT);
-
-        // 드래그로 이동 & 크기 조절
         root.setOnMousePressed((MouseEvent e) -> {
             offsetX = e.getSceneX();
             offsetY = e.getSceneY();
@@ -94,6 +99,9 @@ public class _PIP_test {
         });
 
         // 창 설정
+        Scene scene = new Scene(root, newWidth, newHeight);
+        scene.setFill(Color.TRANSPARENT);
+
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);

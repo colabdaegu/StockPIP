@@ -44,10 +44,12 @@ public class Settings_Controller {
 
     @FXML
     public void initialize() {
+        fontSizeSlider.setValue(SettingsFontSize.getFontSize());
 
         /// PIP 폰트 사이즈 설정(연결 필요)
         fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double fontSize = newValue.doubleValue();
+            SettingsFontSize.setFontSize(fontSize);
             System.out.println("PIP 폰트 크기: " + String.format("%.1f", fontSize));
 
             /// ▼ pip글자변수 지정 필요
@@ -105,7 +107,7 @@ public class Settings_Controller {
         pipToggle.setSelected(false);
 
         // 폰트 크기 슬라이더: 기본값 20으로 설정
-        fontSizeSlider.setValue(14.0);
+        fontSizeSlider.setValue(28.0);
 
         // 알림 방식 설정: 토스트 방식으로 설정
         toastAlertButton.setSelected(true);

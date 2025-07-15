@@ -3,11 +3,10 @@ package config;
 import java.net.http.HttpClient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gson.Gson; // Gson 라이브러리 임포트
 import com.google.gson.GsonBuilder; // GsonBuilder 임포트 (Gson 객체 설정을 위함)
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 public final class AppConstants {
@@ -21,10 +20,7 @@ public final class AppConstants {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 
-
     ///  사용자 입력 변수
-    public static List<String> NameList = new ArrayList<>(); // 이름 목록
-
     public static String name = "";      // 회사명
 
     public static double targetPrice;   // 목표가

@@ -159,9 +159,49 @@
             </HBox>
             <VBox prefHeight="495.0" prefWidth="234.0" spacing="25.0">
                <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="780.0">
+                     <children>
+                        <Label prefHeight="29.0" prefWidth="165.0" text="알림 방식" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <ToggleButtonGroup prefHeight="39.0" prefWidth="315.0" selectionType="SINGLE">
+                            <toggles>
+                                <ToggleButton fx:id="popUpAlertButton" selected="true">
+                                    <graphic>
+                                        <Label prefHeight="22.0" prefWidth="76.0" text=" 팝업창 알림 ">
+                                       <font>
+                                          <Font name="Malgun Gothic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    </graphic>
+                                </ToggleButton>
+                                <ToggleButton fx:id="systemAlertButton">
+                                    <graphic>
+                                       <Label text=" Windows 시스템 알림">
+                                       <font>
+                                          <Font name="Malgun Gothic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    </graphic>
+                                </ToggleButton>
+                                <ToggleButton fx:id="soundAlertButton">
+                                    <graphic>
+                                       <Label text=" 소리로만 알림 ">
+                                       <font>
+                                          <Font name="Malgun Gothic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    </graphic>
+                                </ToggleButton>
+                            </toggles>
+                        </ToggleButtonGroup>
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
-                        <Label prefHeight="29.0" prefWidth="110.0" text="PIP 설정" textFill="WHITE">
+                        <Label prefHeight="29.0" prefWidth="152.0" text="PIP 테두리 고정" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>
@@ -171,7 +211,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
-                        <Label prefHeight="29.0" prefWidth="125.0" text="PIP 폰트" textFill="WHITE">
+                        <Label prefHeight="29.0" prefWidth="165.0" text="PIP 폰트 크기" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>
@@ -179,46 +219,9 @@
                         <Slider fx:id="fontSizeSlider" prefHeight="24.0" prefWidth="277.0" value="14.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="780.0">
-                     <children>
-                        <Label prefHeight="29.0" prefWidth="125.0" text="알림 방식" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic Bold" size="20.0" />
-                           </font>
-                        </Label>
-                        <ToggleButtonGroup prefHeight="39.0" prefWidth="315.0" selectionType="SINGLE">
-                            <toggles>
-                                <ToggleButton fx:id="toastAlertButton" selected="true">
-                                    <graphic>
-                                        <Label prefHeight="22.0" prefWidth="76.0" text=" 토스트 알림 ">
-                                       <font>
-                                          <Font name="Malgun Gothic" size="12.0" />
-                                       </font></Label>
-                                    </graphic>
-                                </ToggleButton>
-                                <ToggleButton fx:id="inlineAlertButton">
-                                    <graphic>
-                                       <Label text=" 인라인 경고 알림">
-                                       <font>
-                                          <Font name="Malgun Gothic" size="12.0" />
-                                       </font></Label>
-                                    </graphic>
-                                </ToggleButton>
-                                <ToggleButton fx:id="soundAlertButton">
-                                    <graphic>
-                                       <Label text=" 소리로만 알림 ">
-                                       <font>
-                                          <Font name="Malgun Gothic" size="12.0" />
-                                       </font></Label>
-                                    </graphic>
-                                </ToggleButton>
-                            </toggles>
-                        </ToggleButtonGroup>
-                     </children>
-                  </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
-                        <Label prefHeight="29.0" prefWidth="125.0" text="테마 설정" textFill="WHITE">
+                        <Label prefHeight="29.0" prefWidth="165.0" text="테마 설정" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>
@@ -236,7 +239,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
-                        <Label prefHeight="29.0" prefWidth="125.0" text="기본값 설정" textFill="WHITE">
+                        <Label prefHeight="29.0" prefWidth="165.0" text="기본값 설정" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>

@@ -1,15 +1,12 @@
 package ui;
 
-import com.gluonhq.charm.glisten.control.ToggleButtonGroup;
 import com.jfoenix.controls.JFXToggleButton;
-import com.jfoenix.controls.JFXToggleNode;
 import config.AppConstants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -22,34 +19,63 @@ public class Settings_Controller {
 
     @FXML private Slider fontSizeSlider;
 
-    @FXML private ToggleButton toastAlertButton;
-    @FXML private ToggleButton inlineAlertButton;
+    @FXML private ToggleButton popUpAlertButton;
+    @FXML private ToggleButton systemAlertButton;
     @FXML private ToggleButton soundAlertButton;
 
     @FXML RadioButton brightTheme, darkTheme;
-
-    /// PIP 관련 설정(임시)
-    @FXML
-    private void handlePipToggle(ActionEvent event) {
-        if (pipToggle.isSelected()) {
-            // PIP 설정이 ON 상태일 때
-            System.out.println("PIP 설정: ON");
-        } else {
-            // PIP 설정이 OFF 상태일 때
-            System.out.println("PIP 설정: OFF");
-        }
-    }
 
 
 
     @FXML
     public void initialize() {
-        fontSizeSlider.setValue(SettingsFontSize.getFontSize());
+        /// ✅ AppConstants 값 → UI 컴포넌트 초기화
+        pipToggle.setSelected(AppConstants.pipOutlineOption);   // PIP 테두리 고정
+        fontSizeSlider.setValue(AppConstants.pipFontSize);      // PIP 폰트
 
-        /// PIP 폰트 사이즈 설정(연결 필요)
+        switch (AppConstants.AlertOption) {                     // 알림 방식
+            case 0 -> popUpAlertButton.setSelected(true);
+            case 1 -> systemAlertButton.setSelected(true);
+            case 2 -> soundAlertButton.setSelected(true);
+        }
+
+
+
+        ///  알림 방식 설정(임시)
+        // 각 버튼에 대한 선택 상태 리스너 추가
+        popUpAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 팝업창 알림이 선택됐을 때
+                AppConstants.AlertOption = 0;
+                System.out.println("팝업창 알림으로 설정됨");
+            }
+        });
+
+        systemAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 윈도우 시스템 알림이 선택됐을 때
+                AppConstants.AlertOption = 1;
+                System.out.println("윈도우 시스템 알림으로 설정됨");
+            }
+        });
+
+        soundAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 사운드 알림이 선택됐을 때
+                AppConstants.AlertOption = 2;
+                System.out.println("소리로만 알림");
+            }
+        });
+
+
+
+
+        // PIP 폰트 사이즈 설정
+        fontSizeSlider.setValue(_PIP_SettingsFontSize.getFontSize());
+
         fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double fontSize = newValue.doubleValue();
-            SettingsFontSize.setFontSize(fontSize);
+            _PIP_SettingsFontSize.setFontSize(fontSize);
             System.out.println("PIP 폰트 크기: " + String.format("%.1f", fontSize));
 
             /// ▼ pip글자변수 지정 필요
@@ -58,63 +84,70 @@ public class Settings_Controller {
 
 
 
-        ///  알림 방식 설정(임시)
-        // 각 버튼에 대한 선택 상태 리스너 추가
-        toastAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 토스트 알림이 선택됐을 때 (나머지 두 개 취소 구현도 필요)
-                System.out.println("Toast 알림으로 설정됨");
-            }
-        });
 
-        inlineAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 인라인 알림이 선택됐을 때 (나머지 두 개 취소 구현도 필요)
-                System.out.println("Inline 알림으로 설정됨");
-            }
-        });
-
-        soundAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 사운드 알림이 선택됐을 때 (나머지 두 개 취소 구현도 필요)
-                System.out.println("Sound 알림으로 설정됨");
-            }
-        });
-
-
-
-        // 테마 설정
+        /// 테마 설정 (프로젝트 막바지에 설정 예정)
         ToggleGroup group = new ToggleGroup();
         brightTheme.setToggleGroup(group);
         darkTheme.setToggleGroup(group);
 
-        group.selectedToggleProperty().addListener((observable_, oldValue_, newValue_) -> {
-            if (newValue_ == brightTheme) {
-                System.out.println("밝은 테마로 변경");
-            } else if (newValue_ == darkTheme) {
-                System.out.println("어두운 테마로 변경");
+        switch (AppConstants.UI_theme) {                        // 테마 기본 설정
+            case 0 -> brightTheme.setSelected(true);
+            case 1 -> darkTheme.setSelected(true);
+        }
+
+        brightTheme.setOnAction(e -> {
+            if (brightTheme.isSelected()) {
+                AppConstants.UI_theme = 0;
+                System.out.println("밝은 테마로 변경됨");
+            }
+        });
+        darkTheme.setOnAction(e -> {
+            if (darkTheme.isSelected()) {
+                AppConstants.UI_theme = 1;
+                System.out.println("어두운 테마로 변경됨");
             }
         });
     }
 
 
-    /// 기본값 설정 버튼의 이벤트(임시)
+    // PIP 테두리 고정 설정
+    @FXML
+    private void handlePipToggle(ActionEvent event) {
+        if (pipToggle.isSelected()) {
+            // PIP 설정이 ON 상태일 때
+            AppConstants.pipOutlineOption = true;
+            System.out.println("PIP 테두리 고정: ON");
+        } else {
+            // PIP 설정이 OFF 상태일 때
+            AppConstants.pipOutlineOption = false;
+            System.out.println("PIP 테두리 고정: OFF");
+        }
+    }
+
+
+
+
+    /// 기본값 설정
     @FXML
     private void defaultClick(ActionEvent event) {
-        System.out.println("설정을 기본값으로 되돌림");
-
-        // PIP 설정: 기본값으로 설정
-        pipToggle.setSelected(false);
-
-        // 폰트 크기 슬라이더: 기본값 20으로 설정
-        fontSizeSlider.setValue(28.0);
+        System.out.println("설정을 기본값으로 되돌림\n");
 
         // 알림 방식 설정: 토스트 방식으로 설정
-        toastAlertButton.setSelected(true);
-        inlineAlertButton.setSelected(false);
+        AppConstants.AlertOption = 0;
+        popUpAlertButton.setSelected(true);
+        systemAlertButton.setSelected(false);
         soundAlertButton.setSelected(false);
 
+        // PIP 테두리 고정 설정: 기본값으로 설정
+        AppConstants.pipOutlineOption = false;
+        pipToggle.setSelected(false);
+
+        // PIP 폰트 크기 설정: 기본값 28로 설정
+        AppConstants.pipFontSize = 28.0;
+        fontSizeSlider.setValue(28.0);
+
         // 테마 설정: 다크 테마로 설정
+        AppConstants.UI_theme = 1;
         brightTheme.setSelected(false);
         darkTheme.setSelected(true);
     }
@@ -130,7 +163,7 @@ public class Settings_Controller {
 
         // 새 PIP 스테이지 열기
         Stage pipStage = new Stage();
-        _PIP_test pipWindow = new _PIP_test();
+        _PIP_Main pipWindow = new _PIP_Main();
         pipWindow.pip_On(pipStage);
     }
 

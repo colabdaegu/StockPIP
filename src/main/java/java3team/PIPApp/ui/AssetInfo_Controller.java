@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -26,24 +27,63 @@ public class AssetInfo_Controller {
 
     @FXML private ImageView logoUrlLabel;   // 로고 이미지
 
+    @FXML private ComboBox<String> comboBoxID;  // 콤보박스
+
 
     /// API 연동 이후 빈칸 라벨에 셋
 
-    /*
+
     @FXML
     public void initialize() {
+        // ComboBox에 NameList 넣기 (이름 목록만 보여줌)
+        comboBoxID.getItems().setAll(AppConstants.NameList);
+
+        // 현재 선택된 name이 있다면 그것도 선택해줌 (선택 유지 목적)
+        if (AppConstants.NameList.contains(AppConstants.name)) {
+            comboBoxID.setValue(AppConstants.name);
+        }
+
+
         nameLabel.setText(AppConstants.name);
         tickerLabel.setText(AppConstants.ticker);
         industryLabel.setText(AppConstants.industry);
         countryLabel.setText(AppConstants.country);
         currencyLabel.setText(AppConstants.currency);
         exchangeLabel.setText(AppConstants.exchange);
-        ipoDateLabel.setText(AppConstants.ipoDate);
-        marketCapitalizationLabel.setText(AppConstants.marketCapitalization);
+        ipoDateLabel.setText(String.valueOf(AppConstants.ipoDate));
+        marketCapitalizationLabel.setText(String.valueOf(AppConstants.marketCapitalization));
+
+        //logoUrlLabel.setImage(AppConstants.logoUrl.getImage());
 
 
+
+
+        // name이 있을 때만 항목에 보임
+        if (!AppConstants.name.isEmpty()) {
+            nameLabel.setVisible(true);
+            tickerLabel.setVisible(true);
+            industryLabel.setVisible(true);
+            countryLabel.setVisible(true);
+            currencyLabel.setVisible(true);
+            exchangeLabel.setVisible(true);
+            ipoDateLabel.setVisible(true);
+            marketCapitalizationLabel.setVisible(true);
+
+            //logoUrlLabel.setVisible(true);
+        } else {
+            nameLabel.setVisible(false);
+            tickerLabel.setVisible(false);
+            industryLabel.setVisible(false);
+            countryLabel.setVisible(false);
+            currencyLabel.setVisible(false);
+            exchangeLabel.setVisible(false);
+            ipoDateLabel.setVisible(false);
+            marketCapitalizationLabel.setVisible(false);
+
+            //logoUrlLabel.setVisible(false);
+        }
     }
-    */
+
 
 
 
@@ -57,7 +97,7 @@ public class AssetInfo_Controller {
 
         // 새 PIP 스테이지 열기
         Stage pipStage = new Stage();
-        _PIP_test pipWindow = new _PIP_test();
+        _PIP_Main pipWindow = new _PIP_Main();
         pipWindow.pip_On(pipStage);
     }
 

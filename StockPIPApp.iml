@@ -19,9 +19,9 @@
         <jarDirectory url="file://$USER_HOME$/문서/javafx-sdk-21.0.7/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="charm-glisten-5.0.0" level="project" />
-    <orderEntry type="library" name="controlsfx-11.2.2" level="project" />
-    <orderEntry type="library" name="gson-2.10.1" level="project" />
-    <orderEntry type="library" name="jfoenix-9.0.10" level="project" />
+    <orderEntry type="library" exported="" name="controlsfx-11.2.2" level="project" />
+    <orderEntry type="library" exported="" name="charm-glisten-5.0.0" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.10.1" level="project" />
+    <orderEntry type="library" exported="" name="jfoenix-9.0.10" level="project" />
   </component>
 </module>

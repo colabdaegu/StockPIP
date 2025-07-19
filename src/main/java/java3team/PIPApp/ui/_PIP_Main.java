@@ -35,7 +35,7 @@ public class _PIP_Main {
         double newWidth = Math.max(baseWidth, baseWidth * ratio);
         double newHeight = Math.max(baseHeight, baseHeight * ratio);
 
-        // 종목 제목  라벨
+        // 종목 제목 라벨
         //Label titleLabel = new Label(stockName);
         Label titleLabel = new Label("TSLL");
         titleLabel.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: white;");

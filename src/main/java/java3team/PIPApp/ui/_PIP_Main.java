@@ -1,6 +1,6 @@
 package ui;
 
-import config.AppConstants;
+import config.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

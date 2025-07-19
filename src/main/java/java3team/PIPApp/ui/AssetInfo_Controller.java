@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
-import config.AppConstants;
+import config.*;
 
 public class AssetInfo_Controller {
     @FXML private Label nameLabel;      // 회사명

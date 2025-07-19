@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder; // GsonBuilder 임포트 (Gson 객체 설정
 import javafx.scene.image.ImageView;
 
 public final class AppConstants {
-    private AppConstants() {
+    public AppConstants() {
         // 인스턴스화 방지
     }
 

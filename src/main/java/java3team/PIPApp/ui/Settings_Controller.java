@@ -1,7 +1,7 @@
 package ui;
 
 import com.jfoenix.controls.JFXToggleButton;
-import config.AppConstants;
+import config.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

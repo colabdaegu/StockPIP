@@ -1,6 +1,6 @@
 package ui;
 
-import config.AppConstants;
+import config.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.stage.Stage;
@@ -59,6 +60,9 @@ public class Home_Controller {
         }
     }
 
+    public List<AppConstants> Apps = new ArrayList<>();
+    public AppConstants app = new AppConstants();
+
 
     // 저장 버튼의 이벤트
     @FXML
@@ -85,13 +89,13 @@ public class Home_Controller {
 
 
         // 기존 코드 Clear
-        AppConstants.resetData();
+        app.resetData();
 
 
 
         // 이름 유효성 검사
         ////(추가 필요)
-        AppConstants.name = name_Str;
+        A.name = name_Str;
         /// 해당하는 이름의 회사가 존재하지 않으면 작업을 중단하는 예외처리 필요
 
 

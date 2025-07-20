@@ -21,9 +21,6 @@ public final class AppConstants {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 
-    // 현재 열린 PIP창 개수
-    public static int Number_of_PIP_windows = 0;
-
 
     // 환경설정용 변수
     public static int AlertOption = 0;           // 알림 방식

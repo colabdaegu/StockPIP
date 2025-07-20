@@ -95,11 +95,11 @@ public class Stocks {
         return refresh;
     }
 
-    public int getRefreshMinute() {   /// 최종 사용할 값 (초 단위)
+    public int getRefreshMinute() {
         return refreshMinute;
     }
 
-    public int getRefreshSecond() {   /// 최종 사용할 값 (초 단위)
+    public int getRefreshSecond() {
         return refreshSecond;
     }
 }

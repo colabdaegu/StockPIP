@@ -1,6 +1,7 @@
 package ui;
 
 import config.*;
+import config.AppConstants;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,11 +12,17 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class _PIP_Main {
+    public static List<Stage> pipStages = new ArrayList<>();
+
     private double offsetX, offsetY;
     private double initWidth = 300;
     private double initHeight = 120;
@@ -23,10 +30,21 @@ public class _PIP_Main {
     private boolean resizing = false;
     private final int RESIZE_MARGIN = 10;
 
-    public void pip_On(Stage stage) {
-        Label priceLabel = new Label("₩ 10,000");
+    public void pip_On(Stage stage, Stocks stock, int index) {
+        _PIP_Main.pipStages.add(stage);
 
         double fontSize = _PIP_SettingsFontSize.getFontSize();  // 저장된 크기 불러오기
+
+        stage.setX(0);
+        stage.setY(0 + (fontSize * 5) * index); // Y좌표도 같이 늘림
+
+
+        Label nameLabel = new Label(stock.getName());
+        nameLabel.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: white;");
+
+        /// 타임라인 적용 필요
+        //Label priceLabel = new Label(String.valueOf(stock.getCurrentPrice()));
+        Label priceLabel = new Label("₩ 10,000");
         priceLabel.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: red;");
 
         // 기준값: SettingsFontSize 내부의 기본값과 동일하게 28.0 사용
@@ -43,12 +61,22 @@ public class _PIP_Main {
 
         Button closeBtn = new Button("✕");
         closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
-        closeBtn.setOnAction(e -> stage.close());
+        //closeBtn.setOnAction(e -> stage.close());
+        closeBtn.setOnAction(e -> {
+            for (Stage s : _PIP_Main.pipStages) {
+                s.close();
+            }
+            _PIP_Main.pipStages.clear();
+        });
 
         Button settingsBtn = new Button("⚙");
         settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
         settingsBtn.setOnAction(e -> {
-            stage.close();
+            // 모든 PIP 창 닫기
+            for (Stage s : _PIP_Main.pipStages) {
+                s.close();
+            }
+            _PIP_Main.pipStages.clear();
 
             try {
                 Parent homeRoot = FXMLLoader.load(getClass().getResource("home.fxml"));
@@ -65,7 +93,7 @@ public class _PIP_Main {
         buttonBox.setPadding(new Insets(8));
         buttonBox.setVisible(false);
 
-        StackPane center = new StackPane(priceLabel);
+        VBox center = new VBox(10, nameLabel, priceLabel);
         center.setAlignment(Pos.CENTER);
 
         StackPane root = new StackPane(center, buttonBox);
@@ -125,7 +153,7 @@ public class _PIP_Main {
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
-        stage.setTitle("StockPipApp");
+        stage.setTitle("PIP - " + stock.getName());
         stage.show();
     }
 }

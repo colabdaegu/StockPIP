@@ -57,4 +57,17 @@
 
 
 
+.custom-list {
+    -fx-background-color: transparent;
+    -fx-border-color: #8E7CC3;
+    -fx-border-radius: 8px;
+    -fx-padding: 5;
+    -fx-control-inner-background: #1e1e2e;
+    -fx-background-insets: 0;
+    -fx-font-size: 15px;
+    -fx-text-fill: white;
+    -fx-selection-bar: #3b82f6;
+    -fx-selection-bar-non-focused: #3b82f6;
+}
+
 

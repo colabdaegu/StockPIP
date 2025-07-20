@@ -1,6 +1,6 @@
 package ui;
 
-import config.*;
+import config.AppConstants;
 
 public class _PIP_SettingsFontSize {
     //private static double pipFontSize = 28.0; // 기본값

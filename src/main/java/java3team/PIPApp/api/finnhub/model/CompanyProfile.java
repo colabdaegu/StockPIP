@@ -30,9 +30,9 @@ public class CompanyProfile {
     public CompanyProfile() {}
 
     // Getter 및 Setter (생략, 필요에 따라 추가)
-    public String getName() {
-        return name;
-    }
+    //public String getName() {
+    //    return name;
+    //}
 
     public void setName(String name) {
         this.name = name;

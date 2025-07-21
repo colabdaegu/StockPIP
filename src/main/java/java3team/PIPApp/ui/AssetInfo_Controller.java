@@ -1,9 +1,12 @@
 package ui;
 
+import config.StockList;
+import config.Stocks;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -13,7 +16,6 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
-import config.AppConstants;
 
 public class AssetInfo_Controller {
     @FXML private Label nameLabel;      // 회사명
@@ -30,59 +32,49 @@ public class AssetInfo_Controller {
     @FXML private ComboBox<String> comboBoxID;  // 콤보박스
 
 
-    /// API 연동 이후 빈칸 라벨에 셋
-
-
     @FXML
     public void initialize() {
-        // ComboBox에 NameList 넣기 (이름 목록만 보여줌)
-        comboBoxID.getItems().setAll(AppConstants.NameList);
-
-        // 현재 선택된 name이 있다면 그것도 선택해줌 (선택 유지 목적)
-        if (AppConstants.NameList.contains(AppConstants.name)) {
-            comboBoxID.setValue(AppConstants.name);
+        // 콤보박스 초기화
+        comboBoxID.getItems().clear();
+        for (Stocks stock : StockList.getStockArray()) {
+            comboBoxID.getItems().add(stock.getName());
         }
 
+        // 콤보박스 선택 이벤트 핸들러
+        comboBoxID.setOnAction(e -> {
+            String selectedName = comboBoxID.getValue();
+            if (selectedName == null) return;
 
-        nameLabel.setText(AppConstants.name);
-        tickerLabel.setText(AppConstants.ticker);
-        industryLabel.setText(AppConstants.industry);
-        countryLabel.setText(AppConstants.country);
-        currencyLabel.setText(AppConstants.currency);
-        exchangeLabel.setText(AppConstants.exchange);
-        ipoDateLabel.setText(String.valueOf(AppConstants.ipoDate));
-        marketCapitalizationLabel.setText(String.valueOf(AppConstants.marketCapitalization));
+            for (Stocks stock : StockList.getStockArray()) {
+                if (stock.getName().equals(selectedName)) {
+                    updateLabel(stock);
+                    break;
+                }
+            }
+        });
 
-        //logoUrlLabel.setImage(AppConstants.logoUrl.getImage());
-
-
-
-
-        // name이 있을 때만 항목에 보임
-        if (!AppConstants.name.isEmpty()) {
-            nameLabel.setVisible(true);
-            tickerLabel.setVisible(true);
-            industryLabel.setVisible(true);
-            countryLabel.setVisible(true);
-            currencyLabel.setVisible(true);
-            exchangeLabel.setVisible(true);
-            ipoDateLabel.setVisible(true);
-            marketCapitalizationLabel.setVisible(true);
-
-            //logoUrlLabel.setVisible(true);
-        } else {
-            nameLabel.setVisible(false);
-            tickerLabel.setVisible(false);
-            industryLabel.setVisible(false);
-            countryLabel.setVisible(false);
-            currencyLabel.setVisible(false);
-            exchangeLabel.setVisible(false);
-            ipoDateLabel.setVisible(false);
-            marketCapitalizationLabel.setVisible(false);
-
-            //logoUrlLabel.setVisible(false);
+        // 초기 값 설정 (있다면)
+        if (!StockList.getStockArray().isEmpty()) {
+            Stocks firstStock = StockList.getStockArray().get(0);
+            comboBoxID.getSelectionModel().select(firstStock.getName());
+            updateLabel(firstStock);
         }
     }
+
+    // 라벨 업데이트
+    private void updateLabel(Stocks stock) {
+        nameLabel.setText(stock.getName());
+        tickerLabel.setText(String.valueOf(stock.ticker));
+        industryLabel.setText(String.valueOf(stock.industry));
+        countryLabel.setText(String.valueOf(stock.country));
+        currencyLabel.setText(String.valueOf(stock.currency));
+        exchangeLabel.setText(String.valueOf(stock.exchange));
+        ipoDateLabel.setText(String.valueOf(stock.ipoDate));
+        marketCapitalizationLabel.setText(String.valueOf(stock.marketCapitalization));
+
+        //logoUrlLabel.setImage(stock.logoUrl.getImage());
+    }
+
 
 
 
@@ -92,13 +84,22 @@ public class AssetInfo_Controller {
     // PIP 활성화
     @FXML
     private void pipClick(ActionEvent event) {
-        // 현재 메인 스테이지 닫기
-        Main.mainStage.close();
+        if (!StockList.getStockArray().isEmpty()){
+            // 현재 메인 스테이지 닫기
+            Main.mainStage.close();
 
-        // 새 PIP 스테이지 열기
-        Stage pipStage = new Stage();
-        _PIP_Main pipWindow = new _PIP_Main();
-        pipWindow.pip_On(pipStage);
+            // 새 PIP 스테이지 열기
+            _PIP_Launcher.launchAllPipWindows();
+        }
+        else {
+            System.out.println("⚠ 종목이 비어있어 PIP창을 활성화시킬 수 없습니다.\n\n");
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("StockPIP");
+            alert.setHeaderText(null);
+            alert.setContentText("종목을 먼저 입력해 주십시오.");
+            alert.showAndWait();
+        }
     }
 
     // 홈으로 이동

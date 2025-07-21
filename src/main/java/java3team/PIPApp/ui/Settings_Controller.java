@@ -1,6 +1,8 @@
 package ui;
 
 import com.jfoenix.controls.JFXToggleButton;
+import config.StockList;
+import config.Stocks;
 import config.AppConstants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -158,13 +160,22 @@ public class Settings_Controller {
     // PIP 활성화
     @FXML
     private void pipClick(ActionEvent event) {
-        // 현재 메인 스테이지 닫기
-        Main.mainStage.close();
+        if (!StockList.getStockArray().isEmpty()){
+            // 현재 메인 스테이지 닫기
+            Main.mainStage.close();
 
-        // 새 PIP 스테이지 열기
-        Stage pipStage = new Stage();
-        _PIP_Main pipWindow = new _PIP_Main();
-        pipWindow.pip_On(pipStage);
+            // 새 PIP 스테이지 열기
+            _PIP_Launcher.launchAllPipWindows();
+        }
+        else {
+            System.out.println("⚠ 종목이 비어있어 PIP창을 활성화시킬 수 없습니다.\n\n");
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("StockPIP");
+            alert.setHeaderText(null);
+            alert.setContentText("종목을 먼저 입력해 주십시오.");
+            alert.showAndWait();
+        }
     }
 
     // 홈으로 이동

@@ -167,35 +167,35 @@
                            </font>
                         </Label>
                         <ToggleButtonGroup prefHeight="39.0" prefWidth="315.0" selectionType="SINGLE">
-                            <toggles>
-                                <ToggleButton fx:id="popUpAlertButton" selected="true">
-                                    <graphic>
-                                        <Label prefHeight="22.0" prefWidth="76.0" text=" 팝업창 알림 ">
+                           <toggles>
+                              <ToggleButton fx:id="popUpAlertButton" selected="true">
+                                 <graphic>
+                                    <Label prefHeight="22.0" prefWidth="76.0" text=" 팝업창 알림 ">
                                        <font>
                                           <Font name="Malgun Gothic" size="12.0" />
                                        </font>
                                     </Label>
-                                    </graphic>
-                                </ToggleButton>
-                                <ToggleButton fx:id="systemAlertButton">
-                                    <graphic>
-                                       <Label text=" Windows 시스템 알림">
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="systemAlertButton">
+                                 <graphic>
+                                    <Label text=" Windows 시스템 알림">
                                        <font>
                                           <Font name="Malgun Gothic" size="12.0" />
                                        </font>
                                     </Label>
-                                    </graphic>
-                                </ToggleButton>
-                                <ToggleButton fx:id="soundAlertButton">
-                                    <graphic>
-                                       <Label text=" 소리로만 알림 ">
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="soundAlertButton">
+                                 <graphic>
+                                    <Label text=" 소리로만 알림 ">
                                        <font>
                                           <Font name="Malgun Gothic" size="12.0" />
                                        </font>
                                     </Label>
-                                    </graphic>
-                                </ToggleButton>
-                            </toggles>
+                                 </graphic>
+                              </ToggleButton>
+                           </toggles>
                         </ToggleButtonGroup>
                      </children>
                   </HBox>

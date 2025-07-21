@@ -1,65 +1,86 @@
 package ui;
 
+import config.*;
 import config.AppConstants;
-import config.Stocks;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class _PIP_Main {
+    public static List<Stage> pipStages = new ArrayList<>();
 
-    private static final AtomicInteger openWindowCount = new AtomicInteger(0);  // 열린 창 수 추적
     private double offsetX, offsetY;
+    private double initWidth = 300;
+    private double initHeight = 120;
+
+    private boolean resizing = false;
     private final int RESIZE_MARGIN = 10;
 
     public void pip_On(Stage stage, Stocks stock, int index) {
-        openWindowCount.incrementAndGet();
+        _PIP_Main.pipStages.add(stage);
 
-        // 종목명 + 현재가 표시
+        double fontSize = _PIP_SettingsFontSize.getFontSize();  // 저장된 크기 불러오기
+
+        stage.setX(0);
+        stage.setY(0 + (fontSize * 5) * index); // Y좌표도 같이 늘림
+
+
         Label nameLabel = new Label(stock.getName());
-        Label priceLabel = new Label("$ " + stock.currentPrice);
+        nameLabel.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: white;");
 
-        double fontSize = _PIP_SettingsFontSize.getFontSize();
-        nameLabel.setStyle("-fx-font-size: " + (fontSize * 0.7) + "px; -fx-text-fill: white;");
+        /// 타임라인 적용 필요
+        //Label priceLabel = new Label(String.valueOf(stock.getCurrentPrice()));
+        Label priceLabel = new Label("₩ 10,000");
         priceLabel.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: red;");
 
-        // 창 크기 계산
-        double ratio = fontSize / 28.0;
-        double newWidth = Math.max(300, 300 * ratio);
-        double newHeight = Math.max(120, 120 * ratio);
+        // 기준값: SettingsFontSize 내부의 기본값과 동일하게 28.0 사용
+        double baseFontSize = 28.0;
+        double baseWidth = 300;
+        double baseHeight = 120;
 
-        // 버튼
+        // 폰트 비율로 확대
+        double ratio = fontSize / baseFontSize;
+
+        // 오버레이 창 크기를 비례해서 확대
+        double newWidth = Math.max(baseWidth, baseWidth * ratio);
+        double newHeight = Math.max(baseHeight, baseHeight * ratio);
+
         Button closeBtn = new Button("✕");
         closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
+        //closeBtn.setOnAction(e -> stage.close());
         closeBtn.setOnAction(e -> {
-            stage.close();
-            int remaining = openWindowCount.decrementAndGet();
-            if (remaining == 0) {
-                Platform.exit();  // 마지막 창 닫으면 종료
+            for (Stage s : _PIP_Main.pipStages) {
+                s.close();
             }
+            _PIP_Main.pipStages.clear();
         });
 
         Button settingsBtn = new Button("⚙");
         settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
         settingsBtn.setOnAction(e -> {
-            stage.close();
-            openWindowCount.decrementAndGet();
+            // 모든 PIP 창 닫기
+            for (Stage s : _PIP_Main.pipStages) {
+                s.close();
+            }
+            _PIP_Main.pipStages.clear();
+
             try {
                 Parent homeRoot = FXMLLoader.load(getClass().getResource("home.fxml"));
+
                 Main.mainStage.setScene(new Scene(homeRoot, 1220, 740));
                 Main.mainStage.show();
             } catch (Exception ex) {
@@ -67,26 +88,25 @@ public class _PIP_Main {
             }
         });
 
-        // 레이아웃 구성
         HBox buttonBox = new HBox(8, settingsBtn, closeBtn);
         buttonBox.setAlignment(Pos.TOP_RIGHT);
         buttonBox.setPadding(new Insets(8));
         buttonBox.setVisible(false);
 
-        StackPane center = VBoxSpacing(nameLabel, priceLabel);
+        VBox center = new VBox(10, nameLabel, priceLabel);
         center.setAlignment(Pos.CENTER);
 
         StackPane root = new StackPane(center, buttonBox);
-        applyOutlineStyle(root, buttonBox);
+        root.setStyle("-fx-background-color: transparent;");
 
-        // 드래그 & 리사이징
-        root.setOnMousePressed(e -> {
+        root.setOnMousePressed((MouseEvent e) -> {
             offsetX = e.getSceneX();
             offsetY = e.getSceneY();
+            resizing = (offsetX > stage.getWidth() - RESIZE_MARGIN && offsetY > stage.getHeight() - RESIZE_MARGIN);
         });
 
-        root.setOnMouseDragged(e -> {
-            if (offsetX > stage.getWidth() - RESIZE_MARGIN && offsetY > stage.getHeight() - RESIZE_MARGIN) {
+        root.setOnMouseDragged((MouseEvent e) -> {
+            if (resizing) {
                 stage.setWidth(Math.max(150, e.getScreenX() - stage.getX()));
                 stage.setHeight(Math.max(80, e.getScreenY() - stage.getY()));
             } else {
@@ -95,39 +115,45 @@ public class _PIP_Main {
             }
         });
 
-        Scene scene = new Scene(root, newWidth, newHeight);
-        scene.setFill(Color.TRANSPARENT);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setAlwaysOnTop(true);
-        stage.setScene(scene);
-        stage.setTitle("StockPipApp");
-        stage.show();
-    }
-
-    // 테두리 설정 스타일 적용
-    private void applyOutlineStyle(StackPane root, HBox buttonBox) {
+//        // 마우스 올리면 배경 반투명 + 버튼 보이기
+//        root.setOnMouseEntered(e -> {
+//            root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 1px;");
+//            buttonBox.setVisible(true);
+//        });
+//
+//        // 마우스 벗어나면 배경 투명 + 버튼 숨김
+//        root.setOnMouseExited(e -> {
+//            root.setStyle("-fx-background-color: transparent;");
+//            buttonBox.setVisible(false);
+//        });
         if (!AppConstants.pipOutlineOption) {
             root.setStyle("-fx-background-color: transparent;");
             buttonBox.setVisible(false);
+
+            // // 마우스 올리면 배경 반투명 + 버튼 보이기
             root.setOnMouseEntered(e -> {
                 root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 1px;");
                 buttonBox.setVisible(true);
             });
+
+            // 마우스 벗어나면 배경 투명 + 버튼 숨김
             root.setOnMouseExited(e -> {
                 root.setStyle("-fx-background-color: transparent;");
                 buttonBox.setVisible(false);
             });
-        } else {
+        } else {    // 테두리 항상 보임
             root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 1px;");
             buttonBox.setVisible(true);
         }
-    }
 
-    // 수직 정렬을 위한 VBox 대체용
-    private StackPane VBoxSpacing(Label top, Label bottom) {
-        VBox box = new VBox(4);
-        box.setAlignment(Pos.CENTER);
-        box.getChildren().addAll(top, bottom);
-        return new StackPane(box);
+        // 창 설정
+        Scene scene = new Scene(root, newWidth, newHeight);
+        scene.setFill(Color.TRANSPARENT);
+
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setAlwaysOnTop(true);
+        stage.setScene(scene);
+        stage.setTitle("PIP - " + stock.getName());
+        stage.show();
     }
 }

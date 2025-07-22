@@ -66,6 +66,11 @@ public class AlertService {
         stage.setX(screenWidth - alertWidth - 20); // 화면 오른쪽에서 20px 안쪽
         stage.setY(screenHeight - alertHeight - 20); // 화면 아래에서 20px 안쪽
 
+        // 🔔 내장 비프음 (설정에서 켜져있을 때만)
+        if (AppConstants.AlertSound) {
+            java.awt.Toolkit.getDefaultToolkit().beep();
+        }
+
         // ⭐ 2초 뒤에 팝업이 자동으로 사라지도록 설정
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
         delay.setOnFinished(event -> {

@@ -191,7 +191,10 @@ public class Home_Controller {
         }
 
         // // ✅ StockList에 저장
-        new StockList(ticker, targetPrice, stopPrice, refreshMinute, refreshSecond);
+        Stocks newStock = new Stocks(ticker, targetPrice, stopPrice, refreshMinute, refreshSecond);
+        StockList.getStockArray().add(newStock);
+        //AlertService.startMonitoring(newStock);       /// ✅ 알림 이벤트 활성화
+
         // ✅ ListView 갱신
         nameList.clear();
         for (Stocks s : StockList.getStockArray()) {
@@ -227,6 +230,7 @@ public class Home_Controller {
         for (int i = 0; i < StockList.getStockArray().size(); i++) {
             Stocks s = StockList.getStockArray().get(i);
             if (s.getTicker().equals(currentName)) {
+                //AlertService.stopMonitoring(currentName);     /// ✅ 해당 종목의 알림 이벤트 삭제
                 nameList.remove(currentName);
                 StockList.getStockArray().remove(i);
                 listViewId.setItems(nameList);

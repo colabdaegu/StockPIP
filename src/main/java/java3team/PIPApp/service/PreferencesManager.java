@@ -41,7 +41,7 @@ public class PreferencesManager {
                 // 직렬화/역직렬화에 포함시킬 필드의 이름만 여기서 'true'가 아닌 'false'를 반환합니다.
                 // 즉, 여기에 명시되지 않은 필드들은 'true'를 반환하여 제외됩니다.
                 String fieldName = f.getName();
-                return !(fieldName.equals("name") ||
+                return !(fieldName.equals("ticker") ||
                         fieldName.equals("targetPrice") ||
                         fieldName.equals("stopPrice") ||
                         fieldName.equals("refreshMinute") ||

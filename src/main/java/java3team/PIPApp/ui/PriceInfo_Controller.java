@@ -1,5 +1,6 @@
 package ui;
 
+import config.AppConstants;
 import config.StockList;
 import config.Stocks;
 import javafx.animation.KeyFrame;
@@ -39,16 +40,16 @@ public class PriceInfo_Controller {
         // 콤보박스 초기화
         comboBoxID.getItems().clear();
         for (Stocks stock : StockList.getStockArray()) {
-            comboBoxID.getItems().add(stock.getName());
+            comboBoxID.getItems().add(stock.getTicker());
         }
 
         // 콤보박스 선택 이벤트 핸들러
         comboBoxID.setOnAction(e -> {
-            String selectedName = comboBoxID.getValue();
-            if (selectedName == null) return;
+            String selectedTicker = comboBoxID.getValue();
+            if (selectedTicker == null) return;
 
             for (Stocks stock : StockList.getStockArray()) {
-                if (stock.getName().equals(selectedName)) {
+                if (stock.getTicker().equals(selectedTicker)) {
                     updateLabels(stock);
                     timelineRefresh(stock);
                     break;
@@ -59,7 +60,7 @@ public class PriceInfo_Controller {
         // 초기 값 설정 (있다면)
         if (!StockList.getStockArray().isEmpty()) {
             Stocks firstStock = StockList.getStockArray().get(0);
-            comboBoxID.getSelectionModel().select(firstStock.getName());
+            comboBoxID.getSelectionModel().select(firstStock.getTicker());
             updateLabels(firstStock);
             timelineRefresh(firstStock);
         }
@@ -68,14 +69,14 @@ public class PriceInfo_Controller {
     // 라벨 업데이트
     private void updateLabels(Stocks stock) {
         nameLabel.setText(stock.getName());
-        currentPriceLabel.setText(String.valueOf(stock.currentPrice));
-        openPriceLabel.setText(String.valueOf(stock.openPrice));
-        highPriceLabel.setText(String.valueOf(stock.highPrice));
-        lowPriceLabel.setText(String.valueOf(stock.lowPrice));
-        previousClosePriceLabel.setText(String.valueOf(stock.previousClosePrice));
+        currentPriceLabel.setText("$" + String.valueOf(stock.currentPrice));
+        openPriceLabel.setText("$" + String.valueOf(stock.openPrice));
+        highPriceLabel.setText("$" + String.valueOf(stock.highPrice));
+        lowPriceLabel.setText("$" + String.valueOf(stock.lowPrice));
+        previousClosePriceLabel.setText("$" + String.valueOf(stock.previousClosePrice));
         refreshTimeLabel.setText(String.valueOf(stock.api_refreshTime));
 
-        System.out.println("🔄 [" + stock.getName() + "] 라벨 정보 자동 새로고침");
+        System.out.println("🔄 [" + stock.getTicker() + "] 라벨 정보 자동 새로고침");
     }
 
 
@@ -90,7 +91,7 @@ public class PriceInfo_Controller {
 
         refreshTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(refreshSeconds), event -> {
-                    /// API에서 stock 값을 갱신해주고 있다면 updateLabel 호출만 해도 됨
+                    stock.refreshQuote();
                     updateLabels(stock);
                 })
         );
@@ -196,10 +197,24 @@ public class PriceInfo_Controller {
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
 
-        try {
-            Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (AppConstants.ExternalSiteOption == 0) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 1) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 2) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://kr.investing.com/markets/united-states/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

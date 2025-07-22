@@ -1,5 +1,6 @@
 package ui;
 
+import config.AppConstants;
 import config.StockList;
 import config.Stocks;
 import javafx.event.ActionEvent;
@@ -37,16 +38,16 @@ public class AssetInfo_Controller {
         // 콤보박스 초기화
         comboBoxID.getItems().clear();
         for (Stocks stock : StockList.getStockArray()) {
-            comboBoxID.getItems().add(stock.getName());
+            comboBoxID.getItems().add(stock.getTicker());
         }
 
         // 콤보박스 선택 이벤트 핸들러
         comboBoxID.setOnAction(e -> {
-            String selectedName = comboBoxID.getValue();
-            if (selectedName == null) return;
+            String selectedTicker = comboBoxID.getValue();
+            if (selectedTicker == null) return;
 
             for (Stocks stock : StockList.getStockArray()) {
-                if (stock.getName().equals(selectedName)) {
+                if (stock.getTicker().equals(selectedTicker)) {
                     updateLabel(stock);
                     break;
                 }
@@ -56,7 +57,7 @@ public class AssetInfo_Controller {
         // 초기 값 설정 (있다면)
         if (!StockList.getStockArray().isEmpty()) {
             Stocks firstStock = StockList.getStockArray().get(0);
-            comboBoxID.getSelectionModel().select(firstStock.getName());
+            comboBoxID.getSelectionModel().select(firstStock.getTicker());
             updateLabel(firstStock);
         }
     }
@@ -70,9 +71,14 @@ public class AssetInfo_Controller {
         currencyLabel.setText(String.valueOf(stock.currency));
         exchangeLabel.setText(String.valueOf(stock.exchange));
         ipoDateLabel.setText(String.valueOf(stock.ipoDate));
-        marketCapitalizationLabel.setText(String.valueOf(stock.marketCapitalization));
+        marketCapitalizationLabel.setText(String.valueOf(stock.marketCapitalization) + "M");
 
-        //logoUrlLabel.setImage(stock.logoUrl.getImage());
+        if (stock.logoUrl != null && stock.logoUrl.getImage() != null) {
+            logoUrlLabel.setVisible(true);
+            logoUrlLabel.setImage(stock.logoUrl.getImage());
+        } else {
+            logoUrlLabel.setVisible(false);
+        }
     }
 
 
@@ -159,10 +165,24 @@ public class AssetInfo_Controller {
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
 
-        try {
-            Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (AppConstants.ExternalSiteOption == 0) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 1) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 2) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://kr.investing.com/markets/united-states/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

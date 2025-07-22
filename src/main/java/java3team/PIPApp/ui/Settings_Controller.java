@@ -2,7 +2,6 @@ package ui;
 
 import com.jfoenix.controls.JFXToggleButton;
 import config.StockList;
-import config.Stocks;
 import config.AppConstants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.IOException;
@@ -21,56 +19,46 @@ public class Settings_Controller {
 
     @FXML private Slider fontSizeSlider;
 
-    @FXML private ToggleButton popUpAlertButton;
-    @FXML private ToggleButton systemAlertButton;
-    @FXML private ToggleButton soundAlertButton;
+    @FXML private ToggleButton external_1_Button;
+    @FXML private ToggleButton external_2_Button;
+    @FXML private ToggleButton external_3_Button;
 
-    @FXML RadioButton brightTheme, darkTheme;
+    @FXML RadioButton soundOff, soundOn;
 
 
 
     @FXML
     public void initialize() {
         /// ✅ AppConstants 값 → UI 컴포넌트 초기화
-        pipToggle.setSelected(AppConstants.pipOutlineOption);   // PIP 테두리 고정
-        fontSizeSlider.setValue(AppConstants.pipFontSize);      // PIP 폰트
+        // 소리 알림 설정
+        ToggleGroup group = new ToggleGroup();
+        soundOff.setToggleGroup(group);
+        soundOn.setToggleGroup(group);
 
-        switch (AppConstants.AlertOption) {                     // 알림 방식
-            case 0 -> popUpAlertButton.setSelected(true);
-            case 1 -> systemAlertButton.setSelected(true);
-            case 2 -> soundAlertButton.setSelected(true);
+        if (AppConstants.AlertSound) {
+            soundOn.setSelected(true);
+        }
+        else {
+            soundOff.setSelected(true);
         }
 
-
-
-        ///  알림 방식 설정(임시)
-        // 각 버튼에 대한 선택 상태 리스너 추가
-        popUpAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 팝업창 알림이 선택됐을 때
-                AppConstants.AlertOption = 0;
-                System.out.println("팝업창 알림으로 설정됨");
+        soundOff.setOnAction(e -> {
+            if (soundOff.isSelected()) {
+                AppConstants.AlertSound = false;
+                System.out.println("소리 알림 끔");
             }
         });
-
-        systemAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 윈도우 시스템 알림이 선택됐을 때
-                AppConstants.AlertOption = 1;
-                System.out.println("윈도우 시스템 알림으로 설정됨");
-            }
-        });
-
-        soundAlertButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 사운드 알림이 선택됐을 때
-                AppConstants.AlertOption = 2;
-                System.out.println("소리로만 알림");
+        soundOn.setOnAction(e -> {
+            if (soundOn.isSelected()) {
+                AppConstants.AlertSound = true;
+                System.out.println("소리 알림 킴");
             }
         });
 
 
 
+        pipToggle.setSelected(AppConstants.pipOutlineOption);   // PIP 테두리 고정
+        fontSizeSlider.setValue(AppConstants.pipFontSize);      // PIP 폰트
 
         // PIP 폰트 사이즈 설정
         fontSizeSlider.setValue(_PIP_SettingsFontSize.getFontSize());
@@ -87,26 +75,35 @@ public class Settings_Controller {
 
 
 
-        /// 테마 설정 (프로젝트 막바지에 설정 예정)
-        ToggleGroup group = new ToggleGroup();
-        brightTheme.setToggleGroup(group);
-        darkTheme.setToggleGroup(group);
-
-        switch (AppConstants.UI_theme) {                        // 테마 기본 설정
-            case 0 -> brightTheme.setSelected(true);
-            case 1 -> darkTheme.setSelected(true);
+        // 외부 사이트 선택
+        switch (AppConstants.ExternalSiteOption) {
+            case 0 -> external_1_Button.setSelected(true);
+            case 1 -> external_2_Button.setSelected(true);
+            case 2 -> external_3_Button.setSelected(true);
         }
 
-        brightTheme.setOnAction(e -> {
-            if (brightTheme.isSelected()) {
-                AppConstants.UI_theme = 0;
-                System.out.println("밝은 테마로 변경됨");
+        // 각 버튼에 대한 선택 상태 리스너 추가
+        external_1_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 팝업창 알림이 선택됐을 때
+                AppConstants.ExternalSiteOption = 0;
+                System.out.println("Finnhub 사이트 바로가기로 설정됨");
             }
         });
-        darkTheme.setOnAction(e -> {
-            if (darkTheme.isSelected()) {
-                AppConstants.UI_theme = 1;
-                System.out.println("어두운 테마로 변경됨");
+
+        external_2_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 윈도우 시스템 알림이 선택됐을 때
+                AppConstants.ExternalSiteOption = 1;
+                System.out.println("finviz 사이트 바로가기로 설정됨");
+            }
+        });
+
+        external_3_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 사운드 알림이 선택됐을 때
+                AppConstants.ExternalSiteOption = 2;
+                System.out.println("Investing 사이트 바로가기로 설정됨");
             }
         });
     }
@@ -134,11 +131,10 @@ public class Settings_Controller {
     private void defaultClick(ActionEvent event) {
         System.out.println("설정을 기본값으로 되돌림\n");
 
-        // 알림 방식 설정: 토스트 방식으로 설정
-        AppConstants.AlertOption = 0;
-        popUpAlertButton.setSelected(true);
-        systemAlertButton.setSelected(false);
-        soundAlertButton.setSelected(false);
+        // 소리 알림 설정
+        AppConstants.AlertSound = true;
+        soundOff.setSelected(false);
+        soundOn.setSelected(true);
 
         // PIP 테두리 고정 설정: 기본값으로 설정
         AppConstants.pipOutlineOption = false;
@@ -148,10 +144,11 @@ public class Settings_Controller {
         AppConstants.pipFontSize = 28.0;
         fontSizeSlider.setValue(28.0);
 
-        // 테마 설정: 다크 테마로 설정
-        AppConstants.UI_theme = 1;
-        brightTheme.setSelected(false);
-        darkTheme.setSelected(true);
+        // 외부 사이트 설정
+        AppConstants.ExternalSiteOption = 0;
+        external_1_Button.setSelected(true);
+        external_2_Button.setSelected(false);
+        external_3_Button.setSelected(false);
     }
 
 
@@ -237,10 +234,24 @@ public class Settings_Controller {
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
 
-        try {
-            Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (AppConstants.ExternalSiteOption == 0) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 1) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 2) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://kr.investing.com/markets/united-states/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

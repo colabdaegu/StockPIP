@@ -158,13 +158,13 @@
                               </Label>
                               <HBox alignment="CENTER_LEFT" prefHeight="6.0" prefWidth="780.0">
                                  <children>
-                                    <Label prefHeight="24.0" prefWidth="200.0" text="이름" textFill="WHITE">
+                                    <Label prefHeight="24.0" prefWidth="200.0" text="티커" textFill="WHITE">
                                        <font>
                                           <Font name="Malgun Gothic" size="17.0" />
                                        </font>
                                     </Label>
                                     <Pane prefHeight="200.0" prefWidth="35.0" />
-                                    <TextField fx:id="nameField" prefHeight="22.0" prefWidth="322.0" />
+                                    <TextField fx:id="tickerField" prefHeight="22.0" prefWidth="322.0" />
                                  </children>
                               </HBox>
                            </children>

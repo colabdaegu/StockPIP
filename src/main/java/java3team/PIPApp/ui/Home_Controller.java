@@ -1,7 +1,6 @@
 package ui;
 
-import config.Stocks;
-import config.StockList;
+import config.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,13 +18,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 
 public class Home_Controller {
     @FXML private ListView<String> listViewId;
 
-    @FXML private TextField nameField;
+    @FXML private TextField tickerField;
     @FXML private TextField targetPriceField;
     @FXML private TextField stopPriceField;
     @FXML private TextField refreshField_Minute;
@@ -36,33 +34,33 @@ public class Home_Controller {
     private List<String> companyNames;
     private ObservableList<String> nameList = FXCollections.observableArrayList();
 
-    /// API 연동 및 보완 필요 . 회사이름 -> 자동 완성 모듈. 회사 이름만 받아와서 리스트 형태로 담고 있음
+
     @FXML
     public void initialize() {
-        listViewId.setItems(nameList);
-        //listViewId.getItems().addAll(AppConstants.NameList);    // 이름 리스트 불러오기
-
         for (Stocks p : StockList.stockArray) {
-            nameList.add(p.getName());  // 이름만 추출해서 리스트에 추가
+            nameList.add(p.getTicker());  // 이름만 추출해서 리스트에 추가
         }
-
         listViewId.setItems(nameList);
 
+
+        // 자동완성 연결
+        companyNames = FileLoader.loadLines("ticker/ticker_list.txt");
+        TextFields.bindAutoCompletion(tickerField, companyNames);
 
         /// 종목 이름 리스트(테스트용 임시)
-        //List<String> companyNames = List.of("Apple", "Alphabet Inc.", "Amazon", "Adobe"); // 임시(테스트용)
-        companyNames = List.of(
-                "Apple", "Amazon", "Baidu", "Booking Holdings", "Cisco", "Citigroup",
-                "Dell", "Dropbox", "eBay", "Electronic Arts", "Facebook", "Ford",
-                "Google", "General Motors", "HP", "Honeywell", "IBM", "Intel",
-                "Johnson & Johnson", "JetBlue", "Kellogg", "Kraft Heinz", "LinkedIn", "Lyft",
-                "Microsoft", "Meta", "Netflix", "Nvidia", "Oracle", "OpenAI Inc.", "PayPal", "Pinterest",
-                "Qualcomm", "Qurate Retail", "Reddit", "Roku", "Salesforce", "Samsung",
-                "Tesla", "Twitter", "Uber", "Upstart", "Verizon", "Visa", "Walmart", "Workday",
-                "Xilinx", "Xiaomi", "Yahoo", "Yelp", "Zoom", "Zillow"
-        );
-        // nameField에 자동완성 붙이기
-        TextFields.bindAutoCompletion(nameField, companyNames);
+//        //List<String> companyNames = List.of("Apple", "Alphabet Inc.", "Amazon", "Adobe"); // 임시(테스트용)
+//        companyNames = List.of(
+//                "Apple", "Amazon", "Baidu", "Booking Holdings", "Cisco", "Citigroup",
+//                "Dell", "Dropbox", "eBay", "Electronic Arts", "Facebook", "Ford",
+//                "Google", "General Motors", "HP", "Honeywell", "IBM", "Intel",
+//                "Johnson & Johnson", "JetBlue", "Kellogg", "Kraft Heinz", "LinkedIn", "Lyft",
+//                "Microsoft", "Meta", "Netflix", "Nvidia", "Oracle", "OpenAI Inc.", "PayPal", "Pinterest",
+//                "Qualcomm", "Qurate Retail", "Reddit", "Roku", "Salesforce", "Samsung",
+//                "Tesla", "Twitter", "Uber", "Upstart", "Verizon", "Visa", "Walmart", "Workday",
+//                "Xilinx", "Xiaomi", "Yahoo", "Yelp", "Zoom", "Zillow"
+//        );
+//        // nameField에 자동완성 붙이기
+//        TextFields.bindAutoCompletion(nameField, companyNames);
 
 
 
@@ -70,9 +68,9 @@ public class Home_Controller {
             if (newValue != null) {
                 // 선택된 이름에 해당하는 Stocks 객체 검색
                 for (Stocks s : StockList.getStockArray()) {
-                    if (s.getName().equals(newValue)) {
+                    if (s.getTicker().equals(newValue)) {
                         // 필드에 값 세팅
-                        nameField.setText(s.getName());
+                        tickerField.setText(s.getTicker());
                         targetPriceField.setText(String.format("%.10f", s.getTargetPrice()).replaceAll("\\.?0+$", ""));
                         stopPriceField.setText(String.format("%.10f", s.getStopPrice()).replaceAll("\\.?0+$", ""));
                         refreshField_Minute.setText(String.valueOf(s.getRefreshMinute()));
@@ -94,7 +92,7 @@ public class Home_Controller {
 
 
 
-        String name_Str = nameField.getText().trim();
+        String ticker_Str = tickerField.getText().toUpperCase().trim();
         String targetPriceStr = targetPriceField.getText().trim();
         String stopPriceStr = stopPriceField.getText().trim();
         String refreshMinuteStr = refreshField_Minute.getText().trim();
@@ -102,8 +100,8 @@ public class Home_Controller {
 
 
         // 이름 유효성 검사
-        String name = name_Str;
-        if (!companyNames.contains(name)) {
+        String ticker = ticker_Str;
+        if (!companyNames.contains(ticker)) {
             warningMessageLabel.setVisible(true);
             warningMessageLabel.setText("종목 이름이 유효하지 않습니다.");
             System.out.println("⚠ 존재하지 않는 종목 이름\n");
@@ -111,7 +109,7 @@ public class Home_Controller {
         }
 
         // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
-        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty() || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty()) || ((!refreshMinuteStr.isEmpty() && !refreshMinuteStr.matches("\\d+")) || (!refreshSecondStr.isEmpty() && !refreshSecondStr.matches("\\d+"))) || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
+        if (ticker_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty() || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty()) || ((!refreshMinuteStr.isEmpty() && !refreshMinuteStr.matches("\\d+")) || (!refreshSecondStr.isEmpty() && !refreshSecondStr.matches("\\d+"))) || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
             warningMessageLabel.setVisible(true);
             warningMessageLabel.setText("모든 항목을 올바르게 입력해 주세요.");
             System.out.println("⚠⚠ 입력 누락\n\n");
@@ -175,7 +173,7 @@ public class Home_Controller {
 
 
         // 최종 결과 출력
-        System.out.println("종목명: " + name);
+        System.out.println("종목명: " + ticker);
         System.out.println("목표가: " + targetPrice);
         System.out.println("손절가: " + stopPrice);
         System.out.println("새로고침: " + refreshMinute + "분 " + refreshSecond + "초");
@@ -185,19 +183,19 @@ public class Home_Controller {
         // 동일 종목 이름이 있다면 기존 항목 삭제
         for (int i = 0; i < StockList.getStockArray().size(); i++) {
             Stocks s = StockList.getStockArray().get(i);
-            if (s.getName().equals(name)) {
+            if (s.getTicker().equals(ticker)) {
                 StockList.getStockArray().remove(i);
-                System.out.println(name + ", 업데이트됨\n");
+                System.out.println(ticker + ", 업데이트됨\n");
                 break;
             }
         }
 
         // // ✅ StockList에 저장
-        new StockList(name, targetPrice, stopPrice, refreshMinute, refreshSecond);
+        new StockList(ticker, targetPrice, stopPrice, refreshMinute, refreshSecond);
         // ✅ ListView 갱신
         nameList.clear();
         for (Stocks s : StockList.getStockArray()) {
-            nameList.add(s.getName());
+            nameList.add(s.getTicker());
         }
 
         // 저장완료 팝업
@@ -223,24 +221,28 @@ public class Home_Controller {
 
 
         // 현재 입력된 이름
-        String currentName = nameField.getText().trim();
+        String currentName = tickerField.getText().trim();
 
         // NameList와 ListView에서 해당 이름이 있을 때만 삭제
         for (int i = 0; i < StockList.getStockArray().size(); i++) {
             Stocks s = StockList.getStockArray().get(i);
-            if (s.getName().equals(currentName)) {
+            if (s.getTicker().equals(currentName)) {
+                nameList.remove(currentName);
                 StockList.getStockArray().remove(i);
+                listViewId.setItems(nameList);
                 break;
             }
         }
 
 
-        // 사용자 입력 필드 초기화
-        nameField.clear();
-        targetPriceField.clear();
-        stopPriceField.clear();
-        refreshField_Minute.clear();
-        refreshField_Second.clear();
+        if (StockList.getStockArray().isEmpty()){
+            // 사용자 입력 필드 초기화
+            tickerField.clear();
+            targetPriceField.clear();
+            stopPriceField.clear();
+            refreshField_Minute.clear();
+            refreshField_Second.clear();
+        }
 
 
         System.out.println("삭제됨\n\n");
@@ -333,10 +335,24 @@ public class Home_Controller {
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
 
-        try {
-            Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (AppConstants.ExternalSiteOption == 0) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 1) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (AppConstants.ExternalSiteOption == 2) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://kr.investing.com/markets/united-states/"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

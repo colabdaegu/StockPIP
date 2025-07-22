@@ -7,13 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import api.model.FinnhubApiClient;
-import api.model.StockQuote;
-import api.model.CompanyProfile;
-import service.StockService;
+import api.model.*;
+import service.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
-    public static Stage mainStage; //
+    public static Stage mainStage;
 
     public void start(Stage primaryStage) throws Exception{
         Font.loadFont(getClass().getResourceAsStream("/fonts/Pretendard-Regular.ttf"), 15);

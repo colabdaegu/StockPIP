@@ -19,6 +19,8 @@ import javafx.util.Duration;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PriceInfo_Controller {
     @FXML private Label nameLabel;    // 회사명
@@ -74,7 +76,10 @@ public class PriceInfo_Controller {
         highPriceLabel.setText("$" + String.valueOf(stock.highPrice));
         lowPriceLabel.setText("$" + String.valueOf(stock.lowPrice));
         previousClosePriceLabel.setText("$" + String.valueOf(stock.previousClosePrice));
-        refreshTimeLabel.setText(String.valueOf(stock.api_refreshTime));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String refreshTime = stock.api_refreshTime.format(formatter);
+        refreshTimeLabel.setText(refreshTime);
 
         System.out.println("🔄 [" + stock.getTicker() + "] 라벨 정보 자동 새로고침");
     }

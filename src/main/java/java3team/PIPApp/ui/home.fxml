@@ -217,7 +217,7 @@
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="6.0" prefWidth="780.0">
                                  <children>
-                                    <Label prefHeight="24.0" prefWidth="200.0" text="새로고침 주기" textFill="WHITE">
+                                    <Label prefHeight="24.0" prefWidth="200.0" text="알림 주기" textFill="WHITE">
                                        <font>
                                           <Font name="Malgun Gothic" size="17.0" />
                                        </font>

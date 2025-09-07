@@ -19,9 +19,9 @@ public class Settings_Controller {
 
     @FXML private Slider fontSizeSlider;
 
-    @FXML private ToggleButton external_1_Button;
-    @FXML private ToggleButton external_2_Button;
-    @FXML private ToggleButton external_3_Button;
+    @FXML private ToggleButton notification_1_Button;
+    @FXML private ToggleButton notification_2_Button;
+    @FXML private ToggleButton notification_3_Button;
 
     @FXML RadioButton soundOff, soundOn;
 
@@ -30,6 +30,40 @@ public class Settings_Controller {
     @FXML
     public void initialize() {
         /// ✅ AppConstants 값 → UI 컴포넌트 초기화
+        // 알림 선택
+        switch (AppConstants.NotificationOption) {
+            case 0 -> notification_1_Button.setSelected(true);
+            case 1 -> notification_2_Button.setSelected(true);
+            case 2 -> notification_3_Button.setSelected(true);
+        }
+
+        // 각 버튼에 대한 선택 상태 리스너 추가
+        notification_1_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 팝업창 알림이 선택됐을 때
+                AppConstants.NotificationOption = 0;
+                System.out.println("팝업창 알림으로 설정됨");
+            }
+        });
+
+        notification_2_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 윈도우 시스템 알림이 선택됐을 때
+                AppConstants.NotificationOption = 1;
+                System.out.println("윈도우 알림으로 설정됨");
+            }
+        });
+
+        notification_3_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 사운드 알림이 선택됐을 때
+                AppConstants.NotificationOption = 2;
+                System.out.println("알림 없음으로 설정됨");
+            }
+        });
+
+
+
         // 소리 알림 설정
         ToggleGroup group = new ToggleGroup();
         soundOff.setToggleGroup(group);
@@ -67,44 +101,6 @@ public class Settings_Controller {
             double fontSize = newValue.doubleValue();
             _PIP_SettingsFontSize.setFontSize(fontSize);
             System.out.println("PIP 폰트 크기: " + String.format("%.1f", fontSize));
-
-            /// ▼ pip글자변수 지정 필요
-            // pipLabel.setStyle("-fx-font-size: " + fontSize + "px;");
-        });
-
-
-
-
-        // 외부 사이트 선택
-        switch (AppConstants.ExternalSiteOption) {
-            case 0 -> external_1_Button.setSelected(true);
-            case 1 -> external_2_Button.setSelected(true);
-            case 2 -> external_3_Button.setSelected(true);
-        }
-
-        // 각 버튼에 대한 선택 상태 리스너 추가
-        external_1_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 팝업창 알림이 선택됐을 때
-                AppConstants.ExternalSiteOption = 0;
-                System.out.println("Finnhub 사이트 바로가기로 설정됨");
-            }
-        });
-
-        external_2_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 윈도우 시스템 알림이 선택됐을 때
-                AppConstants.ExternalSiteOption = 1;
-                System.out.println("finviz 사이트 바로가기로 설정됨");
-            }
-        });
-
-        external_3_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                // 사운드 알림이 선택됐을 때
-                AppConstants.ExternalSiteOption = 2;
-                System.out.println("Investing 사이트 바로가기로 설정됨");
-            }
         });
     }
 
@@ -131,6 +127,12 @@ public class Settings_Controller {
     private void defaultClick(ActionEvent event) {
         System.out.println("설정을 기본값으로 되돌림\n");
 
+        // 알림 설정
+        AppConstants.NotificationOption = 0;
+        notification_1_Button.setSelected(true);
+        notification_2_Button.setSelected(false);
+        notification_3_Button.setSelected(false);
+
         // 소리 알림 설정
         AppConstants.AlertSound = true;
         soundOff.setSelected(false);
@@ -143,12 +145,6 @@ public class Settings_Controller {
         // PIP 폰트 크기 설정: 기본값 28로 설정
         AppConstants.pipFontSize = 28.0;
         fontSizeSlider.setValue(28.0);
-
-        // 외부 사이트 설정
-        AppConstants.ExternalSiteOption = 0;
-        external_1_Button.setSelected(true);
-        external_2_Button.setSelected(false);
-        external_3_Button.setSelected(false);
     }
 
 
@@ -180,7 +176,6 @@ public class Settings_Controller {
     private void handleHomeClick(MouseEvent event) {
         System.out.println("홈 클릭됨");
         try {
-            // 홈.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
             Parent root = loader.load();
 
@@ -196,7 +191,6 @@ public class Settings_Controller {
     private void handleAssetInfoClick(MouseEvent event) {
         System.out.println("종목 정보 클릭됨");
         try {
-            // 종목 정보.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("assetInfo.fxml"));
             Parent root = loader.load();
 
@@ -212,7 +206,6 @@ public class Settings_Controller {
     private void handlePriceInfoClick(MouseEvent event) {
         System.out.println("시세 정보 클릭됨");
         try {
-            // 홈.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("priceInfo.fxml"));
             Parent root = loader.load();
 
@@ -229,29 +222,30 @@ public class Settings_Controller {
         System.out.println("설정 클릭됨");
     }
 
+    // 로그로 이동
+    @FXML
+    private void handleLogClick(MouseEvent event) {
+        System.out.println("로그 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // 외부 사이트로 이동
     @FXML
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
 
-        if (AppConstants.ExternalSiteOption == 0) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (AppConstants.ExternalSiteOption == 1) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://finviz.com/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (AppConstants.ExternalSiteOption == 2) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://kr.investing.com/markets/united-states/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -20,7 +20,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Settings_Controller">
    <left>
-      <VBox prefHeight="200.0" prefWidth="340.0" spacing="50.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="340.0" spacing="30.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
          <children>
             <VBox alignment="CENTER" prefHeight="202.0" prefWidth="340.0" spacing="15.0">
                <VBox.margin>
@@ -41,7 +41,7 @@
                   </Button>
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="320.0" prefWidth="340.0" spacing="15.0">
+            <VBox alignment="CENTER" prefHeight="390.0" prefWidth="340.0" spacing="15.0">
                <children>
                   <HBox fx:id="homeBox" alignment="CENTER" onMouseClicked="#handleHomeClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected" stylesheets="@../values/styles.css">
                      <children>
@@ -115,6 +115,23 @@
                         <String fx:value="selected-border" />
                      </styleClass>
                   </HBox>
+                  <HBox fx:id="logBox" alignment="CENTER" onMouseClicked="#handleLogClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Scroll_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="로그" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
                   <HBox fx:id="externalBox" alignment="CENTER" onMouseClicked="#handleExternalClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -159,6 +176,46 @@
             </HBox>
             <VBox prefHeight="495.0" prefWidth="234.0" spacing="25.0">
                <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="780.0">
+                     <children>
+                        <Label prefHeight="29.0" prefWidth="165.0" text="알림 설정" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <ToggleButtonGroup prefHeight="39.0" prefWidth="315.0" selectionType="SINGLE">
+                           <toggles>
+                              <ToggleButton fx:id="notification_1_Button" selected="true">
+                                 <graphic>
+                                    <Label alignment="CENTER" prefHeight="22.0" prefWidth="75.0" text="팝업창 알림">
+                                       <font>
+                                          <Font name="Malgun Gothic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="notification_2_Button">
+                                 <graphic>
+                                    <Label alignment="CENTER" prefHeight="22.0" prefWidth="75.0" text="윈도우 알림">
+                                       <font>
+                                          <Font name="Malgun Gothic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="notification_3_Button">
+                                 <graphic>
+                                    <Label alignment="CENTER" prefHeight="22.0" prefWidth="75.0" text="알림 끄기">
+                                       <font>
+                                          <Font name="Malgun Gothic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                 </graphic>
+                              </ToggleButton>
+                           </toggles>
+                        </ToggleButtonGroup>
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
                         <Label prefHeight="29.0" prefWidth="165.0" text="소리 알림" textFill="WHITE">
@@ -195,46 +252,6 @@
                            </font>
                         </Label>
                         <Slider fx:id="fontSizeSlider" prefHeight="24.0" prefWidth="277.0" value="14.0" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="780.0">
-                     <children>
-                        <Label prefHeight="29.0" prefWidth="165.0" text="바로가기 설정" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic Bold" size="20.0" />
-                           </font>
-                        </Label>
-                        <ToggleButtonGroup prefHeight="39.0" prefWidth="315.0" selectionType="SINGLE">
-                           <toggles>
-                              <ToggleButton fx:id="external_1_Button" selected="true">
-                                 <graphic>
-                                    <Label alignment="CENTER" prefHeight="22.0" prefWidth="50.0" text="Finnhub">
-                                       <font>
-                                          <Font name="Malgun Gothic" size="12.0" />
-                                       </font>
-                                    </Label>
-                                 </graphic>
-                              </ToggleButton>
-                              <ToggleButton fx:id="external_2_Button">
-                                 <graphic>
-                                    <Label alignment="CENTER" prefHeight="22.0" prefWidth="50.0" text="finviz">
-                                       <font>
-                                          <Font name="Malgun Gothic" size="12.0" />
-                                       </font>
-                                    </Label>
-                                 </graphic>
-                              </ToggleButton>
-                              <ToggleButton fx:id="external_3_Button">
-                                 <graphic>
-                                    <Label alignment="CENTER" prefHeight="22.0" prefWidth="50.0" text="Investing">
-                                       <font>
-                                          <Font name="Malgun Gothic" size="12.0" />
-                                       </font>
-                                    </Label>
-                                 </graphic>
-                              </ToggleButton>
-                           </toggles>
-                        </ToggleButtonGroup>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">

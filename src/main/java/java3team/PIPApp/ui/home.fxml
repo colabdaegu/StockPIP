@@ -17,7 +17,7 @@
 
 <BorderPane fx:id="rootLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Home_Controller">
    <left>
-      <VBox prefHeight="200.0" prefWidth="340.0" spacing="50.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="340.0" spacing="30.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
          <children>
             <VBox alignment="CENTER" prefHeight="202.0" prefWidth="340.0" spacing="15.0">
                <VBox.margin>
@@ -38,7 +38,7 @@
                   </Button>
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="320.0" prefWidth="340.0" spacing="15.0">
+            <VBox alignment="CENTER" prefHeight="390.0" prefWidth="340.0" spacing="15.0">
                <children>
                   <HBox fx:id="homeBox" alignment="CENTER" onMouseClicked="#handleHomeClick" prefHeight="45.0" prefWidth="200.0" stylesheets="@../values/styles.css">
                      <children>
@@ -103,6 +103,23 @@
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="설정" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="logBox" alignment="CENTER" onMouseClicked="#handleLogClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Scroll_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="로그" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic" size="20.0" />
                            </font>
@@ -234,7 +251,7 @@
             </HBox>
             <VBox alignment="CENTER" prefHeight="92.0" prefWidth="780.0">
                <children>
-                  <Label fx:id="warningMessageLabel" alignment="CENTER" prefHeight="23.0" prefWidth="431.0" textFill="RED">
+                  <Label fx:id="warningMessageLabel" alignment="CENTER" prefHeight="23.0" prefWidth="650.0" textFill="RED">
                      <font>
                         <Font name="Malgun Gothic Bold" size="15.0" />
                      </font>

@@ -71,3 +71,15 @@
 }
 
 
+.text-area.log-area {
+    -fx-control-inner-background: black;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-family: "Malgun Gothic";
+}
+.text-area.log-area:focused {
+    -fx-control-inner-background: black;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-family: "Malgun Gothic";
+}

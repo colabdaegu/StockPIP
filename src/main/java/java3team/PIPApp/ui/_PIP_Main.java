@@ -24,135 +24,86 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class _PIP_Main {
+    private static final List<_PIP_Main> pipWindows = new ArrayList<>();
 
-    private static final AtomicInteger openWindowCount = new AtomicInteger(0);  // 열린 창 수 추적
+    private Stage stage;
     private double offsetX, offsetY;
     private final int RESIZE_MARGIN = 10;
 
-    private Timeline refreshTimeline;  // 주기적 업데이트용 타임라인
-    private double previousPrice = -1;  // 직전 값
+    private Timeline refreshTimeline;
+    private double previousPrice = -1;
 
-    // 종목명 + 현재가 표시
     private Label nameLabel;
     private Label priceLabel;
 
+    // 1. Entry Point
     public void pip_On(Stage stage, Stocks stock, int index) {
-        openWindowCount.incrementAndGet();
+        this.stage = stage;
+        pipWindows.add(this);
 
-        // 종목명 + 현재가 표시
         nameLabel = new Label(stock.getTicker() + "(" + stock.getName() + ")");
         priceLabel = new Label("Loading...");
 
-//        // 실시간 주가 갱신 타이머
-//        Timer timer = new Timer(true); // 데몬 스레드
-//        timer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                StockQuote quote = new StockService().getLiveStockQuote(stock.getTicker());
-//                if (quote != null) {
-//                    double price = quote.getCurrentPrice();
-//                    Platform.runLater(() -> {
-//                        priceLabel.setText("$ " + String.format("%,.2f", price));
-//                        System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
-//                    });
-//                }
-//            }
-//        }, 0, stock.getRefresh() * 1000); // 설정된 초 단위로 갱신
-
-
         double fontSize = _PIP_SettingsFontSize.getFontSize();
-        nameLabel.setStyle("-fx-font-size: " + (fontSize * 0.65) + "px; -fx-text-fill: white;" +
-                "-fx-effect: dropshadow(gaussian, black, 2, 0.3, 0, 0);");
-        priceLabel.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: lightgray;" +
-                "-fx-effect: dropshadow(gaussian, black, 2, 0.3, 0, 0);");
+        styleLabels(fontSize); // 2.
 
-        // 타임라인 시작
-        updateLabels(stock);
-        timelineRefresh(stock);
+        updateLabels(stock); // 3.
+        timelineRefresh(stock); // 4.
 
-        // 창 크기 계산
         double ratio = fontSize / 28.0;
         double newWidth = Math.max(300, 300 * ratio);
         double newHeight = Math.max(120, 120 * ratio);
 
         stage.setX(0);
-        stage.setY(0 + (fontSize * 5) * index); // Y좌표도 같이 늘림
+        stage.setY(0 + (fontSize * 5) * index);
 
-        // 버튼
-        Button closeBtn = new Button("✕");
-        closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
-        closeBtn.setOnAction(e -> {
-            stage.close();
-            int remaining = openWindowCount.decrementAndGet();
-            // 타임라인 정지
-            if (refreshTimeline != null) {
-                refreshTimeline.stop();
-            }
-            if (remaining == 0) {
-                Platform.exit();  // 마지막 창 닫으면 종료
-            }
-        });
-
-        Button settingsBtn = new Button("⚙");
-        settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
-        settingsBtn.setOnAction(e -> {
-            stage.close();
-            openWindowCount.decrementAndGet();
-            // 타임라인 정지
-            if (refreshTimeline != null) {
-                refreshTimeline.stop();
-            }
-            try {
-                Parent homeRoot = FXMLLoader.load(getClass().getResource("home.fxml"));
-                Main.mainStage.setScene(new Scene(homeRoot, 1220, 740));
-                Main.mainStage.show();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        // 레이아웃 구성
-        HBox buttonBox = new HBox(8, settingsBtn, closeBtn);
-        buttonBox.setAlignment(Pos.TOP_RIGHT);
-        buttonBox.setPadding(new Insets(8));
-        buttonBox.setVisible(false);
-
-        StackPane center = VBoxSpacing(nameLabel, priceLabel);
+        HBox buttonBox = createButtonBar(); // 5.
+        StackPane center = VBoxSpacing(nameLabel, priceLabel); // 6.
         center.setAlignment(Pos.CENTER);
 
         StackPane root = new StackPane(center, buttonBox);
-        applyOutlineStyle(root, buttonBox);
+        applyOutlineStyle(root, buttonBox); // 7.
+        enableDragAndResize(stage, root);   // 8.
 
-        // 드래그 & 리사이징
-        root.setOnMousePressed(e -> {
-            offsetX = e.getSceneX();
-            offsetY = e.getSceneY();
-        });
-
-        root.setOnMouseDragged(e -> {
-            if (offsetX > stage.getWidth() - RESIZE_MARGIN && offsetY > stage.getHeight() - RESIZE_MARGIN) {
-                stage.setWidth(Math.max(150, e.getScreenX() - stage.getX()));
-                stage.setHeight(Math.max(80, e.getScreenY() - stage.getY()));
-            } else {
-                stage.setX(e.getScreenX() - offsetX);
-                stage.setY(e.getScreenY() - offsetY);
-            }
-        });
-
-        Scene scene = new Scene(root, newWidth, newHeight);
-        scene.setFill(Color.TRANSPARENT);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setAlwaysOnTop(true);
-        stage.setScene(scene);
-        stage.setTitle("StockPipApp");
-        stage.show();
+        setupStage(stage, root, newWidth, newHeight); // 9.
     }
 
+    // 2. 스타일 설정
+    private void styleLabels(double fontSize) {
+        nameLabel.setStyle("-fx-font-size: " + (fontSize * 0.65) + "px; -fx-text-fill: white;" +
+                "-fx-effect: dropshadow(gaussian, black, 2, 0.3, 0, 0);");
+
+        priceLabel.setStyle("-fx-font-size: " + fontSize + "px;" +
+                "-fx-effect: dropshadow(gaussian, black, 2, 0.3, 0, 0);");
+    }
+
+    // 3. 현재가 표시 업데이트
+    private void updateLabels(Stocks stock) {
+        double current = stock.currentPrice;
+
+        Color color;
+        if (previousPrice < 0) {
+            color = Color.LIGHTGRAY;
+        } else if (current > previousPrice) {
+            color = Color.RED;
+        } else if (current < previousPrice) {
+            color = Color.BLUE;
+        } else {
+            color = Color.LIGHTGRAY;
+        }
+
+        priceLabel.setText(String.format("$ %,.2f", current));
+        priceLabel.setTextFill(color);
+        previousPrice = current;
+
+        System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
+    }
+
+    // 4. 주기적 업데이트
     private void timelineRefresh(Stocks stock) {
         if (refreshTimeline != null) {
             refreshTimeline.stop();
@@ -172,32 +123,48 @@ public class _PIP_Main {
         refreshTimeline.play();
     }
 
-    // 라벨 업데이트
-    private void updateLabels(Stocks stock) {
-        double current = stock.currentPrice;
+    // 5. 버튼 생성 및 핸들러
+    private HBox createButtonBar() {
+        Button closeBtn = new Button("✕");
+        closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
+        closeBtn.setOnAction(e -> {
+            stop();
+            pipWindows.remove(this);
+            if (pipWindows.isEmpty()) Platform.exit();
+        });
 
-        // 텍스트 색상 결정
-        String color;
-        if (previousPrice < 0) {
-            color = "lightgray"; // 첫 표시
-        } else if (current > previousPrice) {
-            color = "red"; // 상승
-        } else if (current < previousPrice) {
-            color = "blue"; // 하락
-        } else {
-            color = "lightgray"; // 동일
-        }
+        Button settingsBtn = new Button("⚙");
+        settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
+        settingsBtn.setOnAction(e -> {
+            for (_PIP_Main pip : new ArrayList<>(pipWindows)) {
+                pip.stop();
+            }
+            pipWindows.clear();
+            try {
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("home.fxml"));
+                Main.mainStage.setScene(new Scene(homeRoot, 1220, 740));
+                Main.mainStage.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
-        priceLabel.setText("$ " + String.format("%,.2f", stock.currentPrice));
-        priceLabel.setStyle("-fx-font-size: " + _PIP_SettingsFontSize.getFontSize() + "px; -fx-text-fill: " + color + ";" +
-                "-fx-effect: dropshadow(gaussian, black, 2, 0.3, 0, 0);");
-
-        previousPrice = current;
-
-        System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
+        HBox box = new HBox(8, settingsBtn, closeBtn);
+        box.setAlignment(Pos.TOP_RIGHT);
+        box.setPadding(new Insets(8));
+        box.setVisible(false);
+        return box;
     }
 
-    // 테두리 설정 스타일 적용
+    // 6. 레이블 수직 정렬용 VBox
+    private StackPane VBoxSpacing(Label top, Label bottom) {
+        VBox box = new VBox(4);
+        box.setAlignment(Pos.CENTER);
+        box.getChildren().addAll(top, bottom);
+        return new StackPane(box);
+    }
+
+    // 7. 마우스 진입 시 외곽선 스타일
     private void applyOutlineStyle(StackPane root, HBox buttonBox) {
         if (!AppConstants.pipOutlineOption) {
             root.setStyle("-fx-background-color: transparent;");
@@ -216,11 +183,42 @@ public class _PIP_Main {
         }
     }
 
-    // 수직 정렬을 위한 VBox 대체용
-    private StackPane VBoxSpacing(Label top, Label bottom) {
-        VBox box = new VBox(4);
-        box.setAlignment(Pos.CENTER);
-        box.getChildren().addAll(top, bottom);
-        return new StackPane(box);
+    // 8. 창 드래그 & 리사이징
+    private void enableDragAndResize(Stage stage, StackPane root) {
+        root.setOnMousePressed(e -> {
+            offsetX = e.getSceneX();
+            offsetY = e.getSceneY();
+        });
+
+        root.setOnMouseDragged(e -> {
+            if (offsetX > stage.getWidth() - RESIZE_MARGIN && offsetY > stage.getHeight() - RESIZE_MARGIN) {
+                stage.setWidth(Math.max(150, e.getScreenX() - stage.getX()));
+                stage.setHeight(Math.max(80, e.getScreenY() - stage.getY()));
+            } else {
+                stage.setX(e.getScreenX() - offsetX);
+                stage.setY(e.getScreenY() - offsetY);
+            }
+        });
+    }
+
+    // 9. Stage 설정 및 띄우기
+    private void setupStage(Stage stage, StackPane root, double width, double height) {
+        Scene scene = new Scene(root, width, height);
+        scene.setFill(Color.TRANSPARENT);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setAlwaysOnTop(true);
+        stage.setScene(scene);
+        stage.setTitle("StockPipApp");
+        stage.show();
+    }
+
+    // 10. 종료 시 타임라인 멈추고 창 닫기
+    public void stop() {
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
+        if (stage != null) {
+            stage.close();
+        }
     }
 }

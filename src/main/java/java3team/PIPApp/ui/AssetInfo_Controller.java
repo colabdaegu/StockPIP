@@ -113,7 +113,6 @@ public class AssetInfo_Controller {
     private void handleHomeClick(MouseEvent event) {
         System.out.println("홈 클릭됨");
         try {
-            // 홈.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
             Parent root = loader.load();
 
@@ -133,7 +132,6 @@ public class AssetInfo_Controller {
     private void handlePriceInfoClick(MouseEvent event) {
         System.out.println("시세 정보 클릭됨");
         try {
-            // 홈.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("priceInfo.fxml"));
             Parent root = loader.load();
 
@@ -149,8 +147,22 @@ public class AssetInfo_Controller {
     private void handleSettingsClick(MouseEvent event) {
         System.out.println("설정 클릭됨");
         try {
-            // 홈.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 로그로 이동
+    @FXML
+    private void handleLogClick(MouseEvent event) {
+        System.out.println("로그 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -165,24 +177,10 @@ public class AssetInfo_Controller {
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
 
-        if (AppConstants.ExternalSiteOption == 0) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (AppConstants.ExternalSiteOption == 1) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://finviz.com/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (AppConstants.ExternalSiteOption == 2) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://kr.investing.com/markets/united-states/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

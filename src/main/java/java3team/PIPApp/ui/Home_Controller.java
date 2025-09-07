@@ -7,18 +7,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import javafx.scene.control.Label;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
 import org.controlsfx.control.textfield.TextFields;
+import service.AlertService;
+import service.StockService;
 
 public class Home_Controller {
     @FXML private ListView<String> listViewId;
@@ -35,6 +36,22 @@ public class Home_Controller {
     private ObservableList<String> nameList = FXCollections.observableArrayList();
 
 
+    @FXML private ToggleButton companyToggle;
+    @FXML private ToggleButton tickerToggle;
+    @FXML private ToggleGroup inputToggleGroup;
+
+    @FXML
+    private void onToggleChanged(ActionEvent event) {
+        if (companyToggle.isSelected()) {
+            System.out.println("회사명 입력 모드");
+            // 추가 동작 처리
+        } else if (tickerToggle.isSelected()) {
+            System.out.println("티커 입력 모드");
+            // 추가 동작 처리
+        }
+    }
+
+
     @FXML
     public void initialize() {
         for (Stocks p : StockList.stockArray) {
@@ -44,23 +61,8 @@ public class Home_Controller {
 
 
         // 자동완성 연결
-        companyNames = FileLoader.loadLines("ticker/ticker_list.txt");
+        companyNames = FileLoader.loadLines("ticker/ticker_list_s.txt");
         TextFields.bindAutoCompletion(tickerField, companyNames);
-
-        /// 종목 이름 리스트(테스트용 임시)
-//        //List<String> companyNames = List.of("Apple", "Alphabet Inc.", "Amazon", "Adobe"); // 임시(테스트용)
-//        companyNames = List.of(
-//                "Apple", "Amazon", "Baidu", "Booking Holdings", "Cisco", "Citigroup",
-//                "Dell", "Dropbox", "eBay", "Electronic Arts", "Facebook", "Ford",
-//                "Google", "General Motors", "HP", "Honeywell", "IBM", "Intel",
-//                "Johnson & Johnson", "JetBlue", "Kellogg", "Kraft Heinz", "LinkedIn", "Lyft",
-//                "Microsoft", "Meta", "Netflix", "Nvidia", "Oracle", "OpenAI Inc.", "PayPal", "Pinterest",
-//                "Qualcomm", "Qurate Retail", "Reddit", "Roku", "Salesforce", "Samsung",
-//                "Tesla", "Twitter", "Uber", "Upstart", "Verizon", "Visa", "Walmart", "Workday",
-//                "Xilinx", "Xiaomi", "Yahoo", "Yelp", "Zoom", "Zillow"
-//        );
-//        // nameField에 자동완성 붙이기
-//        TextFields.bindAutoCompletion(nameField, companyNames);
 
 
 
@@ -89,7 +91,7 @@ public class Home_Controller {
         // ✅ 경고 메시지 숨기고 시작
         warningMessageLabel.setVisible(false);
         warningMessageLabel.setText("");
-
+        showAlert("Now Loading...", "⏳ 유효성 검사 중...", 0);
 
 
         String ticker_Str = tickerField.getText().toUpperCase().trim();
@@ -102,16 +104,20 @@ public class Home_Controller {
         // 이름 유효성 검사
         String ticker = ticker_Str;
         if (!companyNames.contains(ticker)) {
+            hidePopup();
+
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("종목 이름이 유효하지 않습니다.");
+            warningMessageLabel.setText("※ 종목 이름이 유효하지 않습니다.");
             System.out.println("⚠ 존재하지 않는 종목 이름\n");
             return;
         }
 
         // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
         if (ticker_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty() || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty()) || ((!refreshMinuteStr.isEmpty() && !refreshMinuteStr.matches("\\d+")) || (!refreshSecondStr.isEmpty() && !refreshSecondStr.matches("\\d+"))) || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
+            hidePopup();
+
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("모든 항목을 올바르게 입력해 주세요.");
+            warningMessageLabel.setText("※ 모든 항목을 올바르게 입력해 주십시오.");
             System.out.println("⚠⚠ 입력 누락\n\n");
             return;
         }
@@ -125,8 +131,10 @@ public class Home_Controller {
         try {
             targetPrice = Double.parseDouble(targetPriceStr);
         } catch (NumberFormatException e) {
+            hidePopup();
+
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("목표가는 숫자 형식으로 입력해 주세요.");
+            warningMessageLabel.setText("※ 목표가는 숫자 형식으로 입력해 주십시오.");
             System.out.println("⚠ 목표가 - 데이터 타입이 맞지 않음\n");
             return;
         }
@@ -135,8 +143,10 @@ public class Home_Controller {
         try {
             stopPrice = Double.parseDouble(stopPriceStr);
         } catch (NumberFormatException e) {
+            hidePopup();
+
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("손절가는 숫자 형식으로 입력해 주세요.");
+            warningMessageLabel.setText("※ 손절가는 숫자 형식으로 입력해 주십시오.");
             System.out.println("⚠ 손절가 - 데이터 타입이 맞지 않음\n");
             return;
         }
@@ -146,8 +156,10 @@ public class Home_Controller {
             try {
                 refreshMinute = Integer.parseInt(refreshMinuteStr);
             } catch (NumberFormatException e) {
+                hidePopup();
+
                 warningMessageLabel.setVisible(true);
-                warningMessageLabel.setText("숫자(정수) 형식으로 입력해 주세요.");
+                warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
                 System.out.println("⚠ 새로고침(분) - 데이터 타입이 맞지 않음\n");
                 return;
             }
@@ -157,28 +169,63 @@ public class Home_Controller {
             try {
                 refreshSecond = Integer.parseInt(refreshSecondStr);
             } catch (NumberFormatException e) {
+                hidePopup();
+
                 warningMessageLabel.setVisible(true);
-                warningMessageLabel.setText("숫자(정수) 형식으로 입력해 주세요.");
+                warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
                 System.out.println("⚠ 새로고침(초) - 데이터 타입이 맞지 않음\n");
                 return;
             }
         }
         // 새로고침 값이 0이면 유효성 처리
         if ((refreshMinute + refreshSecond) == 0) {
+            hidePopup();
+
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("새로고침 주기는 0이 될 수 없습니다.");
+            warningMessageLabel.setText("※ 새로고침 주기는 0이 될 수 없습니다.");
             System.out.println("⚠ 새로고침 주기는 0이 될 수 없음\n");
             return;
         }
 
+        // 목표가가 손절가보다 높은지 검사
+        if (targetPrice < stopPrice) {
+            hidePopup();
 
-        // 최종 결과 출력
-        System.out.println("종목명: " + ticker);
-        System.out.println("목표가: " + targetPrice);
-        System.out.println("손절가: " + stopPrice);
-        System.out.println("새로고침: " + refreshMinute + "분 " + refreshSecond + "초");
-        System.out.println();
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 손절가는 목표가보다 클 수 없습니다.");
+            System.out.println("⚠ 저장 실패 - 목표가가 손절가보다 낮음\n");
+            return;
+        } else if (targetPrice == stopPrice) {
+            hidePopup();
 
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 손절가와 목표가는 같을 수 없습니다.");
+            System.out.println("⚠ 저장 실패 - 목표가와 손절가가 같음\n");
+            return;
+        }
+
+        // 손절가 적절성 검사
+        StockService stockService = new StockService();
+        var quote = stockService.getLiveStockQuote(ticker);
+        if (quote != null) {
+            double currentPrice = quote.getCurrentPrice();
+            if (currentPrice == 0) {    // 현재가가 0이면
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + " / 폐지된 종목으로 확인됩니다.");
+                System.out.println("⚠ 폐지된 종목임\n");
+                return;
+            }
+            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+                System.out.println("⚠ 손절가가 현재가보다 높음\n");
+                return;
+            }
+        }
 
         // 동일 종목 이름이 있다면 기존 항목 삭제
         for (int i = 0; i < StockList.getStockArray().size(); i++) {
@@ -190,10 +237,24 @@ public class Home_Controller {
             }
         }
 
+        // 최종 결과 출력
+        System.out.println("종목명: " + ticker);
+        System.out.println("목표가: " + targetPrice);
+        System.out.println("손절가: " + stopPrice);
+        System.out.println("새로고침: " + refreshMinute + "분 " + refreshSecond + "초");
+        System.out.println();
+
         // // ✅ StockList에 저장
         Stocks newStock = new Stocks(ticker, targetPrice, stopPrice, refreshMinute, refreshSecond);
         StockList.getStockArray().add(newStock);
-        //AlertService.startMonitoring(newStock);       /// ✅ 알림 이벤트 활성화
+        AlertService.startMonitoring(newStock);       /// ✅ 알림 이벤트 활성화
+
+        // 저장 성공 로그
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        String logLine = timestamp + " - [" + ticker + "]이 저장되었습니다!";
+        StockList.appendLog(logLine);
+        System.out.println(logLine + "\n");
 
         // ✅ ListView 갱신
         nameList.clear();
@@ -202,15 +263,28 @@ public class Home_Controller {
         }
 
         // 저장완료 팝업
-        showAlert("StockPIP", "성공적으로 저장되었습니다!");
+        hidePopup();
+        showAlert("StockPIP", "성공적으로 저장되었습니다!", 1);
     }
     // 성공 팝업
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private Alert alert;
+    private void showAlert(String title, String message, int option) {
+        alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.showAndWait();
+        if (option == 0) {
+            alert.show();
+        }
+        else if (option == 1) {
+            alert.showAndWait();
+        }
+    }
+
+    private void hidePopup() {
+        if (alert != null) {
+            alert.hide();
+        }
     }
 
 
@@ -230,7 +304,7 @@ public class Home_Controller {
         for (int i = 0; i < StockList.getStockArray().size(); i++) {
             Stocks s = StockList.getStockArray().get(i);
             if (s.getTicker().equals(currentName)) {
-                //AlertService.stopMonitoring(currentName);     /// ✅ 해당 종목의 알림 이벤트 삭제
+                AlertService.stopMonitoring(currentName);     /// ✅ 해당 종목의 알림 이벤트 삭제
                 nameList.remove(currentName);
                 StockList.getStockArray().remove(i);
                 listViewId.setItems(nameList);
@@ -291,7 +365,6 @@ public class Home_Controller {
     private void handleAssetInfoClick(MouseEvent event) {
         System.out.println("종목 정보 클릭됨");
         try {
-            // 종목 정보.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("assetInfo.fxml"));
             Parent root = loader.load();
 
@@ -307,7 +380,6 @@ public class Home_Controller {
     private void handlePriceInfoClick(MouseEvent event) {
         System.out.println("시세 정보 클릭됨");
         try {
-            // 홈.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("priceInfo.fxml"));
             Parent root = loader.load();
 
@@ -323,8 +395,22 @@ public class Home_Controller {
     private void handleSettingsClick(MouseEvent event) {
         System.out.println("설정 클릭됨");
         try {
-            // 홈.fxml 로드
             FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 로그로 이동
+    @FXML
+    private void handleLogClick(MouseEvent event) {
+        System.out.println("로그 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -339,24 +425,10 @@ public class Home_Controller {
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
 
-        if (AppConstants.ExternalSiteOption == 0) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://finnhub.io/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (AppConstants.ExternalSiteOption == 1) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://finviz.com/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (AppConstants.ExternalSiteOption == 2) {
-            try {
-                Desktop.getDesktop().browse(new URI("https://kr.investing.com/markets/united-states/"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

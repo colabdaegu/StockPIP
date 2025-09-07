@@ -30,6 +30,7 @@ public class Main extends Application {
 
         mainStage = primaryStage;
 
+        // test
         // ⭐ 1. PreferencesManager를 초기화하고 설정을 로드합니다. (가장 먼저 실행되어야 합니다!) ⭐
         preferencesManager = new PreferencesManager();
         preferencesManager.loadSettings(); // <--- 이 줄이

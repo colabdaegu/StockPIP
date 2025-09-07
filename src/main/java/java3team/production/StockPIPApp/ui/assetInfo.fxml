@@ -19,7 +19,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.AssetInfo_Controller">
    <left>
-      <VBox prefHeight="200.0" prefWidth="340.0" spacing="50.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="340.0" spacing="30.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
          <children>
             <VBox alignment="CENTER" prefHeight="202.0" prefWidth="340.0" spacing="15.0">
                <VBox.margin>
@@ -40,7 +40,7 @@
                   </Button>
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="320.0" prefWidth="340.0" spacing="15.0">
+            <VBox alignment="CENTER" prefHeight="390.0" prefWidth="340.0" spacing="15.0">
                <children>
                   <HBox fx:id="homeBox" alignment="CENTER" onMouseClicked="#handleHomeClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected" stylesheets="@../values/styles.css">
                      <children>
@@ -105,6 +105,23 @@
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="설정" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="logBox" alignment="CENTER" onMouseClicked="#handleLogClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Scroll_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="로그" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic" size="20.0" />
                            </font>

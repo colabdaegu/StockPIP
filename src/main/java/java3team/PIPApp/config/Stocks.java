@@ -111,6 +111,15 @@ public class Stocks {
         }
     }
 
+    public void alert_refreshQuote() {
+        StockService stockService = new StockService();
+        var quote = stockService.getLiveStockQuote(this.ticker);
+        if (quote != null) {
+            currentPrice = quote.getCurrentPrice();
+            api_refreshTime = LocalDateTime.now();
+        }
+    }
+
 
     @Override
     public String toString() {

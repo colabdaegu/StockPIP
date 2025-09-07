@@ -45,7 +45,7 @@ public class _PIP_Main {
         this.stage = stage;
         pipWindows.add(this);
 
-        nameLabel = new Label(stock.getTicker() + "(" + stock.getName() + ")");
+        nameLabel = new Label(stock.getName() + "(" + stock.getTicker() + ")");
         priceLabel = new Label("Loading...");
 
         double fontSize = _PIP_SettingsFontSize.getFontSize();

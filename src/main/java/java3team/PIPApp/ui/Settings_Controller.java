@@ -1,8 +1,7 @@
 package ui;
 
 import com.jfoenix.controls.JFXToggleButton;
-import config.StockList;
-import config.AppConstants;
+import config.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +30,7 @@ public class Settings_Controller {
     public void initialize() {
         /// ✅ AppConstants 값 → UI 컴포넌트 초기화
         // 알림 선택
-        switch (AppConstants.NotificationOption) {
+        switch (AppConstants.notificationOption) {
             case 0 -> notification_1_Button.setSelected(true);
             case 1 -> notification_2_Button.setSelected(true);
             case 2 -> notification_3_Button.setSelected(true);
@@ -41,7 +40,7 @@ public class Settings_Controller {
         notification_1_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
                 // 팝업창 알림이 선택됐을 때
-                AppConstants.NotificationOption = 0;
+                AppConstants.notificationOption = 0;
                 System.out.println("팝업창 알림으로 설정됨");
             }
         });
@@ -49,7 +48,7 @@ public class Settings_Controller {
         notification_2_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
                 // 윈도우 시스템 알림이 선택됐을 때
-                AppConstants.NotificationOption = 1;
+                AppConstants.notificationOption = 1;
                 System.out.println("윈도우 알림으로 설정됨");
             }
         });
@@ -57,7 +56,7 @@ public class Settings_Controller {
         notification_3_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
                 // 사운드 알림이 선택됐을 때
-                AppConstants.NotificationOption = 2;
+                AppConstants.notificationOption = 2;
                 System.out.println("알림 없음으로 설정됨");
             }
         });
@@ -69,7 +68,7 @@ public class Settings_Controller {
         soundOff.setToggleGroup(group);
         soundOn.setToggleGroup(group);
 
-        if (AppConstants.AlertSound) {
+        if (AppConstants.alertSound) {
             soundOn.setSelected(true);
         }
         else {
@@ -78,13 +77,13 @@ public class Settings_Controller {
 
         soundOff.setOnAction(e -> {
             if (soundOff.isSelected()) {
-                AppConstants.AlertSound = false;
+                AppConstants.alertSound = false;
                 System.out.println("소리 알림 끔");
             }
         });
         soundOn.setOnAction(e -> {
             if (soundOn.isSelected()) {
-                AppConstants.AlertSound = true;
+                AppConstants.alertSound = true;
                 System.out.println("소리 알림 킴");
             }
         });
@@ -128,13 +127,13 @@ public class Settings_Controller {
         System.out.println("설정을 기본값으로 되돌림\n");
 
         // 알림 설정
-        AppConstants.NotificationOption = 0;
+        AppConstants.notificationOption = 0;
         notification_1_Button.setSelected(true);
         notification_2_Button.setSelected(false);
         notification_3_Button.setSelected(false);
 
         // 소리 알림 설정
-        AppConstants.AlertSound = true;
+        AppConstants.alertSound = true;
         soundOff.setSelected(false);
         soundOn.setSelected(true);
 

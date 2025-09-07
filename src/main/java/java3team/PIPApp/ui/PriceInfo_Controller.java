@@ -70,7 +70,7 @@ public class PriceInfo_Controller {
 
     // 라벨 업데이트
     private void updateLabels(Stocks stock) {
-        nameLabel.setText(stock.getName());
+        nameLabel.setText("[ " + stock.getName() + " ]");
         currentPriceLabel.setText("$" + String.valueOf(stock.currentPrice));
         openPriceLabel.setText("$" + String.valueOf(stock.openPrice));
         highPriceLabel.setText("$" + String.valueOf(stock.highPrice));

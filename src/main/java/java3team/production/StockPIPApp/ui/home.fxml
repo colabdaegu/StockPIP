@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXToggleNode?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -175,13 +177,20 @@
                               </Label>
                               <HBox alignment="CENTER_LEFT" prefHeight="6.0" prefWidth="780.0">
                                  <children>
-                                    <Label prefHeight="24.0" prefWidth="200.0" text="티커" textFill="WHITE">
-                                       <font>
-                                          <Font name="Malgun Gothic" size="17.0" />
-                                       </font>
-                                    </Label>
+
+                                    <fx:define>
+                                       <ToggleGroup fx:id="inputToggleGroup" />
+                                    </fx:define>
+                                    <HBox alignment="CENTER" spacing="0">
+                                       <JFXToggleNode fx:id="companyToggle" styleClass="left-toggle" text="회사명">
+                                          <toggleGroup>
+                                             <ToggleGroup fx:id="inputToggleGroup" />
+                                          </toggleGroup></JFXToggleNode>
+                                       <JFXToggleNode fx:id="tickerToggle" styleClass="right-toggle" text="티커" toggleGroup="$inputToggleGroup" />
+                                    </HBox>
+
                                     <Pane prefHeight="200.0" prefWidth="35.0" />
-                                    <TextField fx:id="tickerField" prefHeight="22.0" prefWidth="322.0" />
+                                    <TextField fx:id="nameField" prefHeight="22.0" prefWidth="322.0" />
                                  </children>
                               </HBox>
                            </children>

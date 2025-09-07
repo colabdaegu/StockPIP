@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 public class Stocks {
     // 사용자 입력 정보
     public String ticker = "";        // 티커
+    public int toggleOption;
 
     public String name;         // 회사명
 
@@ -38,8 +39,9 @@ public class Stocks {
     public LocalDateTime api_refreshTime;   // 최근 갱신 시간
 
 
-    public Stocks(String ticker, double targetPrice, double stopPrice, int refreshMinute, int refreshSecond) {
+    public Stocks(String ticker, int toggleOption, double targetPrice, double stopPrice, int refreshMinute, int refreshSecond) {
         this.ticker = ticker;
+        this.toggleOption = toggleOption;
 
         this.targetPrice = targetPrice;   // 목표가
         this.stopPrice = stopPrice;     // 손절가
@@ -136,6 +138,9 @@ public class Stocks {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+
+    public int getToggleOption() { return toggleOption; }
+    public void setToggleOption(int toggleOption) { this.toggleOption = toggleOption; }
 
     public double getTargetPrice() { return targetPrice; }
     public void setTargetPrice(double targetPrice) { this.targetPrice = targetPrice; }

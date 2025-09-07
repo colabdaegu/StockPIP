@@ -36,25 +36,25 @@ public class AlertService {
             double stopPrice = stock.getStopPrice();
 
             // 목표가 도달 시
-            if (currentPrice >= targetPrice) {
+            if (currentPrice >= targetPrice && currentPrice != 0) {
                 String logLine = formatLog(0, ticker, "목표가에 도달했습니다.", currentPrice, targetPrice);
                 StockList.appendLog(logLine);
                 LogInfo_Controller.appendToLogArea(logLine);
-                if (AppConstants.NotificationOption == 0) {
+                if (AppConstants.notificationOption == 0) {
                     showAlert(Alert.AlertType.INFORMATION, "📈 목표가 도달", logLine);
-                } else if (AppConstants.NotificationOption == 1) { }
+                } else if (AppConstants.notificationOption == 1) { }
                 beep();
                 System.out.println(api_refreshTime + " - [" + ticker + "] 목표가 도달 / 현재가: $" + currentPrice + " 목표가: $" + targetPrice + "\n");
             }
 
             // 손절가 도달 시
-            if (currentPrice <= stopPrice) {
+            if (currentPrice <= stopPrice && currentPrice != 0) {
                 String logLine = formatLog(1, ticker, "손절가에 도달했습니다. 삭제됨", currentPrice, stopPrice);
                 StockList.appendLog(logLine);
                 LogInfo_Controller.appendToLogArea(logLine);
-                if (AppConstants.NotificationOption == 0) {
+                if (AppConstants.notificationOption == 0) {
                     showAlert(Alert.AlertType.NONE, "📉 손절가 도달", logLine);
-                } else if (AppConstants.NotificationOption == 1) { }
+                } else if (AppConstants.notificationOption == 1) { }
                 beep();
                 System.out.println(api_refreshTime + " - [" + ticker + "] 손절가 도달 / 현재가: $" + currentPrice + " 목표가: $" + stopPrice + "\n");
 
@@ -90,7 +90,7 @@ public class AlertService {
 
     // 비프음
     private static void beep() {
-        if (AppConstants.AlertSound) {
+        if (AppConstants.alertSound) {
             java.awt.Toolkit.getDefaultToolkit().beep();
         }
     }

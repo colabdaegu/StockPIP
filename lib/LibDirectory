@@ -1,7 +1,6 @@
 1. jdk-21.0.7 및 javafx-sdk-21.0.7/lib를 설치 및 연동해주십시오
 
 2. charm-glisten-5.0.0.jar / controlsfx-11.2.2.jar / gson-2.10.1.jar / jfoenix-9.0.10.jar 라이브러리 및 모듈에 적용
-JSON 라이브러리 사용을 위한 gson 파일 
 ---------------------------
 https://drive.google.com/drive/folders/1AB4XCkDy-YWJ3niuW6g9JtPIOdFavcOp?usp=sharing 
 

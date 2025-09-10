@@ -26,6 +26,8 @@ import javafx.stage.StageStyle;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.image.Image;
+
 public class _PIP_Main {
     private static final List<_PIP_Main> pipWindows = new ArrayList<>();
 
@@ -129,7 +131,14 @@ public class _PIP_Main {
         refreshTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(refreshSeconds), event -> {
                     stock.refreshQuote();
-                    updateLabels(stock);
+                    updateLabels(stock);    /// updateLabels 함수 동작
+
+                    // 손절가 조건 체크
+                    if (stock.getCurrentPrice() <= stock.getStopPrice() && stock.getCurrentPrice() != 0) {
+                        System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
+                        stop(); // 타임라인 중단 + Stage 닫기
+                        pipWindows.remove(this);
+                    }
                 })
         );
 
@@ -223,6 +232,8 @@ public class _PIP_Main {
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
         stage.setTitle("StockPipApp");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo_fill.png")));
+
         stage.show();
     }
 

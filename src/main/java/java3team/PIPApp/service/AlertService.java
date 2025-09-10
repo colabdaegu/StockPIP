@@ -19,14 +19,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import java.awt.*;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
+import java.awt.Image;
 
 
 
 public class AlertService {
     // 종목별 모니터링 타이머 관리
     private static final Map<String, Timeline> monitoringMap = new HashMap<>();
+    // 종목별 알림창 최신화 관리
+    private static final Map<String, Alert> alertMap = new HashMap<>();
 
     // 모니터링 시작
     public static void startMonitoring(Stocks stock) {
@@ -51,30 +56,48 @@ public class AlertService {
             LocalDateTime api_refreshTime = stock.getApi_refreshTime();
             double targetPrice = stock.getTargetPrice();
             double stopPrice = stock.getStopPrice();
+            String name = (stock.getToggleOption() == 0) ? stock.getName() : stock.getTicker();
+
             System.out.println("🔄🔄 [" + stock.getTicker() + "] 모니터링 자동 새로고침");
 
-            showNotification("📈 목표가 도달", "logLine");
+            //showNotification("📈 목표가 도달", "logLine");
 
             // 목표가 도달 시
             if (currentPrice >= targetPrice && currentPrice != 0) {
-                String logLine = formatLog(0, ticker, "목표가에 도달했습니다.", currentPrice, targetPrice);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String timestamp = LocalDateTime.now().format(formatter);
+                String logLine = formatLog(0, timestamp, name, "목표가에 달성했습니다.", currentPrice, targetPrice);
                 StockList.appendLog(logLine);
                 LogInfo_Controller.appendToLogArea(logLine);
                 if (AppConstants.notificationOption == 0) {
-                    showAlert(Alert.AlertType.INFORMATION, "📈 목표가 도달", logLine);
-                } else if (AppConstants.notificationOption == 1) { }
+                    String AlertMessage = "(" + timestamp + ") " + name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + currentPrice + "\n 목표가: $" + targetPrice;
+                    showAlert(Alert.AlertType.INFORMATION, name, "📈 목표가 달성", AlertMessage);
+                } else if (AppConstants.notificationOption == 1) {
+
+
+                }
+
+
 //                beep();
-                System.out.println(api_refreshTime + " - [" + ticker + "] 목표가 도달 / 현재가: $" + currentPrice + " 목표가: $" + targetPrice + "\n");
+                //System.out.println(api_refreshTime + " - [" + ticker + "] 목표가 도달 / 현재가: $" + currentPrice + " 목표가: $" + targetPrice + "\n");
             }
 
             // 손절가 도달 시
             if (currentPrice <= stopPrice && currentPrice != 0) {
-                String logLine = formatLog(1, ticker, "손절가에 도달했습니다. 삭제됨", currentPrice, stopPrice);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String timestamp = LocalDateTime.now().format(formatter);
+                String logLine = formatLog(1, timestamp, name, "손절가에 도달했습니다. 삭제됨", currentPrice, stopPrice);
                 StockList.appendLog(logLine);
                 LogInfo_Controller.appendToLogArea(logLine);
                 if (AppConstants.notificationOption == 0) {
-                    showAlert(Alert.AlertType.NONE, "📉 손절가 도달", logLine);
-                } else if (AppConstants.notificationOption == 1) { }
+                    String AlertMessage = "(" + timestamp + ") " + name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + currentPrice + "\n 손절가: $" + stopPrice;
+                    showAlert(Alert.AlertType.INFORMATION, name, "📉 손절가 도달", AlertMessage);
+                } else if (AppConstants.notificationOption == 1) {
+
+
+                }
+
+
 //                beep();
                 System.out.println(api_refreshTime + " - [" + ticker + "] 손절가 도달 / 현재가: $" + currentPrice + " 목표가: $" + stopPrice + "\n");
 
@@ -98,13 +121,11 @@ public class AlertService {
     }
 
     // 로그 포맷 함수
-    private static String formatLog(int type, String ticker, String message, double currentPrice, double targetOrStopPrice) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String timestamp = LocalDateTime.now().format(formatter);
+    private static String formatLog(int type, String timestamp, String name, String message, double currentPrice, double targetOrStopPrice) {
         if (type == 0) {
-            return timestamp + " - [" + ticker + "]이(가) " + message + " / 현재가: $" + currentPrice + " 목표가: $" + targetOrStopPrice;
+            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " 목표가: $" + targetOrStopPrice;
         } else {
-            return timestamp + " - [" + ticker + "]이(가) " + message + " / 현재가: $" + currentPrice + " --> 삭제됨";
+            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " --> 삭제됨";
         }
     }
 
@@ -116,13 +137,31 @@ public class AlertService {
 //    }
 
     // 알림 팝업 (AlertType을 매개변수로 받음)
-    private static void showAlert(Alert.AlertType type, String title, String message) {
+    private static void showAlert(Alert.AlertType type, String name, String title, String message) {
         Platform.runLater(() -> {
+            // 기존 알림창이 떠있으면 닫기
+            if (alertMap.containsKey(name)) {
+                Alert oldAlert = alertMap.get(name);
+                if (oldAlert.isShowing()) {
+                    oldAlert.close();
+                }
+            }
+
             Alert alert = new Alert(type);
             alert.setTitle(title);
             alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
+            javafx.scene.control.Label label = new javafx.scene.control.Label(message);
+            label.setWrapText(true);
+            //alert.setContentText(message);
+
+            alert.getDialogPane().setStyle("-fx-font-size: 15px;");
+            alert.getDialogPane().setContent(label);
+
+            // 닫힐 때 Map에서 제거
+            alert.setOnHidden(e -> alertMap.remove(name));
+
+            alertMap.put(name, alert);
+            alert.show();
         });
     }
 

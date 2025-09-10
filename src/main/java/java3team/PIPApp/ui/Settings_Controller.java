@@ -22,7 +22,7 @@ public class Settings_Controller {
     @FXML private ToggleButton notification_2_Button;
     @FXML private ToggleButton notification_3_Button;
 
-    @FXML RadioButton soundOff, soundOn;
+    @FXML RadioButton decimal_0, decimal_1, decimal_2, decimal_3, decimal_4, decimal_5;
 
 
 
@@ -63,32 +63,60 @@ public class Settings_Controller {
 
 
 
-        // 소리 알림 설정
+        // PIP 소수점 표시
         ToggleGroup group = new ToggleGroup();
-        soundOff.setToggleGroup(group);
-        soundOn.setToggleGroup(group);
+        decimal_0.setToggleGroup(group);
+        decimal_1.setToggleGroup(group);
+        decimal_2.setToggleGroup(group);
+        decimal_3.setToggleGroup(group);
+        decimal_4.setToggleGroup(group);
+        decimal_5.setToggleGroup(group);
 
-        if (AppConstants.alertSound) {
-            soundOn.setSelected(true);
-        }
-        else {
-            soundOff.setSelected(true);
+        switch (AppConstants.pipDecimalPoint) {
+            case 0 -> decimal_0.setSelected(true);
+            case 1 -> decimal_1.setSelected(true);
+            case 2 -> decimal_2.setSelected(true);
+            case 3 -> decimal_3.setSelected(true);
+            case 4 -> decimal_4.setSelected(true);
+            case 5 -> decimal_5.setSelected(true);
         }
 
-        soundOff.setOnAction(e -> {
-            if (soundOff.isSelected()) {
-                AppConstants.alertSound = false;
-                System.out.println("소리 알림 끔");
+        decimal_0.setOnAction(e -> {
+            if (decimal_0.isSelected()) {
+                AppConstants.pipDecimalPoint = 0;
+                System.out.println("소수점 표시 안 함");
             }
         });
-        soundOn.setOnAction(e -> {
-            if (soundOn.isSelected()) {
-                AppConstants.alertSound = true;
-                System.out.println("소리 알림 킴");
+        decimal_1.setOnAction(e -> {
+            if (decimal_1.isSelected()) {
+                AppConstants.pipDecimalPoint = 1;
+                System.out.println("소수점 1자리로 표시");
             }
         });
-
-
+        decimal_2.setOnAction(e -> {
+            if (decimal_2.isSelected()) {
+                AppConstants.pipDecimalPoint = 2;
+                System.out.println("소수점 2자리로 표시");
+            }
+        });
+        decimal_3.setOnAction(e -> {
+            if (decimal_3.isSelected()) {
+                AppConstants.pipDecimalPoint = 3;
+                System.out.println("소수점 3자리로 표시");
+            }
+        });
+        decimal_4.setOnAction(e -> {
+            if (decimal_4.isSelected()) {
+                AppConstants.pipDecimalPoint = 4;
+                System.out.println("소수점 4자리로 표시");
+            }
+        });
+        decimal_5.setOnAction(e -> {
+            if (decimal_5.isSelected()) {
+                AppConstants.pipDecimalPoint = 5;
+                System.out.println("소수점 5자리로 표시");
+            }
+        });
 
         pipToggle.setSelected(AppConstants.pipOutlineOption);   // PIP 테두리 고정
         fontSizeSlider.setValue(AppConstants.pipFontSize);      // PIP 폰트
@@ -132,10 +160,14 @@ public class Settings_Controller {
         notification_2_Button.setSelected(false);
         notification_3_Button.setSelected(false);
 
-        // 소리 알림 설정
-        AppConstants.alertSound = true;
-        soundOff.setSelected(false);
-        soundOn.setSelected(true);
+        // PIP 소수점 표시
+        AppConstants.pipDecimalPoint = 2;
+        decimal_0.setSelected(false);
+        decimal_1.setSelected(false);
+        decimal_2.setSelected(true);
+        decimal_3.setSelected(false);
+        decimal_4.setSelected(false);
+        decimal_5.setSelected(false);
 
         // PIP 테두리 고정 설정: 기본값으로 설정
         AppConstants.pipOutlineOption = false;

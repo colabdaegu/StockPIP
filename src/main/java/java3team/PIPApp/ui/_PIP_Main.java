@@ -1,7 +1,6 @@
 package ui;
 
-import config.AppConstants;
-import config.Stocks;
+import config.*;
 import api.model.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -52,8 +51,8 @@ public class _PIP_Main {
         styleLabels(fontSize); // 2.
 
         updateLabels(stock); // 3.
-        bindToStock(stock);
-        //timelineRefresh(stock); // 4.
+        //bindToStock(stock);
+        timelineRefresh(stock); // 4.
 
         double ratio = fontSize / 28.0;
         double newWidth = Math.max(300, 300 * ratio);
@@ -97,7 +96,14 @@ public class _PIP_Main {
             color = Color.LIGHTGRAY;
         }
 
-        priceLabel.setText(String.format("$ %,.2f", current));
+        switch (AppConstants.pipDecimalPoint) {
+            case 0 -> priceLabel.setText(String.format("$ %,.0f", current));
+            case 1 -> priceLabel.setText(String.format("$ %,.1f", current));
+            case 2 -> priceLabel.setText(String.format("$ %,.2f", current));
+            case 3 -> priceLabel.setText(String.format("$ %,.3f", current));
+            case 4 -> priceLabel.setText(String.format("$ %,.4f", current));
+            case 5 -> priceLabel.setText(String.format("$ %,.5f", current));
+        }
         priceLabel.setTextFill(color);
         previousPrice = current;
 

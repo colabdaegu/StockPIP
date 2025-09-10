@@ -19,6 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import java.awt.*;
+import java.awt.TrayIcon.MessageType;
+
+
+
 public class AlertService {
     // 종목별 모니터링 타이머 관리
     private static final Map<String, Timeline> monitoringMap = new HashMap<>();
@@ -48,6 +53,8 @@ public class AlertService {
             double stopPrice = stock.getStopPrice();
             System.out.println("🔄🔄 [" + stock.getTicker() + "] 모니터링 자동 새로고침");
 
+            showNotification("📈 목표가 도달", "logLine");
+
             // 목표가 도달 시
             if (currentPrice >= targetPrice && currentPrice != 0) {
                 String logLine = formatLog(0, ticker, "목표가에 도달했습니다.", currentPrice, targetPrice);
@@ -56,7 +63,7 @@ public class AlertService {
                 if (AppConstants.notificationOption == 0) {
                     showAlert(Alert.AlertType.INFORMATION, "📈 목표가 도달", logLine);
                 } else if (AppConstants.notificationOption == 1) { }
-                beep();
+//                beep();
                 System.out.println(api_refreshTime + " - [" + ticker + "] 목표가 도달 / 현재가: $" + currentPrice + " 목표가: $" + targetPrice + "\n");
             }
 
@@ -68,7 +75,7 @@ public class AlertService {
                 if (AppConstants.notificationOption == 0) {
                     showAlert(Alert.AlertType.NONE, "📉 손절가 도달", logLine);
                 } else if (AppConstants.notificationOption == 1) { }
-                beep();
+//                beep();
                 System.out.println(api_refreshTime + " - [" + ticker + "] 손절가 도달 / 현재가: $" + currentPrice + " 목표가: $" + stopPrice + "\n");
 
                 // 모니터링 종료 및 데이터 삭제
@@ -101,12 +108,12 @@ public class AlertService {
         }
     }
 
-    // 비프음
-    private static void beep() {
-        if (AppConstants.alertSound) {
-            java.awt.Toolkit.getDefaultToolkit().beep();
-        }
-    }
+//    // 비프음
+//    private static void beep() {
+//        if (AppConstants.alertSound) {
+//            java.awt.Toolkit.getDefaultToolkit().beep();
+//        }
+//    }
 
     // 알림 팝업 (AlertType을 매개변수로 받음)
     private static void showAlert(Alert.AlertType type, String title, String message) {
@@ -146,6 +153,42 @@ public class AlertService {
         } catch (IOException e) {
             // HTTP 요청 실패 → 인터넷 연결 안 됨
             return false;
+        }
+    }
+
+
+    // Windows 알림 센터 알림
+    public static void showNotification(String title, String message) {
+        // SystemTray 지원 여부 확인
+        if (!SystemTray.isSupported()) {
+            System.out.println("경고: SystemTray가 지원되지 않는 시스템");
+            return;
+        }
+
+        try {
+            SystemTray tray = SystemTray.getSystemTray();
+
+            // 아이콘 (없으면 작은 기본 이미지)
+            Image image = Toolkit.getDefaultToolkit().createImage(new byte[0]);
+
+            TrayIcon trayIcon = new TrayIcon(image, "Stock Alert");
+            trayIcon.setImageAutoSize(true);
+            trayIcon.setToolTip("Stock Alert Service");
+            tray.add(trayIcon);
+
+            // 알림 표시
+            trayIcon.displayMessage(title, message, MessageType.INFO);
+
+            // 잠시 뒤 Tray에서 제거 (안 해주면 중복 추가될 수 있음)
+            new Thread(() -> {
+                try {
+                    Thread.sleep(5000);
+                    tray.remove(trayIcon);
+                } catch (InterruptedException ignored) {}
+            }).start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

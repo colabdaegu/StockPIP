@@ -19,7 +19,7 @@ public final class AppConstants {
 
     // 환경설정용 변수
     public static int notificationOption = 0;       // 알림 설정
-    public static boolean alertSound = true;        // 소리 알림 설정
+    public static int pipDecimalPoint = 2;        // PIP 소수점 표시
     public static boolean pipOutlineOption = false; // PIP 테두리 고정
     public static double pipFontSize = 28.0;        // PIP 폰트 크기
 }

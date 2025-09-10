@@ -81,7 +81,7 @@ public class PriceInfo_Controller {
         String refreshTime = stock.api_refreshTime.format(formatter);
         refreshTimeLabel.setText(refreshTime);
 
-        System.out.println("🔄 [" + stock.getTicker() + "] 라벨 정보 자동 새로고침");
+        System.out.println("🔄 [" + stock.getTicker() + "] 시세 정보 자동 새로고침");
     }
 
 

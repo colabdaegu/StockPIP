@@ -1,5 +1,7 @@
 package ui;
 
+import javafx.scene.image.Image;
+import javafx.stage.StageStyle;
 import service.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,12 +32,17 @@ public class Main extends Application {
 
         mainStage = primaryStage;
 
-        // ⭐ 1. PreferencesManager를 초기화하고 설정을 로드합니다. (가장 먼저 실행되어야 합니다!) ⭐
+        // ⭐ PreferencesManager를 초기화하고 설정을 로드 ⭐
         preferencesManager = new PreferencesManager();
-        preferencesManager.loadSettings(); // <--- 이 줄이
+        preferencesManager.loadSettings();
 
 
         Parent root = FXMLLoader.load(getClass().getResource("home.fxml"));
+
+        //primaryStage.initStyle(StageStyle.UNDECORATED);
+
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo.png")));
+
         primaryStage.setTitle("StockPIP-App");
         primaryStage.setScene(new Scene(root, 1220, 740));
         primaryStage.show();

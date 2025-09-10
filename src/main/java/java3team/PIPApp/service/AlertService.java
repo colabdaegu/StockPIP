@@ -2,16 +2,21 @@ package service;
 
 import config.*;
 import ui.*;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.application.Platform;
 
 
 public class AlertService {
@@ -27,13 +32,21 @@ public class AlertService {
             stopMonitoring(ticker);
         }
 
+
         // 새 Timeline 생성
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(stock.getRefresh()), event -> {
+            // 네트워크 검사
+            if (!isInternetAvailable()) {
+                System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+                return;
+            }
+
             stock.alert_refreshQuote(); // 시세 갱신
             double currentPrice = stock.getCurrentPrice();
             LocalDateTime api_refreshTime = stock.getApi_refreshTime();
             double targetPrice = stock.getTargetPrice();
             double stopPrice = stock.getStopPrice();
+            System.out.println("🔄🔄 [" + stock.getTicker() + "] 모니터링 자동 새로고침");
 
             // 목표가 도달 시
             if (currentPrice >= targetPrice && currentPrice != 0) {
@@ -104,5 +117,35 @@ public class AlertService {
             alert.setContentText(message);
             alert.showAndWait();
         });
+    }
+
+
+    // 네트워크 연결 진단
+    private static boolean isInternetAvailable() {
+        // 1차 검사 : Ping으로 빠르게 확인
+        try {
+            boolean pingSuccess = InetAddress.getByName("8.8.8.8").isReachable(1000);
+            if (pingSuccess) {
+                return true; // Ping 성공 → 인터넷 연결 확인
+            }
+        } catch (IOException e) {
+            // Ping 도중 오류 → HTTP로 2차 확인 진행
+        }
+
+        // 2차 검사 : HTTP 요청으로 다시 확인
+        try {
+            URL url = new URL("https://www.google.com/");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
+            int responseCode = connection.getResponseCode();
+
+            // 응답 코드가 200~399면 성공으로 간주
+            return (responseCode >= 200 && responseCode <= 399);
+        } catch (IOException e) {
+            // HTTP 요청 실패 → 인터넷 연결 안 됨
+            return false;
+        }
     }
 }

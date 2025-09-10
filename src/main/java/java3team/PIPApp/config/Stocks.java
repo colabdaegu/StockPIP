@@ -4,11 +4,15 @@ import javafx.scene.image.Image;
 import service.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.image.ImageView;
 
 
 public class Stocks {
+    private List<Runnable> listeners = new ArrayList<>();
+
     // 사용자 입력 정보
     public String ticker = "";        // 티커
     public int toggleOption;
@@ -100,6 +104,16 @@ public class Stocks {
         }
     }
 
+    public void addUpdateListener(Runnable listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyListeners() {
+        for (Runnable listener : listeners) {
+            listener.run();
+        }
+    }
+
     public void refreshQuote() {
         StockService stockService = new StockService();
         var quote = stockService.getLiveStockQuote(this.ticker);
@@ -110,6 +124,8 @@ public class Stocks {
             lowPrice = quote.getLowPrice();
             previousClosePrice = quote.getPreviousClosePrice();
             api_refreshTime = LocalDateTime.now();
+
+            notifyListeners();
         }
     }
 

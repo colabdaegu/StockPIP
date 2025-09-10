@@ -52,7 +52,8 @@ public class _PIP_Main {
         styleLabels(fontSize); // 2.
 
         updateLabels(stock); // 3.
-        timelineRefresh(stock); // 4.
+        bindToStock(stock);
+        //timelineRefresh(stock); // 4.
 
         double ratio = fontSize / 28.0;
         double newWidth = Math.max(300, 300 * ratio);
@@ -101,6 +102,13 @@ public class _PIP_Main {
         previousPrice = current;
 
         System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
+    }
+
+    // 🆕 실시간 갱신 리스너 추가
+    private void bindToStock(Stocks stock) {
+        stock.addUpdateListener(() -> {
+            Platform.runLater(() -> updateLabels(stock));
+        });
     }
 
     // 4. 주기적 업데이트

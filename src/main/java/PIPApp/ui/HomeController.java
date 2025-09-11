@@ -1,0 +1,606 @@
+package ui;
+
+import pip.PipLauncher;
+import com.jfoenix.controls.JFXToggleNode;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+
+import service.*;
+import config.*;
+
+import java.net.InetAddress;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+
+public class HomeController {
+    @FXML private ListView<String> listViewId;
+
+    @FXML private TextField nameField;
+    @FXML private TextField targetPriceField;
+    @FXML private TextField stopPriceField;
+    @FXML private TextField refreshField_Minute;
+    @FXML private TextField refreshField_Second;
+
+    private AutoCompletionBinding<String> autoCompletionBinding;
+
+    @FXML private Label warningMessageLabel; // 경고 메시지용
+
+    private List<String> nameList;
+    private ObservableList<String> listViews = FXCollections.observableArrayList();
+
+    private int toggleOption;
+
+
+    @FXML private JFXToggleNode companyToggle;
+    @FXML private JFXToggleNode tickerToggle;
+    @FXML private ToggleGroup inputToggleGroup;
+
+    @FXML
+    public void initialize() {
+        for (Stocks p : StockList.stockArray) {
+            listViews.add(p.getTicker());  // 이름만 추출해서 리스트에 추가
+        }
+        listViewId.setItems(listViews);
+
+
+
+        // 리스트뷰에서 해당하는 종목을 클릭했을 때
+        listViewId.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                // 선택된 이름에 해당하는 Stocks 객체 검색
+                for (Stocks s : StockList.getStockArray()) {
+                    if (s.getTicker().equals(newValue)) {
+                        // 필드에 값 세팅
+                        setToggleOption(s.getToggleOption());
+                        if (s.getToggleOption() == 0) {
+                            nameField.setText(s.getName());
+                        } else if (s.getToggleOption() == 1) {
+                            nameField.setText(s.getTicker());
+                        }
+                        targetPriceField.setText(String.format("%.10f", s.getTargetPrice()).replaceAll("\\.?0+$", ""));
+                        stopPriceField.setText(String.format("%.10f", s.getStopPrice()).replaceAll("\\.?0+$", ""));
+                        refreshField_Minute.setText(String.valueOf(s.getRefreshMinute()));
+                        refreshField_Second.setText(String.valueOf(s.getRefreshSecond()));
+                        break;
+                    }
+                }
+            }
+        });
+
+
+        toggleOption = 1;
+        setToggleOption(1);
+
+        inputToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle == null) {
+                if (oldToggle != null) {
+                    oldToggle.setSelected(true);
+                } else {
+                    // 혹시 모를 경우 기본값으로 companyToggle 선택
+                    setToggleOption(0);
+                }
+            } else if (newToggle == companyToggle) {
+                setToggleOption(0);
+            } else if (newToggle == tickerToggle) {
+                setToggleOption(1);
+            }
+        });
+    }
+
+
+    // 저장 버튼의 이벤트
+    @FXML
+    private void saveClick(ActionEvent event) {
+        // ✅ 경고 메시지 숨기고 시작
+        warningMessageLabel.setVisible(false);
+        warningMessageLabel.setText("");
+        showAlert("Now Loading...", "⏳ 유효성 검사 중...", 0);
+
+
+        String name_Str = nameField.getText().toUpperCase().trim();
+        String targetPriceStr = targetPriceField.getText().trim();
+        String stopPriceStr = stopPriceField.getText().trim();
+        String refreshMinuteStr = refreshField_Minute.getText().trim();
+        String refreshSecondStr = refreshField_Second.getText().trim();
+
+
+        // 네트워크 검사
+        if (!isInternetAvailable()) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 인터넷에 연결되어 있지 않습니다.");
+            System.out.println("⚠ 인터넷 연결 실패\n");
+            return;
+        }
+
+        // 이름 유효성 검사
+        String company = "";
+        String ticker = "";
+        if (toggleOption == 0) {
+            company = name_Str;
+            if (!nameList.contains(company)) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 종목 이름이 유효하지 않습니다.");
+                System.out.println("⚠ 존재하지 않는 종목 이름\n");
+                return;
+            }
+
+            CompanyService companyService = new CompanyService();
+            var profileOpt = companyService.getCompanyInfoByName(company);
+            if (profileOpt.isEmpty()) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 해당 종목은 회사명으로의 조회가 어렵습니다. 티커명으로 직접 입력해 주세요.");
+                System.out.println("⚠ 회사명 → 티커 매핑 실패\n");
+                return;
+            }
+            ticker = profileOpt.get().getTicker();
+
+        } else if (toggleOption == 1) {
+            ticker = name_Str;
+            if (!nameList.contains(ticker)) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 종목 이름이 유효하지 않습니다.");
+                System.out.println("⚠ 존재하지 않는 종목 이름\n");
+                return;
+            }
+        }
+
+        // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
+        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty() || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty()) || ((!refreshMinuteStr.isEmpty() && !refreshMinuteStr.matches("\\d+")) || (!refreshSecondStr.isEmpty() && !refreshSecondStr.matches("\\d+"))) || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 모든 항목을 올바르게 입력해 주십시오.");
+            System.out.println("⚠⚠ 입력 누락\n\n");
+            return;
+        }
+
+        // 값 파싱
+        double targetPrice, stopPrice;
+        int refreshMinute = 0, refreshSecond = 0;
+
+
+        // 목표가 유효성 검사
+        try {
+            targetPrice = Double.parseDouble(targetPriceStr);
+        } catch (NumberFormatException e) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 목표가는 숫자 형식으로 입력해 주십시오.");
+            System.out.println("⚠ 목표가 - 데이터 타입이 맞지 않음\n");
+            return;
+        }
+
+        // 손절가 유효성 검사
+        try {
+            stopPrice = Double.parseDouble(stopPriceStr);
+        } catch (NumberFormatException e) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 손절가는 숫자 형식으로 입력해 주십시오.");
+            System.out.println("⚠ 손절가 - 데이터 타입이 맞지 않음\n");
+            return;
+        }
+
+        // 새로고침 주기-분은 입력된 경우에만 파싱 시도
+        if (!refreshMinuteStr.isEmpty()) {
+            try {
+                refreshMinute = Integer.parseInt(refreshMinuteStr);
+            } catch (NumberFormatException e) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
+                System.out.println("⚠ 새로고침(분) - 데이터 타입이 맞지 않음\n");
+                return;
+            }
+        }
+        // 새로고침 주기-초는 입력된 경우에만 파싱 시도
+        if (!refreshSecondStr.isEmpty()) {
+            try {
+                refreshSecond = Integer.parseInt(refreshSecondStr);
+            } catch (NumberFormatException e) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
+                System.out.println("⚠ 새로고침(초) - 데이터 타입이 맞지 않음\n");
+                return;
+            }
+        }
+        // 새로고침 값이 0이면 유효성 처리
+        if ((refreshMinute + refreshSecond) == 0) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 새로고침 주기는 0이 될 수 없습니다.");
+            System.out.println("⚠ 새로고침 주기는 0이 될 수 없음\n");
+            return;
+        }
+
+        // 목표가가 손절가보다 높은지 검사
+        if (targetPrice < stopPrice) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 손절가는 목표가보다 클 수 없습니다.");
+            System.out.println("⚠ 저장 실패 - 목표가가 손절가보다 낮음\n");
+            return;
+        } else if (targetPrice == stopPrice) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 손절가와 목표가는 같을 수 없습니다.");
+            System.out.println("⚠ 저장 실패 - 목표가와 손절가가 같음\n");
+            return;
+        }
+
+        // 손절가 적절성 검사
+        StockService stockService = new StockService();
+        var quote = stockService.getLiveStockQuote(ticker);
+        if (quote != null) {
+            double currentPrice = quote.getCurrentPrice();
+            if (currentPrice == 0) {    // 현재가가 0이면
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                if (toggleOption == 0) {
+                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + " / 폐지된 종목으로 확인됩니다.");
+                } else if (toggleOption == 1) {
+                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + " / 폐지된 종목으로 확인됩니다.");
+                }
+                System.out.println("⚠ 폐지된 종목임\n");
+                return;
+            }
+            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                if (toggleOption == 0) {
+                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+                } else if (toggleOption == 1) {
+                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+                }
+                System.out.println("⚠ 손절가가 현재가보다 높음\n");
+                return;
+            }
+        }
+
+        // 손절가 및 목표가가 0이하인지 검사
+        if (stopPrice <= 0 || targetPrice <= 0) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 손절가 및 목표가는 0보다 같거나 작을 수 없습니다.");
+            System.out.println("⚠ 손절가 및 목표가 입력이 0이하임\n");
+            return;
+        }
+
+
+        // 티커가 결측치인지 검사
+        if (ticker == null || ticker.isEmpty()) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 티커 정보를 찾을 수 없습니다.");
+            System.out.println("⚠ 저장 실패 - 티커가 null 또는 빈 문자열임\n");
+            return;
+        }
+
+
+        // 동일 종목 이름이 있다면 기존 항목 삭제
+        for (int i = 0; i < StockList.getStockArray().size(); i++) {
+            Stocks s = StockList.getStockArray().get(i);
+            if (s.getTicker().equals(ticker)) {
+                StockList.getStockArray().remove(i);
+                if (toggleOption == 0) {
+                    System.out.println(company + ", 업데이트됨\n");
+                } else if (toggleOption == 1) {
+                    System.out.println(ticker + ", 업데이트됨\n");
+                }
+                break;
+            }
+        }
+
+        // 최종 결과 출력
+        if (toggleOption == 0) {
+            System.out.println("종목명: " + company);
+        } else if (toggleOption == 1) {
+            System.out.println("종목명: " + ticker);
+        }
+        System.out.println("목표가: " + targetPrice);
+        System.out.println("손절가: " + stopPrice);
+        System.out.println("새로고침: " + refreshMinute + "분 " + refreshSecond + "초");
+        System.out.println();
+
+        // // ✅ StockList에 저장
+        Stocks newStock = new Stocks(ticker, toggleOption, targetPrice, stopPrice, refreshMinute, refreshSecond);
+        StockList.getStockArray().add(newStock);
+        AlertService.startMonitoring(newStock);       /// ✅ 알림 이벤트 활성화
+
+        // 저장 성공 로그
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        String logLine = "";
+        if (toggleOption == 0) {
+            logLine = timestamp + " - [" + company + "]이 저장되었습니다!";
+        } else if (toggleOption == 1) {
+            logLine = timestamp + " - [" + ticker + "]이 저장되었습니다!";
+        }
+        StockList.appendLog(logLine);
+        System.out.println(logLine + "\n");
+
+        // ✅ ListView 갱신
+        listViews.clear();
+        for (Stocks s : StockList.getStockArray()) {
+            listViews.add(s.getTicker());
+        }
+
+        // 저장완료 팝업
+        hidePopup();
+        showAlert("StockPIP", "성공적으로 저장되었습니다!", 1);
+    }
+    // 성공 팝업
+    private Alert alert;
+    private void showAlert(String title, String message, int option) {
+        alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        if (option == 0) {
+            alert.show();
+        }
+        else if (option == 1) {
+            alert.showAndWait();
+        }
+    }
+
+    private void hidePopup() {
+        if (alert != null) {
+            alert.hide();
+        }
+    }
+
+
+
+    // 삭제 버튼의 이벤트
+    @FXML
+    private void resetClick(ActionEvent event) {
+        // ✅ 초기화 시 경고 메시지 숨김
+        warningMessageLabel.setVisible(false);
+        warningMessageLabel.setText("");
+
+
+        // 현재 입력된 이름
+        String currentName = nameField.getText().trim();
+
+        // ListView에서 해당 이름이 있을 때만 삭제
+        if (toggleOption == 0) {
+            CompanyService companyService = new CompanyService();
+            var profileOpt = companyService.getCompanyInfoByName(currentName);
+            if (profileOpt.isEmpty()) {
+                System.out.println("⚠ 삭제 실패\n");
+                return;
+            }
+            String ticker = profileOpt.get().getTicker();
+            for (int i = 0; i < StockList.getStockArray().size(); i++) {
+                Stocks s = StockList.getStockArray().get(i);
+                if (s.getTicker().equals(ticker)) {
+                    AlertService.stopMonitoring(ticker);     /// ✅ 해당 종목의 알림 이벤트 삭제
+                    listViews.remove(ticker);
+                    StockList.getStockArray().remove(i);
+                    listViewId.setItems(listViews);
+                    break;
+                }
+            }
+            System.out.println("삭제됨\n\n");
+        } else if (toggleOption == 1) {
+            for (int i = 0; i < StockList.getStockArray().size(); i++) {
+                Stocks s = StockList.getStockArray().get(i);
+                if (s.getTicker().equals(currentName)) {
+                    AlertService.stopMonitoring(currentName);     /// ✅ 해당 종목의 알림 이벤트 삭제
+                    listViews.remove(currentName);
+                    StockList.getStockArray().remove(i);
+                    listViewId.setItems(listViews);
+                    break;
+                }
+            }
+            System.out.println("삭제됨\n\n");
+        }
+
+
+        if (StockList.getStockArray().isEmpty()){
+            // 사용자 입력 필드 초기화
+            nameField.clear();
+            targetPriceField.clear();
+            stopPriceField.clear();
+            refreshField_Minute.clear();
+            refreshField_Second.clear();
+            setToggleOption(1);
+        }
+    }
+
+
+    // 토글 옵션 이벤트
+    private void setToggleOption(int option) {
+        this.toggleOption = option;
+
+        if (option == 0) {
+            companyToggle.setSelected(true);
+            tickerToggle.setSelected(false);
+            System.out.println("회사명 입력 모드");
+
+            nameList = FileLoader.loadLines("names/company_list_filtered.txt");
+        } else if (option == 1) {
+            tickerToggle.setSelected(true);
+            companyToggle.setSelected(false);
+            System.out.println("티커 입력 모드");
+
+            nameList = FileLoader.loadLines("names/ticker_list_s.txt");
+        }
+
+        // 자동완성 연결
+        if (autoCompletionBinding != null) {
+            autoCompletionBinding.dispose();
+        }
+        autoCompletionBinding = TextFields.bindAutoCompletion(nameField, nameList);
+    }
+
+
+    // 네트워크 연결 진단
+    private boolean isInternetAvailable() {
+        // 1차 검사 : Ping으로 빠르게 확인
+        try {
+            boolean pingSuccess = InetAddress.getByName("8.8.8.8").isReachable(1000);
+            if (pingSuccess) {
+                return true; // Ping 성공 → 인터넷 연결 확인
+            }
+        } catch (IOException e) {
+            // Ping 도중 오류 → HTTP로 2차 확인 진행
+        }
+
+        // 2차 검사 : HTTP 요청으로 다시 확인
+        try {
+            URL url = new URL("https://www.google.com/");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
+            int responseCode = connection.getResponseCode();
+
+            // 응답 코드가 200~399면 성공으로 간주
+            return (responseCode >= 200 && responseCode <= 399);
+        } catch (IOException e) {
+            // HTTP 요청 실패 → 인터넷 연결 안 됨
+            return false;
+        }
+    }
+
+
+    /// 사이드바 함수 ///
+    // PIP 활성화
+    @FXML
+    private void pipClick(ActionEvent event) {
+        if (!StockList.getStockArray().isEmpty()){
+            // ✅ 경고 메시지 숨김
+            warningMessageLabel.setVisible(false);
+            warningMessageLabel.setText("");
+
+            // 현재 메인 스테이지 닫기
+            Main.mainStage.close();
+
+            // 새 PIP 스테이지 열기
+            PipLauncher.launchAllPipWindows();
+        }
+        else {
+            System.out.println("⚠ 종목이 비어있어 PIP창을 활성화시킬 수 없습니다.\n\n");
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("StockPIP");
+            alert.setHeaderText(null);
+            alert.setContentText("종목을 먼저 입력해 주십시오.");
+            alert.showAndWait();
+        }
+    }
+
+    // 홈으로 이동
+    @FXML
+    private void handleHomeClick(MouseEvent event) { System.out.println("홈 클릭됨"); }
+
+    // 종목 정보로 이동
+    @FXML
+    private void handleAssetInfoClick(MouseEvent event) {
+        System.out.println("종목 정보 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("assetInfo.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 시세 정보로 이동
+    @FXML
+    private void handlePriceInfoClick(MouseEvent event) {
+        System.out.println("시세 정보 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("priceInfo.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 설정으로 이동
+    @FXML
+    private void handleSettingsClick(MouseEvent event) {
+        System.out.println("설정 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 로그로 이동
+    @FXML
+    private void handleLogClick(MouseEvent event) {
+        System.out.println("로그 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 외부 사이트로 이동
+    @FXML
+    private void handleExternalClick(MouseEvent event) {
+        System.out.println("외부 사이트 클릭됨");
+
+        try {
+            Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

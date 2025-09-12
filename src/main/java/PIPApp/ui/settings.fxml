@@ -219,7 +219,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
-                        <Label prefHeight="29.0" prefWidth="165.0" text="pip 소수점 표시" textFill="WHITE">
+                        <Label prefHeight="29.0" prefWidth="165.0" text="PIP 소수점 표시" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>
@@ -261,7 +261,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="780.0">
                      <children>
-                        <Label prefHeight="29.0" prefWidth="152.0" text="pip 테두리 고정" textFill="WHITE">
+                        <Label prefHeight="29.0" prefWidth="152.0" text="PIP 테두리 고정" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>
@@ -271,7 +271,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
-                        <Label prefHeight="29.0" prefWidth="165.0" text="pip 폰트 크기" textFill="WHITE">
+                        <Label prefHeight="29.0" prefWidth="165.0" text="PIP 폰트 크기" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>

@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import service.AlertService;
 import ui.Main;
 import config.*;
 
@@ -39,10 +40,14 @@ public class PipMain {
     private Label nameLabel;
     private Label priceLabel;
 
+    private String thisTicker;
+
     // 1. Entry Point
     public void pip_On(Stage stage, Stocks stock, int index) {
         this.stage = stage;
         pipWindows.add(this);
+
+        thisTicker = stock.getTicker();
 
         nameLabel = new Label(stock.getName() + "(" + stock.getTicker() + ")");
         priceLabel = new Label("Loading...");
@@ -50,8 +55,9 @@ public class PipMain {
         double fontSize = PipSettingsFontSize.getFontSize();
         styleLabels(fontSize); // 2.
 
-        updateLabels(stock); // 3.
         //bindToStock(stock);
+
+        updateLabels(stock); // 3.
         timelineRefresh(stock); // 4.
 
         double ratio = fontSize / 28.0;
@@ -70,6 +76,9 @@ public class PipMain {
         enableDragAndResize(stage, root);   // 8.
 
         setupStage(stage, root, newWidth, newHeight); // 9.
+
+
+        AlertService.startMonitoring(stock);
     }
 
     // 2. 스타일 설정
@@ -110,10 +119,47 @@ public class PipMain {
         System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
     }
 
-    // 🆕 실시간 갱신 리스너 추가
+//    // 🆕 실시간 갱신 리스너 추가
+//    private void bindToStock(Stocks stock) {
+//        stock.addUpdateListener(() -> {
+//            Platform.runLater(() -> updateLabels(stock));
+//
+//            // 손절가 조건 체크
+//            if (stock.getCurrentPrice() <= stock.getStopPrice() && stock.getCurrentPrice() != 0) {
+//                System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
+//                stop(); // 타임라인 중단 + Stage 닫기
+//                pipWindows.remove(this);
+//            }
+//        });
+//    }
+
     private void bindToStock(Stocks stock) {
+        // 람다로 등록 — stock 내부에서 업데이트 시 이 코드가 호출되어 UI 갱신
         stock.addUpdateListener(() -> {
-            Platform.runLater(() -> updateLabels(stock));
+            Platform.runLater(() -> {
+                // 1) UI 갱신은 반드시 여기서
+                updateLabels(stock);
+
+                // 2) 손절가 체크
+                try {
+                    double current = stock.getCurrentPrice();
+                    if (current != 0 && current <= stock.getStopPrice()) {
+                        System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
+                        stop();
+                        pipWindows.remove(this);
+                        return;
+                    }
+
+//                    // 3) 목표가 체크
+//                    if (current != 0 && current >= stock.getTargetPrice()) {
+//                        System.out.println("[" + stock.getTicker() + "] 목표가 도달 → PIP 창 닫음");
+//                        stop();
+//                        pipWindows.remove(this);
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         });
     }
 
@@ -230,7 +276,7 @@ public class PipMain {
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
         stage.setTitle("StockPipApp");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo_fill.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo/Stock_Logo_fill.png")));
 
         stage.show();
     }
@@ -243,5 +289,14 @@ public class PipMain {
         if (stage != null) {
             stage.close();
         }
+    }
+
+
+    public static List<PipMain> getPipWindows() {
+        return pipWindows;
+    }
+
+    public String getStockTicker() {
+        return thisTicker;
     }
 }

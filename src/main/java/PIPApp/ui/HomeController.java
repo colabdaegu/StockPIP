@@ -277,18 +277,18 @@ public class HomeController {
                 System.out.println("⚠ 폐지된 종목임\n");
                 return;
             }
-            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
-                hidePopup();
-
-                warningMessageLabel.setVisible(true);
-                if (toggleOption == 0) {
-                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
-                } else if (toggleOption == 1) {
-                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
-                }
-                System.out.println("⚠ 손절가가 현재가보다 높음\n");
-                return;
-            }
+//            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
+//                hidePopup();
+//
+//                warningMessageLabel.setVisible(true);
+//                if (toggleOption == 0) {
+//                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+//                } else if (toggleOption == 1) {
+//                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+//                }
+//                System.out.println("⚠ 손절가가 현재가보다 높음\n");
+//                return;
+//            }
         }
 
         // 손절가 및 목표가가 0이하인지 검사

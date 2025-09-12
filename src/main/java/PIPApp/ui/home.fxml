@@ -41,7 +41,7 @@
                   </Button>
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="390.0" prefWidth="340.0" spacing="15.0">
+            <VBox alignment="CENTER" prefHeight="458.0" prefWidth="340.0" spacing="15.0">
                <children>
                   <HBox fx:id="homeBox" alignment="CENTER" onMouseClicked="#handleHomeClick" prefHeight="45.0" prefWidth="200.0" stylesheets="@values/styles.css">
                      <children>
@@ -98,23 +98,6 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox fx:id="settingsBox" alignment="CENTER" onMouseClicked="#handleSettingsClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
-                     <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../resources/img/Settings_.png" />
-                           </image>
-                        </ImageView>
-                        <Label prefHeight="32.0" prefWidth="192.0" text="설정" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic" size="20.0" />
-                           </font>
-                           <padding>
-                              <Insets left="15.0" />
-                           </padding>
-                        </Label>
-                     </children>
-                  </HBox>
                   <HBox fx:id="logBox" alignment="CENTER" onMouseClicked="#handleLogClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -132,6 +115,23 @@
                         </Label>
                      </children>
                   </HBox>
+                  <HBox fx:id="settingsBox" alignment="CENTER" onMouseClicked="#handleSettingsClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/img/Settings_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="설정" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
                   <HBox fx:id="externalBox" alignment="CENTER" onMouseClicked="#handleExternalClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -140,6 +140,23 @@
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="외부 사이트" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="aiBox" alignment="CENTER" onMouseClicked="#handleAiClick" prefHeight="100.0" prefWidth="340.0" styleClass="edge">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/img/AI_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="AI 분석 ✨" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic" size="20.0" />
                            </font>

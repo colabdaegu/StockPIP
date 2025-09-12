@@ -1,51 +1,59 @@
 package ui;
 
-import pip.PipLauncher;
-import javafx.application.Platform;
+import config.StockList;
+import config.Stocks;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.TextArea;
-
-import config.*;
+import pip.PipLauncher;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 
-public class LogInfoController {
-    @FXML private TextArea logTextArea;
+public class AiController {
+    @FXML private Label firstLabel;
+    @FXML private Label secondLabel;
+    @FXML private Label thirdLabel;
+    @FXML private Label fourthLabel;
+    @FXML private Label fifthLabel;
+    @FXML private Label sixthLabel;
+
 
     @FXML
     public void initialize() {
-        logTextArea.setText(StockList.getLogText());
+        // 초기 값 세팅 (있다면)
+        setInitialStock();
+
+        // updateLabel();
     }
 
-    // 로그 초기화
+
+    // 초기 값 세팅 (있다면)
+    private void setInitialStock() {
+
+    }
+
+    // AI 분석 최신화
     @FXML
     private void resetClick(ActionEvent event) {
-        StockList.clearLog();
-        logTextArea.clear();
-        System.out.println("로그 기록 초기화됨\n");
+        // updateLabel();
+
+        System.out.println("AI 갱신됨\n");
     }
 
-
-    // 싱글 인스턴스 참조 (자동 갱신용)
-    private static LogInfoController instance;
-
-    public LogInfoController() {
-        instance = this;
-    }
-
-    public static void appendToLogArea(String logLine) {
-        if (instance != null && instance.logTextArea != null) {
-            Platform.runLater(() -> {
-                instance.logTextArea.appendText(logLine + "\n");
-            });
-        }
+    // 라벨 업데이트
+    private void updateLabel(Stocks stock) {
+        firstLabel.setText(stock.getName());
+        secondLabel.setText(stock.getName());
+        thirdLabel.setText(stock.getName());
+        fourthLabel.setText(stock.getName());
+        fifthLabel.setText(stock.getName());
+        sixthLabel.setText(stock.getName());
     }
 
 
@@ -119,16 +127,15 @@ public class LogInfoController {
 
     // 로그로 이동
     @FXML
-    private void handleLogClick(MouseEvent event) { System.out.println("로그 클릭됨"); }
-
-    // 외부 사이트로 이동
-    @FXML
-    private void handleExternalClick(MouseEvent event) {
-        System.out.println("외부 사이트 클릭됨");
-
+    private void handleLogClick(MouseEvent event) {
+        System.out.println("로그 클릭됨");
         try {
-            Desktop.getDesktop().browse(new URI("https://finviz.com/"));
-        } catch (Exception e) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -148,18 +155,19 @@ public class LogInfoController {
         }
     }
 
-    // AI 분석으로 이동
+    // 외부 사이트로 이동
     @FXML
-    private void handleAiClick(MouseEvent event) {
-        System.out.println("AI 분석 클릭됨");
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ai.fxml"));
-            Parent root = loader.load();
+    private void handleExternalClick(MouseEvent event) {
+        System.out.println("외부 사이트 클릭됨");
 
-            // Main의 전역 Stage를 이용해서 화면 전환
-            Main.mainStage.getScene().setRoot(root);
-        } catch (IOException e) {
+        try {
+            Desktop.getDesktop().browse(new URI("https://finviz.com/"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    // AI 분석으로 이동
+    @FXML
+    private void handleAiClick(MouseEvent event) { System.out.println("AI 분석 클릭됨"); }
 }

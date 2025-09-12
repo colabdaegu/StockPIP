@@ -29,38 +29,65 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 public class HomeController {
+    // 리스트 뷰
     @FXML private ListView<String> listViewId;
 
+    // 입력 필드
     @FXML private TextField nameField;
     @FXML private TextField targetPriceField;
     @FXML private TextField stopPriceField;
     @FXML private TextField refreshField_Minute;
     @FXML private TextField refreshField_Second;
 
-    private AutoCompletionBinding<String> autoCompletionBinding;
+    // 경고 메시지용
+    @FXML private Label warningMessageLabel;
 
-    @FXML private Label warningMessageLabel; // 경고 메시지용
-
-    private List<String> nameList;
-    private ObservableList<String> listViews = FXCollections.observableArrayList();
-
-    private int toggleOption;
-
-
+    // 토글 버튼
     @FXML private JFXToggleNode companyToggle;
     @FXML private JFXToggleNode tickerToggle;
     @FXML private ToggleGroup inputToggleGroup;
 
+    // 자동완성
+    private AutoCompletionBinding<String> autoCompletionBinding;
+
+    // 데이터 리스트
+    private List<String> nameList;
+    private ObservableList<String> listViews = FXCollections.observableArrayList();
+
+    // 토글 옵션
+    private int toggleOption;
+
+    // 성공 팝업
+    private Alert alert;
+
+
     @FXML
     public void initialize() {
+        // 리스트뷰 초기 설정
+        setupListView();
+
+        // 리스트뷰 클릭 이벤트
+        listViewClickEvent();
+
+        // 종목 이름 토글 - 초기 세팅
+        toggleOption = 1;
+        setToggleOption(1);
+
+        // 종목 이름 토글 - 이벤트 리스너
+        toggleListner();
+    }
+
+
+    // 리스트뷰 초기 설정
+    private void setupListView() {
         for (Stocks p : StockList.stockArray) {
             listViews.add(p.getTicker());  // 이름만 추출해서 리스트에 추가
         }
         listViewId.setItems(listViews);
+    }
 
-
-
-        // 리스트뷰에서 해당하는 종목을 클릭했을 때
+    // 리스트뷰에서 해당하는 종목을 클릭했을 때
+    private void listViewClickEvent() {
         listViewId.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
                 // 선택된 이름에 해당하는 Stocks 객체 검색
@@ -82,11 +109,36 @@ public class HomeController {
                 }
             }
         });
+    }
 
 
-        toggleOption = 1;
-        setToggleOption(1);
+    // 토글 옵션
+    private void setToggleOption(int option) {
+        this.toggleOption = option;
 
+        if (option == 0) {
+            companyToggle.setSelected(true);
+            tickerToggle.setSelected(false);
+            System.out.println("회사명 입력 모드");
+
+            nameList = FileLoader.loadLines("names/company_list_filtered.txt");
+        } else if (option == 1) {
+            tickerToggle.setSelected(true);
+            companyToggle.setSelected(false);
+            System.out.println("티커 입력 모드");
+
+            nameList = FileLoader.loadLines("names/ticker_list_s.txt");
+        }
+
+        // 자동완성 연결
+        if (autoCompletionBinding != null) {
+            autoCompletionBinding.dispose();
+        }
+        autoCompletionBinding = TextFields.bindAutoCompletion(nameField, nameList);
+    }
+
+    // 종목 이름 토글 - 이벤트 리스너
+    private void toggleListner() {
         inputToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle == null) {
                 if (oldToggle != null) {
@@ -107,7 +159,7 @@ public class HomeController {
     // 저장 버튼의 이벤트
     @FXML
     private void saveClick(ActionEvent event) {
-        // ✅ 경고 메시지 숨기고 시작
+        /// 경고 메시지 숨기고 시작
         warningMessageLabel.setVisible(false);
         warningMessageLabel.setText("");
         showAlert("Now Loading...", "⏳ 유효성 검사 중...", 0);
@@ -118,6 +170,12 @@ public class HomeController {
         String stopPriceStr = stopPriceField.getText().trim();
         String refreshMinuteStr = refreshField_Minute.getText().trim();
         String refreshSecondStr = refreshField_Second.getText().trim();
+
+
+        String company = "";
+        String ticker = "";
+        double targetPrice, stopPrice;
+        int refreshMinute = 0, refreshSecond = 0;
 
 
         // 네트워크 검사
@@ -131,8 +189,6 @@ public class HomeController {
         }
 
         // 이름 유효성 검사
-        String company = "";
-        String ticker = "";
         if (toggleOption == 0) {
             company = name_Str;
             if (!nameList.contains(company)) {
@@ -178,10 +234,6 @@ public class HomeController {
             return;
         }
 
-        // 값 파싱
-        double targetPrice, stopPrice;
-        int refreshMinute = 0, refreshSecond = 0;
-
 
         // 목표가 유효성 검사
         try {
@@ -194,7 +246,6 @@ public class HomeController {
             System.out.println("⚠ 목표가 - 데이터 타입이 맞지 않음\n");
             return;
         }
-
         // 손절가 유효성 검사
         try {
             stopPrice = Double.parseDouble(stopPriceStr);
@@ -206,6 +257,7 @@ public class HomeController {
             System.out.println("⚠ 손절가 - 데이터 타입이 맞지 않음\n");
             return;
         }
+
 
         // 새로고침 주기-분은 입력된 경우에만 파싱 시도
         if (!refreshMinuteStr.isEmpty()) {
@@ -243,6 +295,7 @@ public class HomeController {
             return;
         }
 
+
         // 목표가가 손절가보다 높은지 검사
         if (targetPrice < stopPrice) {
             hidePopup();
@@ -259,6 +312,7 @@ public class HomeController {
             System.out.println("⚠ 저장 실패 - 목표가와 손절가가 같음\n");
             return;
         }
+
 
         // 손절가 적절성 검사
         StockService stockService = new StockService();
@@ -277,19 +331,20 @@ public class HomeController {
                 System.out.println("⚠ 폐지된 종목임\n");
                 return;
             }
-            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
-                hidePopup();
-
-                warningMessageLabel.setVisible(true);
-                if (toggleOption == 0) {
-                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
-                } else if (toggleOption == 1) {
-                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
-                }
-                System.out.println("⚠ 손절가가 현재가보다 높음\n");
-                return;
-            }
+//            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
+//                hidePopup();
+//
+//                warningMessageLabel.setVisible(true);
+//                if (toggleOption == 0) {
+//                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+//                } else if (toggleOption == 1) {
+//                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+//                }
+//                System.out.println("⚠ 손절가가 현재가보다 높음\n");
+//                return;
+//            }
         }
+
 
         // 손절가 및 목표가가 0이하인지 검사
         if (stopPrice <= 0 || targetPrice <= 0) {
@@ -338,10 +393,10 @@ public class HomeController {
         System.out.println("새로고침: " + refreshMinute + "분 " + refreshSecond + "초");
         System.out.println();
 
-        // // ✅ StockList에 저장
+        //// ✅ StockList에 저장
         Stocks newStock = new Stocks(ticker, toggleOption, targetPrice, stopPrice, refreshMinute, refreshSecond);
         StockList.getStockArray().add(newStock);
-        AlertService.startMonitoring(newStock);       /// ✅ 알림 이벤트 활성화
+        AlertService.startMonitoring(newStock);       /// 알림 이벤트 활성화
 
         // 저장 성공 로그
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -355,7 +410,7 @@ public class HomeController {
         StockList.appendLog(logLine);
         System.out.println(logLine + "\n");
 
-        // ✅ ListView 갱신
+        /// ListView 갱신
         listViews.clear();
         for (Stocks s : StockList.getStockArray()) {
             listViews.add(s.getTicker());
@@ -365,8 +420,8 @@ public class HomeController {
         hidePopup();
         showAlert("StockPIP", "성공적으로 저장되었습니다!", 1);
     }
+
     // 성공 팝업
-    private Alert alert;
     private void showAlert(String title, String message, int option) {
         alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -385,7 +440,6 @@ public class HomeController {
             alert.hide();
         }
     }
-
 
 
     // 삭제 버튼의 이벤트
@@ -411,7 +465,7 @@ public class HomeController {
             for (int i = 0; i < StockList.getStockArray().size(); i++) {
                 Stocks s = StockList.getStockArray().get(i);
                 if (s.getTicker().equals(ticker)) {
-                    AlertService.stopMonitoring(ticker);     /// ✅ 해당 종목의 알림 이벤트 삭제
+                    AlertService.stopMonitoring(ticker);     /// 해당 종목의 알림 이벤트 삭제
                     listViews.remove(ticker);
                     StockList.getStockArray().remove(i);
                     listViewId.setItems(listViews);
@@ -423,7 +477,7 @@ public class HomeController {
             for (int i = 0; i < StockList.getStockArray().size(); i++) {
                 Stocks s = StockList.getStockArray().get(i);
                 if (s.getTicker().equals(currentName)) {
-                    AlertService.stopMonitoring(currentName);     /// ✅ 해당 종목의 알림 이벤트 삭제
+                    AlertService.stopMonitoring(currentName);     /// 해당 종목의 알림 이벤트 삭제
                     listViews.remove(currentName);
                     StockList.getStockArray().remove(i);
                     listViewId.setItems(listViews);
@@ -443,32 +497,6 @@ public class HomeController {
             refreshField_Second.clear();
             setToggleOption(1);
         }
-    }
-
-
-    // 토글 옵션 이벤트
-    private void setToggleOption(int option) {
-        this.toggleOption = option;
-
-        if (option == 0) {
-            companyToggle.setSelected(true);
-            tickerToggle.setSelected(false);
-            System.out.println("회사명 입력 모드");
-
-            nameList = FileLoader.loadLines("names/company_list_filtered.txt");
-        } else if (option == 1) {
-            tickerToggle.setSelected(true);
-            companyToggle.setSelected(false);
-            System.out.println("티커 입력 모드");
-
-            nameList = FileLoader.loadLines("names/ticker_list_s.txt");
-        }
-
-        // 자동완성 연결
-        if (autoCompletionBinding != null) {
-            autoCompletionBinding.dispose();
-        }
-        autoCompletionBinding = TextFields.bindAutoCompletion(nameField, nameList);
     }
 
 
@@ -500,6 +528,7 @@ public class HomeController {
             return false;
         }
     }
+
 
 
     /// 사이드바 함수 ///
@@ -562,12 +591,12 @@ public class HomeController {
         }
     }
 
-    // 설정으로 이동
+    // 로그로 이동
     @FXML
-    private void handleSettingsClick(MouseEvent event) {
-        System.out.println("설정 클릭됨");
+    private void handleLogClick(MouseEvent event) {
+        System.out.println("로그 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -577,12 +606,12 @@ public class HomeController {
         }
     }
 
-    // 로그로 이동
+    // 설정으로 이동
     @FXML
-    private void handleLogClick(MouseEvent event) {
-        System.out.println("로그 클릭됨");
+    private void handleSettingsClick(MouseEvent event) {
+        System.out.println("설정 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -600,6 +629,21 @@ public class HomeController {
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // AI 분석으로 이동
+    @FXML
+    private void handleAiClick(MouseEvent event) {
+        System.out.println("AI 분석 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ai.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

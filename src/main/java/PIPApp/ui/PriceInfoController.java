@@ -37,13 +37,25 @@ public class PriceInfoController {
 
     @FXML
     public void initialize() {
-        // 콤보박스 초기화
+        // 콤보박스 설정
+        comboBoxOverride();
+        setupComboBox();
+
+        // 초기 값 세팅 (있다면)
+        setInitialStock();
+    }
+
+
+    // 콤보박스 초기화
+    private void comboBoxOverride() {
         comboBoxID.getItems().clear();
         for (Stocks stock : StockList.getStockArray()) {
             comboBoxID.getItems().add(stock.getTicker());
         }
+    }
 
-        // 콤보박스 선택 이벤트 핸들러
+    // 콤보박스 선택 이벤트 핸들러
+    private void setupComboBox() {
         comboBoxID.setOnAction(e -> {
             String selectedTicker = comboBoxID.getValue();
             if (selectedTicker == null) return;
@@ -56,8 +68,11 @@ public class PriceInfoController {
                 }
             }
         });
+    }
 
-        // 초기 값 설정 (있다면)
+
+    // 초기 값 세팅 (있다면)
+    private void setInitialStock() {
         if (!StockList.getStockArray().isEmpty()) {
             Stocks firstStock = StockList.getStockArray().get(0);
             comboBoxID.getSelectionModel().select(firstStock.getTicker());
@@ -174,24 +189,6 @@ public class PriceInfoController {
     @FXML
     private void handlePriceInfoClick(MouseEvent event) { System.out.println("시세 정보 클릭됨"); }
 
-    // 설정으로 이동
-    @FXML
-    private void handleSettingsClick(MouseEvent event) {
-        System.out.println("설정 클릭됨");
-        if (refreshTimeline != null) {
-            refreshTimeline.stop();
-        }
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
-            Parent root = loader.load();
-
-            // Main의 전역 Stage를 이용해서 화면 전환
-            Main.mainStage.getScene().setRoot(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // 로그로 이동
     @FXML
     private void handleLogClick(MouseEvent event) {
@@ -210,6 +207,24 @@ public class PriceInfoController {
         }
     }
 
+    // 설정으로 이동
+    @FXML
+    private void handleSettingsClick(MouseEvent event) {
+        System.out.println("설정 클릭됨");
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // 외부 사이트로 이동
     @FXML
     private void handleExternalClick(MouseEvent event) {
@@ -218,6 +233,21 @@ public class PriceInfoController {
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // AI 분석으로 이동
+    @FXML
+    private void handleAiClick(MouseEvent event) {
+        System.out.println("AI 분석 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ai.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

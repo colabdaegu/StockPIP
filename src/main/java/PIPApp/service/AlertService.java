@@ -35,6 +35,14 @@ public class AlertService {
     // 종목별 알림창 최신화 관리
     private static final Map<String, Alert> alertMap = new HashMap<>();
 
+    // 모든 모니터링 중단
+    public static void stopAllMonitoring() {
+        for (Timeline timeline : monitoringMap.values()) {
+            timeline.stop();
+        }
+        monitoringMap.clear();
+    }
+
     // 모니터링 시작
     public static void startMonitoring(Stocks stock) {
         String ticker = stock.getTicker();
@@ -139,28 +147,6 @@ public class AlertService {
         }
     }
 
-    // 로그 포맷 함수
-    private static String formatLog(int type, String timestamp, String name, String message, double currentPrice, double targetOrStopPrice) {
-        if (type == 0) {
-            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " 목표가: $" + targetOrStopPrice;
-        } else {
-            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " --> 삭제";
-        }
-    }
-
-    // 로그 포맷 함수 (윈도우 알림용)
-    private static String formatLog(int type, String timestamp, String name) {
-        if (type == 0) {
-            return timestamp + " - [" + name + "]이(가) 삭제됨 (목표가 달성)";
-        } else {
-            return timestamp + " - [" + name + "]이(가) 삭제됨 (손절가 도달)";
-        }
-    }
-
-    // 비프음
-    private static void beep() {
-        java.awt.Toolkit.getDefaultToolkit().beep();
-    }
 
     // 알림 팝업 (AlertType을 매개변수로 받음)
     private static void showAlert(int type, Alert.AlertType warningType, String name, String ticker, String title, String message, String timestamp) {
@@ -183,12 +169,16 @@ public class AlertService {
             alert.getDialogPane().setContent(label);
 
             if (type == 0) {
-                ButtonType okButton = new ButtonType("종목 삭제", ButtonBar.ButtonData.OK_DONE);
-                ButtonType cancelButton = new ButtonType("알림 중단", ButtonBar.ButtonData.CANCEL_CLOSE);
-                alert.getButtonTypes().setAll(okButton, cancelButton);
+                ButtonType stopButton = new ButtonType("알림 중단", ButtonBar.ButtonData.OK_DONE);
+                ButtonType removeButton = new ButtonType("종목 삭제", ButtonBar.ButtonData.OK_DONE);
+                ButtonType closeButton = new ButtonType("닫기", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(stopButton, removeButton, closeButton);
 
                 alert.resultProperty().addListener((obs, oldVal, newVal) -> {
-                    if (newVal == okButton) {
+                    if (newVal == stopButton) {
+                        monitoringMap.get(ticker).stop();
+                        System.out.println("[" + name + "] 알림 중단 버튼 눌림");
+                    } else if (newVal == removeButton) {
                         stopMonitoring(ticker);
                         StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
                         System.out.println("[" + name + "] 종목 삭제 버튼 눌림");
@@ -205,9 +195,8 @@ public class AlertService {
                         // 삭제 전용 매니저 호출
                         PipCloseManager closeManager = new PipCloseManager(PipMain.getPipWindows());
                         closeManager.closePipByTicker(ticker);
-                    } else if (newVal == cancelButton) {
-                        monitoringMap.get(ticker).stop();
-                        System.out.println("[" + name + "] 알림 중단 버튼 눌림");
+                    } else if (newVal == closeButton) {
+                        System.out.println("알림창 닫기");
                     }
                 });
             }
@@ -219,37 +208,6 @@ public class AlertService {
             alert.show();
         });
     }
-
-
-    // 네트워크 연결 진단
-    private static boolean isInternetAvailable() {
-        // 1차 검사 : Ping으로 빠르게 확인
-        try {
-            boolean pingSuccess = InetAddress.getByName("8.8.8.8").isReachable(1000);
-            if (pingSuccess) {
-                return true; // Ping 성공 → 인터넷 연결 확인
-            }
-        } catch (IOException e) {
-            // Ping 도중 오류 → HTTP로 2차 확인 진행
-        }
-
-        // 2차 검사 : HTTP 요청으로 다시 확인
-        try {
-            URL url = new URL("https://www.google.com/");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(2000);
-            connection.setReadTimeout(2000);
-            int responseCode = connection.getResponseCode();
-
-            // 응답 코드가 200~399면 성공으로 간주
-            return (responseCode >= 200 && responseCode <= 399);
-        } catch (IOException e) {
-            // HTTP 요청 실패 → 인터넷 연결 안 됨
-            return false;
-        }
-    }
-
 
     // Windows 알림 센터 알림
     public static void showNotification(String title, String message) {
@@ -284,5 +242,60 @@ public class AlertService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    // 로그 포맷 함수
+    private static String formatLog(int type, String timestamp, String name, String message, double currentPrice, double targetOrStopPrice) {
+        if (type == 0) {
+            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " 목표가: $" + targetOrStopPrice;
+        } else {
+            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " --> 삭제";
+        }
+    }
+
+    // 로그 포맷 함수 (윈도우 알림용)
+    private static String formatLog(int type, String timestamp, String name) {
+        if (type == 0) {
+            return timestamp + " - [" + name + "]이(가) 삭제됨 (목표가 달성)";
+        } else {
+            return timestamp + " - [" + name + "]이(가) 삭제됨 (손절가 도달)";
+        }
+    }
+
+
+    // 네트워크 연결 진단
+    private static boolean isInternetAvailable() {
+        // 1차 검사 : Ping으로 빠르게 확인
+        try {
+            boolean pingSuccess = InetAddress.getByName("8.8.8.8").isReachable(1000);
+            if (pingSuccess) {
+                return true; // Ping 성공 → 인터넷 연결 확인
+            }
+        } catch (IOException e) {
+            // Ping 도중 오류 → HTTP로 2차 확인 진행
+        }
+
+        // 2차 검사 : HTTP 요청으로 다시 확인
+        try {
+            URL url = new URL("https://www.google.com/");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
+            int responseCode = connection.getResponseCode();
+
+            // 응답 코드가 200~399면 성공으로 간주
+            return (responseCode >= 200 && responseCode <= 399);
+        } catch (IOException e) {
+            // HTTP 요청 실패 → 인터넷 연결 안 됨
+            return false;
+        }
+    }
+
+
+    // 비프음
+    private static void beep() {
+        java.awt.Toolkit.getDefaultToolkit().beep();
     }
 }

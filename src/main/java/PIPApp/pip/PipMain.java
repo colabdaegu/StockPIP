@@ -120,42 +120,6 @@ public class PipMain {
         System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
     }
 
-//    // 실시간 갱신 리스너
-//    private void bindToStock(Stocks stock) {
-//        stock.addUpdateListener(() -> {
-//            Platform.runLater(() -> updateLabels(stock));
-//
-//            // 손절가 조건 체크
-//            if (stock.getCurrentPrice() <= stock.getStopPrice() && stock.getCurrentPrice() != 0) {
-//                System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
-//                stop(1); // 타임라인 중단 + Stage 닫기
-//            }
-//        });
-//    }
-
-    // 실시간 갱신 리스너 (2)
-    private void bindToStock(Stocks stock) {
-        // 람다로 등록 — stock 내부에서 업데이트 시 이 코드가 호출되어 UI 갱신
-        stock.addUpdateListener(() -> {
-            Platform.runLater(() -> {
-                // 1) UI 갱신은 반드시 여기서
-                updateLabels(stock);
-
-                // 2) 손절가 체크
-                try {
-                    double current = stock.getCurrentPrice();
-                    if (current != 0 && current <= stock.getStopPrice()) {
-                        System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
-                        stop(1);
-                        return;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        });
-    }
-
     // 4. 주기적 업데이트
     private void timelineRefresh(Stocks stock) {
         if (refreshTimeline != null) {

@@ -266,12 +266,6 @@ public class SettingsController {
         }
     }
 
-    // 설정으로 이동
-    @FXML
-    private void handleSettingsClick(MouseEvent event) {
-        System.out.println("설정 클릭됨");
-    }
-
     // 로그로 이동
     @FXML
     private void handleLogClick(MouseEvent event) {
@@ -287,6 +281,12 @@ public class SettingsController {
         }
     }
 
+    // 설정으로 이동
+    @FXML
+    private void handleSettingsClick(MouseEvent event) {
+        System.out.println("설정 클릭됨");
+    }
+
     // 외부 사이트로 이동
     @FXML
     private void handleExternalClick(MouseEvent event) {
@@ -295,6 +295,21 @@ public class SettingsController {
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // AI 분석으로 이동
+    @FXML
+    private void handleAiClick(MouseEvent event) {
+        System.out.println("AI 분석 클릭됨");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ai.fxml"));
+            Parent root = loader.load();
+
+            // Main의 전역 Stage를 이용해서 화면 전환
+            Main.mainStage.getScene().setRoot(root);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

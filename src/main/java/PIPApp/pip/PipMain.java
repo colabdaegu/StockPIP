@@ -1,6 +1,7 @@
 package pip;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.application.Platform;
@@ -42,8 +43,8 @@ public class PipMain {
 
     private String thisTicker;
 
-    // 1. Entry Point
-    public void pip_On(Stage stage, Stocks stock, int index) {
+    // main. Entry Point
+    public void PipMain(Stage stage, Stocks stock, int index) {
         this.stage = stage;
         pipWindows.add(this);
 
@@ -119,7 +120,7 @@ public class PipMain {
         System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
     }
 
-//    // 🆕 실시간 갱신 리스너 추가
+//    // 실시간 갱신 리스너
 //    private void bindToStock(Stocks stock) {
 //        stock.addUpdateListener(() -> {
 //            Platform.runLater(() -> updateLabels(stock));
@@ -127,12 +128,12 @@ public class PipMain {
 //            // 손절가 조건 체크
 //            if (stock.getCurrentPrice() <= stock.getStopPrice() && stock.getCurrentPrice() != 0) {
 //                System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
-//                stop(); // 타임라인 중단 + Stage 닫기
-//                pipWindows.remove(this);
+//                stop(1); // 타임라인 중단 + Stage 닫기
 //            }
 //        });
 //    }
 
+    // 실시간 갱신 리스너 (2)
     private void bindToStock(Stocks stock) {
         // 람다로 등록 — stock 내부에서 업데이트 시 이 코드가 호출되어 UI 갱신
         stock.addUpdateListener(() -> {
@@ -145,17 +146,9 @@ public class PipMain {
                     double current = stock.getCurrentPrice();
                     if (current != 0 && current <= stock.getStopPrice()) {
                         System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
-                        stop();
-                        pipWindows.remove(this);
+                        stop(1);
                         return;
                     }
-
-//                    // 3) 목표가 체크
-//                    if (current != 0 && current >= stock.getTargetPrice()) {
-//                        System.out.println("[" + stock.getTicker() + "] 목표가 도달 → PIP 창 닫음");
-//                        stop();
-//                        pipWindows.remove(this);
-//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -180,8 +173,7 @@ public class PipMain {
                     // 손절가 조건 체크
                     if (stock.getCurrentPrice() <= stock.getStopPrice() && stock.getCurrentPrice() != 0) {
                         System.out.println("[" + stock.getTicker() + "] 손절가 도달 → PIP 창 닫음");
-                        stop(); // 타임라인 중단 + Stage 닫기
-                        pipWindows.remove(this);
+                        stop(1); // 타임라인 중단 + Stage 닫기
                     }
                 })
         );
@@ -195,8 +187,7 @@ public class PipMain {
         Button closeBtn = new Button("✕");
         closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
         closeBtn.setOnAction(e -> {
-            stop();
-            pipWindows.remove(this);
+            stop(1);
             if (pipWindows.isEmpty()) Platform.exit();
         });
 
@@ -204,7 +195,7 @@ public class PipMain {
         settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
         settingsBtn.setOnAction(e -> {
             for (PipMain pip : new ArrayList<>(pipWindows)) {
-                pip.stop();
+                pip.stop(0);
             }
             pipWindows.clear();
             try {
@@ -282,13 +273,36 @@ public class PipMain {
     }
 
     // 10. 종료 시 타임라인 멈추고 창 닫기
-    public void stop() {
+    public void stop(int option) {
         if (refreshTimeline != null) {
             refreshTimeline.stop();
         }
         if (stage != null) {
             stage.close();
         }
+
+        if (option == 1) {
+            pipWindows.remove(this);
+
+            if (pipWindows.isEmpty()) {
+                handleLastWindowClose();
+            }
+        }
+    }
+
+    // 마지막 창일 경우 (알림창 표시를 위한 더미 Stage)
+    private static void handleLastWindowClose() {
+        Stage tempStage = new Stage();
+        tempStage.setTitle("Dummy");
+        tempStage.setOpacity(0);
+        tempStage.show();
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(e -> {
+            tempStage.close();
+            Platform.exit();
+        });
+        delay.play();
     }
 
 

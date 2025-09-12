@@ -266,7 +266,7 @@
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>
                         </Label>
-                        <JFXToggleButton fx:id="pipToggle" onAction="#handlePipToggle" style="-fx-background-color: transparent;" />
+                        <JFXToggleButton fx:id="pipToggle" style="-fx-background-color: transparent;" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">

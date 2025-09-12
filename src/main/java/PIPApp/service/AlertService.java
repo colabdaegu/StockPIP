@@ -81,13 +81,12 @@ public class AlertService {
                     String NotificationMessage = name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + currentPrice + "\n 목표가: $" + targetPrice;
                     showNotification("📈 목표가 달성!", NotificationMessage);
 
-                    // 모니터링 종료 및 데이터 삭제
-                    stopMonitoring(ticker);
-                    StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
+                    // 모니터링 종료
+                    monitoringMap.get(ticker).stop();
 
-                    String logLineNotification = formatLog(0, timestamp, name);
-                    StockList.appendLog(logLineNotification);
-                    System.out.println("[" + ticker + "] - 삭제됨");
+//                    String logLineNotification = formatLog(0, timestamp, name);
+//                    StockList.appendLog(logLineNotification);
+//                    System.out.println("[" + ticker + "] - 삭제됨");
                 }
             }
 
@@ -104,17 +103,25 @@ public class AlertService {
                     String AlertMessage = "(" + timestamp + ") " + name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + currentPrice + "\n 손절가: $" + stopPrice;
                     showAlert(1, Alert.AlertType.INFORMATION, name, ticker, "📉 손절가 도달", AlertMessage, timestamp);
                     beep();
-                } else if (AppConstants.notificationOption == 1) {
-                    String NotificationMessage = name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + currentPrice;
-                    showNotification("📉 손절가 도달", NotificationMessage);
-
-                    // 모니터링 종료 및 데이터 삭제
-                    stopMonitoring(ticker);
-                    StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
 
                     String logLineNotification = formatLog(1, timestamp, name);
                     StockList.appendLog(logLineNotification);
                     System.out.println("[" + ticker + "] - 삭제됨");
+
+                    // 모니터링 종료 및 데이터 삭제
+                    stopMonitoring(ticker);
+                    StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
+                } else if (AppConstants.notificationOption == 1) {
+                    String NotificationMessage = name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + currentPrice;
+                    showNotification("📉 손절가 도달", NotificationMessage);
+
+                    String logLineNotification = formatLog(1, timestamp, name);
+                    StockList.appendLog(logLineNotification);
+                    System.out.println("[" + ticker + "] - 삭제됨");
+
+                    // 모니터링 종료 및 데이터 삭제
+                    stopMonitoring(ticker);
+                    StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
                 }
             }
         }));
@@ -137,7 +144,7 @@ public class AlertService {
         if (type == 0) {
             return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " 목표가: $" + targetOrStopPrice;
         } else {
-            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " --> 삭제됨";
+            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " --> 삭제";
         }
     }
 
@@ -191,26 +198,18 @@ public class AlertService {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                         String currentTime = now.format(formatter);
 
-                        // 삭제 전용 매니저 호출
-                        PipCloseManager closeManager = new PipCloseManager(PipMain.getPipWindows());
-                        closeManager.closePipByTicker(ticker);
-
-
                         String logLineNotification = formatLog(0, currentTime, name);
                         StockList.appendLog(logLineNotification);
                         System.out.println("[" + ticker + "] - 삭제됨");
+
+                        // 삭제 전용 매니저 호출
+                        PipCloseManager closeManager = new PipCloseManager(PipMain.getPipWindows());
+                        closeManager.closePipByTicker(ticker);
                     } else if (newVal == cancelButton) {
                         monitoringMap.get(ticker).stop();
                         System.out.println("[" + name + "] 알림 중단 버튼 눌림");
                     }
                 });
-            } else if (type == 1) {
-                stopMonitoring(ticker);
-                StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
-
-                String logLineNotification = formatLog(1, timestamp, name);
-                StockList.appendLog(logLineNotification);
-                System.out.println("[" + ticker + "] - 삭제됨");
             }
 
             // 숨겨질 때 맵에서 제거

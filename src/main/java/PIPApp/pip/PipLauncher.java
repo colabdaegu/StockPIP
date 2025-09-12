@@ -10,7 +10,7 @@ public class PipLauncher {
         for (Stocks stock : StockList.getStockArray()) {
             Stage pipStage = new Stage();
             PipMain pipWindow = new PipMain();
-            pipWindow.pip_On(pipStage, stock, index);
+            pipWindow.PipMain(pipStage, stock, index);
             index++;
         }
     }

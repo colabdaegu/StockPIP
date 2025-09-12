@@ -28,11 +28,25 @@ public class SettingsController {
     @FXML RadioButton decimal_0, decimal_1, decimal_2, decimal_3, decimal_4, decimal_5;
 
 
-
     @FXML
     public void initialize() {
         /// ✅ AppConstants 값 → UI 컴포넌트 초기화
         // 알림 선택
+        notificationSettings();
+
+        // PIP 소수점 표시
+        pipDecimalPointSettings();
+
+        // PIP 테두리 고정
+        pipOutlineSettings();
+
+        // PIP 폰트 사이즈 설정
+        pipFontSettings();
+    }
+
+
+    // 알림 선택
+    private void notificationSettings() {
         switch (AppConstants.notificationOption) {
             case 0 -> notification_1_Button.setSelected(true);
             case 1 -> notification_2_Button.setSelected(true);
@@ -47,7 +61,6 @@ public class SettingsController {
                 System.out.println("팝업창 알림으로 설정됨");
             }
         });
-
         notification_2_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
                 // 윈도우 시스템 알림이 선택됐을 때
@@ -55,7 +68,6 @@ public class SettingsController {
                 System.out.println("윈도우 알림으로 설정됨");
             }
         });
-
         notification_3_Button.selectedProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
                 // 사운드 알림이 선택됐을 때
@@ -63,10 +75,10 @@ public class SettingsController {
                 System.out.println("알림 없음으로 설정됨");
             }
         });
+    }
 
-
-
-        // PIP 소수점 표시
+    // PIP 소수점 표시
+    private void pipDecimalPointSettings() {
         ToggleGroup group = new ToggleGroup();
         decimal_0.setToggleGroup(group);
         decimal_1.setToggleGroup(group);
@@ -120,8 +132,29 @@ public class SettingsController {
                 System.out.println("소수점 5자리로 표시");
             }
         });
+    }
 
-        pipToggle.setSelected(AppConstants.pipOutlineOption);   // PIP 테두리 고정
+    // PIP 테두리 고정 설정
+    private void pipOutlineSettings() {
+        // 초기 상태 반영
+        pipToggle.setSelected(AppConstants.pipOutlineOption);
+
+        // 이벤트 리스너
+        pipToggle.setOnAction(event -> {
+            if (pipToggle.isSelected()) {
+                // PIP 설정이 ON 상태일 때
+                AppConstants.pipOutlineOption = true;
+                System.out.println("PIP 테두리 고정: ON");
+            } else {
+                // PIP 설정이 OFF 상태일 때
+                AppConstants.pipOutlineOption = false;
+                System.out.println("PIP 테두리 고정: OFF");
+            }
+        });
+    }
+
+    // PIP 폰트 사이즈 설정
+    private void pipFontSettings() {
         fontSizeSlider.setValue(AppConstants.pipFontSize);      // PIP 폰트
 
         // PIP 폰트 사이즈 설정
@@ -133,23 +166,6 @@ public class SettingsController {
             System.out.println("PIP 폰트 크기: " + String.format("%.1f", fontSize));
         });
     }
-
-
-    // PIP 테두리 고정 설정
-    @FXML
-    private void handlePipToggle(ActionEvent event) {
-        if (pipToggle.isSelected()) {
-            // PIP 설정이 ON 상태일 때
-            AppConstants.pipOutlineOption = true;
-            System.out.println("PIP 테두리 고정: ON");
-        } else {
-            // PIP 설정이 OFF 상태일 때
-            AppConstants.pipOutlineOption = false;
-            System.out.println("PIP 테두리 고정: OFF");
-        }
-    }
-
-
 
 
     /// 기본값 설정

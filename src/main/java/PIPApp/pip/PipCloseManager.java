@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class PipCloseManager {
-
     private final List<PipMain> pipWindows;
 
     // 기존 PipMain 리스트를 주입받아 관리
@@ -21,7 +20,7 @@ public class PipCloseManager {
         if (optional.isPresent()) {
             PipMain pip = optional.get();
             System.out.println("[" + ticker + "] 목표가 도달 → PIP 창 닫음");
-            pip.stop();           // Stage 닫기 + 타임라인 정지
+            pip.stop(1);           // Stage 닫기 + 타임라인 정지
             pipWindows.remove(pip); // 리스트에서도 제거
             return true;
         } else {

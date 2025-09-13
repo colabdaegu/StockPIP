@@ -17,7 +17,7 @@ public class Stocks {
     public String ticker = "";        // 티커
     public int toggleOption;
 
-    public String name;         // 회사명
+    public transient String name;         // 회사명
 
     public double targetPrice;   // 목표가
     public double stopPrice;     // 손절가
@@ -26,21 +26,21 @@ public class Stocks {
     public int refreshSecond;    // 새로고침 주기 - 초
 
     // 종목 정보
-    public String industry;
-    public String country;
-    public String currency;
-    public String exchange;
-    public LocalDate ipoDate;
-    public double marketCapitalization;
-    public ImageView logoUrl;
+    public transient String industry;
+    public transient String country;
+    public transient String currency;
+    public transient String exchange;
+    public transient LocalDate ipoDate;
+    public transient double marketCapitalization;
+    public transient ImageView logoUrl;
 
     // 시세 정보
-    public double currentPrice;  // 현재가
-    public double openPrice;     // 시가
-    public double highPrice;     // 당일 최고가
-    public double lowPrice;      // 당일 최저가
-    public double previousClosePrice;      // 전일 종가
-    public LocalDateTime api_refreshTime;   // 최근 갱신 시간
+    public transient double currentPrice;  // 현재가
+    public transient double openPrice;     // 시가
+    public transient double highPrice;     // 당일 최고가
+    public transient double lowPrice;      // 당일 최저가
+    public transient double previousClosePrice;      // 전일 종가
+    public transient LocalDateTime api_refreshTime;   // 최근 갱신 시간
 
 
     public Stocks(String ticker, int toggleOption, double targetPrice, double stopPrice, int refreshMinute, int refreshSecond) {
@@ -55,10 +55,62 @@ public class Stocks {
 
         this.refresh = (refreshMinute * 60) + refreshSecond; // 초 단위로 변환
 
+        refreshProfile();
+        refreshQuote();
+    }
 
-        // API 호출을 위한 서비스 객체 생성
-        CompanyService companyService = new CompanyService();
+    public void refreshQuote() {
+//        // 네트워크 검사
+//        if (!NetworkManager.isInternetAvailable()) {
+//            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+//            return;
+//        }
+
         StockService stockService = new StockService();
+        var quote = stockService.getLiveStockQuote(this.ticker);
+        CompanyService companyService = new CompanyService();
+        var profileOpt = companyService.getCompanyInfo(this.ticker);
+
+        // 시세 정보 조회
+        if (quote != null) {
+            currentPrice = quote.getCurrentPrice();     // 현재가
+            openPrice = quote.getOpenPrice();           // 시가
+            highPrice = quote.getHighPrice();           // 당일 최고가
+            lowPrice = quote.getLowPrice();             // 당일 최저가
+            previousClosePrice = quote.getPreviousClosePrice();     // 전일 종가
+            api_refreshTime = LocalDateTime.now(); // 최근 갱신 시간
+
+            profileOpt.ifPresent(profile -> {
+                if (profile.getName() != null) name = profile.getName();
+            });
+
+            notifyListeners();
+        }
+    }
+    private void notifyListeners() {
+        for (Runnable listener : listeners) {
+            listener.run();
+        }
+    }
+
+    public void alert_refreshQuote() {
+        StockService stockService = new StockService();
+        var quote = stockService.getLiveStockQuote(this.ticker);
+        if (quote != null) {
+            currentPrice = quote.getCurrentPrice();
+            api_refreshTime = LocalDateTime.now();
+        }
+    }
+
+    // 회사 프로필 조회
+    public void refreshProfile() {
+//        // 네트워크 검사
+//        if (!NetworkManager.isInternetAvailable()) {
+//            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+//            return;
+//        }
+
+        CompanyService companyService = new CompanyService();
 
         // 회사 프로필 조회
         companyService.getCompanyInfo(this.ticker).ifPresent(profile -> {
@@ -75,67 +127,28 @@ public class Stocks {
                 ipoDate = null;
             }
             marketCapitalization = profile.getMarketCapitalization();   // 시가총액
+
             // 로고이미지
             String logo = profile.getLogoUrl();
             if (logo != null && !logo.isBlank()) {
-                try {
-                    Image image = new Image(logo, true); // background 로드
-                    logoUrl = new ImageView(image);
-                    logoUrl.setFitHeight(50);
-                    logoUrl.setPreserveRatio(true);
-                } catch (Exception e) {
-                    System.out.println("⚠️ 로고 이미지 로딩 실패: " + logo);
-                    logoUrl = null;
+                // 기존 로고가 없거나 URL이 달라졌을 때만 새로 로드
+                if (logoUrl == null || !logo.equals(logoUrl.getImage().getUrl())) {
+                    try {
+                        Image image = new Image(logo, true); // background 로드
+                        ImageView newView = new ImageView(image);
+                        newView.setFitHeight(50);
+                        newView.setPreserveRatio(true);
+                        logoUrl = newView;
+                    } catch (Exception e) {
+                        System.out.println("⚠️ 로고 이미지 로딩 실패: " + logo);
+                        logoUrl = null;
+                    }
                 }
             } else {
+                // 새 URL이 없으면 로고 없앰
                 logoUrl = null;
             }
         });
-
-        // 시세 정보 조회
-        var quote = stockService.getLiveStockQuote(this.ticker);
-        if (quote != null) {
-            currentPrice = quote.getCurrentPrice();     // 현재가
-            openPrice = quote.getOpenPrice();           // 시가
-            highPrice = quote.getHighPrice();           // 당일 최고가
-            lowPrice = quote.getLowPrice();             // 당일 최저가
-            previousClosePrice = quote.getPreviousClosePrice();     // 전일 종가
-            api_refreshTime = LocalDateTime.now(); // 최근 갱신 시간
-        }
-    }
-
-    public void addUpdateListener(Runnable listener) {
-        listeners.add(listener);
-    }
-
-    private void notifyListeners() {
-        for (Runnable listener : listeners) {
-            listener.run();
-        }
-    }
-
-    public void refreshQuote() {
-        StockService stockService = new StockService();
-        var quote = stockService.getLiveStockQuote(this.ticker);
-        if (quote != null) {
-            currentPrice = quote.getCurrentPrice();
-            openPrice = quote.getOpenPrice();
-            highPrice = quote.getHighPrice();
-            lowPrice = quote.getLowPrice();
-            previousClosePrice = quote.getPreviousClosePrice();
-            api_refreshTime = LocalDateTime.now();
-
-            notifyListeners();
-        }
-    }
-
-    public void alert_refreshQuote() {
-        StockService stockService = new StockService();
-        var quote = stockService.getLiveStockQuote(this.ticker);
-        if (quote != null) {
-            currentPrice = quote.getCurrentPrice();
-            api_refreshTime = LocalDateTime.now();
-        }
     }
 
 

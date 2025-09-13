@@ -9,7 +9,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Button;
 import pip.PipLauncher;
+import service.NetworkManager;
+import service.PreferencesManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -22,6 +25,8 @@ public class AiController {
     @FXML private Label fourthLabel;
     @FXML private Label fifthLabel;
     @FXML private Label sixthLabel;
+
+    @FXML private Button resetButton;
 
 
     @FXML
@@ -41,6 +46,13 @@ public class AiController {
     // AI 분석 최신화
     @FXML
     private void resetClick(ActionEvent event) {
+        // 네트워크 검사
+        if (!NetworkManager.isInternetAvailable()) {
+            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+            return;
+        }
+
+        resetButton.setText("갱신");
         // updateLabel();
 
         System.out.println("AI 갱신됨\n");
@@ -78,6 +90,7 @@ public class AiController {
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();
         }
+        new PreferencesManager().saveSettings();
     }
 
     // 홈으로 이동
@@ -135,6 +148,8 @@ public class AiController {
 
             // Main의 전역 Stage를 이용해서 화면 전환
             Main.mainStage.getScene().setRoot(root);
+
+            new PreferencesManager().saveSettings();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -159,6 +174,7 @@ public class AiController {
     @FXML
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
+        new PreferencesManager().saveSettings();
 
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));

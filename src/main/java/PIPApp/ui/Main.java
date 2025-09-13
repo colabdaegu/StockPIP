@@ -38,9 +38,6 @@ public class Main extends Application {
         primaryStage.setTitle("StockPIP-App");
         primaryStage.setScene(new Scene(root, 1220, 740));
         primaryStage.show();
-
-
-
 //        // ⭐ 알림 체크 스케줄링
 //        alertService = new AlertService();
 //
@@ -54,6 +51,13 @@ public class Main extends Application {
 //        dataUpdateTimeline.play();
     }
 
+
+    @Override
+    public void stop() throws Exception {
+        preferencesManager.saveSettings(); // 앱 종료 시 저장
+        System.out.println("-주식 종목 설정이 JSON 파일에 저장되었습니다.");
+        super.stop();
+    }
 //    @Override
 //    public void stop() throws Exception {
 //        if (dataUpdateTimeline != null) {

@@ -12,6 +12,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import service.NetworkManager;
+import service.PreferencesManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -59,11 +61,19 @@ public class AssetInfoController {
 
             for (Stocks stock : StockList.getStockArray()) {
                 if (stock.getTicker().equals(selectedTicker)) {
+                    updateInformation(stock);
                     updateLabel(stock);
                     break;
                 }
             }
         });
+    }
+
+    // 정보 업데이트
+    private void updateInformation(Stocks stock) {
+        if (NetworkManager.isInternetAvailable()) {
+            stock.refreshProfile();
+        }
     }
 
 
@@ -72,12 +82,25 @@ public class AssetInfoController {
         if (!StockList.getStockArray().isEmpty()) {
             Stocks firstStock = StockList.getStockArray().get(0);
             comboBoxID.getSelectionModel().select(firstStock.getTicker());
+
+
             updateLabel(firstStock);
+
+            if (countryLabel.getText() == "null" || countryLabel.getText().isBlank()) {
+                updateInformation(firstStock);
+            }
         }
     }
 
     // 라벨 업데이트
     private void updateLabel(Stocks stock) {
+        if (stock.logoUrl != null && stock.logoUrl.getImage() != null) {
+            logoUrlLabel.setVisible(true);
+            logoUrlLabel.setImage(stock.logoUrl.getImage());
+        } else {
+            logoUrlLabel.setVisible(false);
+        }
+
         nameLabel.setText(stock.getName());
         tickerLabel.setText(String.valueOf(stock.ticker));
         industryLabel.setText(String.valueOf(stock.industry));
@@ -86,13 +109,6 @@ public class AssetInfoController {
         exchangeLabel.setText(String.valueOf(stock.exchange));
         ipoDateLabel.setText(String.valueOf(stock.ipoDate));
         marketCapitalizationLabel.setText(String.valueOf(stock.marketCapitalization) + "M");
-
-        if (stock.logoUrl != null && stock.logoUrl.getImage() != null) {
-            logoUrlLabel.setVisible(true);
-            logoUrlLabel.setImage(stock.logoUrl.getImage());
-        } else {
-            logoUrlLabel.setVisible(false);
-        }
     }
 
 
@@ -117,6 +133,7 @@ public class AssetInfoController {
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();
         }
+        new PreferencesManager().saveSettings();
     }
 
     // 홈으로 이동
@@ -163,6 +180,8 @@ public class AssetInfoController {
 
             // Main의 전역 Stage를 이용해서 화면 전환
             Main.mainStage.getScene().setRoot(root);
+
+            new PreferencesManager().saveSettings();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,6 +206,7 @@ public class AssetInfoController {
     @FXML
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
+        new PreferencesManager().saveSettings();
 
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));

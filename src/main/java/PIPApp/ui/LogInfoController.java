@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.TextArea;
 
 import config.*;
+import service.PreferencesManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -21,7 +22,12 @@ public class LogInfoController {
 
     @FXML
     public void initialize() {
+        // System.out.println("앱 시작 시 로드된 로그: " + StockList.getLogText());
         logTextArea.setText(StockList.getLogText());
+        // 초기화 후 스크롤 맨 아래로 이동
+        Platform.runLater(() -> {
+            logTextArea.positionCaret(logTextArea.getText().length());
+        });
     }
 
     // 로그 초기화
@@ -29,6 +35,7 @@ public class LogInfoController {
     private void resetClick(ActionEvent event) {
         StockList.clearLog();
         logTextArea.clear();
+        new PreferencesManager().saveSettings();
         System.out.println("로그 기록 초기화됨\n");
     }
 
@@ -70,6 +77,7 @@ public class LogInfoController {
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();
         }
+        new PreferencesManager().saveSettings();
     }
 
     // 홈으로 이동
@@ -125,6 +133,7 @@ public class LogInfoController {
     @FXML
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
+        new PreferencesManager().saveSettings();
 
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));

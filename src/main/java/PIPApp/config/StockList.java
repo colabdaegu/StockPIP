@@ -22,7 +22,5 @@ public class StockList {
         logBuilder.append(logLine).append("\n");
     }
 
-    public static void clearLog() {
-        logBuilder.setLength(0);
-    }
+    public static void clearLog() { logBuilder.setLength(0); }
 }

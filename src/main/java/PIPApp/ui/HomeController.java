@@ -179,7 +179,7 @@ public class HomeController {
 
 
         // 네트워크 검사
-        if (!isInternetAvailable()) {
+        if (!NetworkManager.isInternetAvailable()) {
             hidePopup();
 
             warningMessageLabel.setVisible(true);
@@ -403,9 +403,9 @@ public class HomeController {
         String timestamp = LocalDateTime.now().format(formatter);
         String logLine = "";
         if (toggleOption == 0) {
-            logLine = timestamp + " - [" + company + "]이 저장되었습니다!";
+            logLine = timestamp + " - [" + company + "]이(가) 저장되었습니다!";
         } else if (toggleOption == 1) {
-            logLine = timestamp + " - [" + ticker + "]이 저장되었습니다!";
+            logLine = timestamp + " - [" + ticker + "]이(가) 저장되었습니다!";
         }
         StockList.appendLog(logLine);
         System.out.println(logLine + "\n");
@@ -416,9 +416,21 @@ public class HomeController {
             listViews.add(s.getTicker());
         }
 
+        /// JSON 최신화
+        new PreferencesManager().saveSettings();
+
+
+        /// 종목 개수 확인 (성능 경고용)
+        String message;
+        if (StockList.getStockArray().size() >= 3) {
+            message = "성공적으로 저장되었습니다!\n(PIP 모드는 종목이 3개 이하일 때만\n사용하는 것을 권장합니다.)";
+        } else {
+            message = "성공적으로 저장되었습니다!";
+        }
+
         // 저장완료 팝업
         hidePopup();
-        showAlert("StockPIP", "성공적으로 저장되었습니다!", 1);
+        showAlert("StockPIP", message, 1);
     }
 
     // 성공 팝업
@@ -449,6 +461,10 @@ public class HomeController {
         warningMessageLabel.setVisible(false);
         warningMessageLabel.setText("");
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        String logLine = "";
+
 
         // 현재 입력된 이름
         String currentName = nameField.getText().trim();
@@ -469,10 +485,15 @@ public class HomeController {
                     listViews.remove(ticker);
                     StockList.getStockArray().remove(i);
                     listViewId.setItems(listViews);
+
+                    // 삭제 로그
+                    logLine = timestamp + " - [" + currentName + "]을(를) 삭제하였습니다.";
+                    StockList.appendLog(logLine);
+                    new PreferencesManager().saveSettings();
+                    System.out.println(logLine + "\n\n");
                     break;
                 }
             }
-            System.out.println("삭제됨\n\n");
         } else if (toggleOption == 1) {
             for (int i = 0; i < StockList.getStockArray().size(); i++) {
                 Stocks s = StockList.getStockArray().get(i);
@@ -481,10 +502,15 @@ public class HomeController {
                     listViews.remove(currentName);
                     StockList.getStockArray().remove(i);
                     listViewId.setItems(listViews);
+
+                    // 삭제 로그
+                    logLine = timestamp + " - [" + currentName + "]을(를) 삭제하였습니다.";
+                    StockList.appendLog(logLine);
+                    new PreferencesManager().saveSettings();
+                    System.out.println(logLine + "\n\n");
                     break;
                 }
             }
-            System.out.println("삭제됨\n\n");
         }
 
 
@@ -496,36 +522,6 @@ public class HomeController {
             refreshField_Minute.clear();
             refreshField_Second.clear();
             setToggleOption(1);
-        }
-    }
-
-
-    // 네트워크 연결 진단
-    private boolean isInternetAvailable() {
-        // 1차 검사 : Ping으로 빠르게 확인
-        try {
-            boolean pingSuccess = InetAddress.getByName("8.8.8.8").isReachable(1000);
-            if (pingSuccess) {
-                return true; // Ping 성공 → 인터넷 연결 확인
-            }
-        } catch (IOException e) {
-            // Ping 도중 오류 → HTTP로 2차 확인 진행
-        }
-
-        // 2차 검사 : HTTP 요청으로 다시 확인
-        try {
-            URL url = new URL("https://www.google.com/");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(2000);
-            connection.setReadTimeout(2000);
-            int responseCode = connection.getResponseCode();
-
-            // 응답 코드가 200~399면 성공으로 간주
-            return (responseCode >= 200 && responseCode <= 399);
-        } catch (IOException e) {
-            // HTTP 요청 실패 → 인터넷 연결 안 됨
-            return false;
         }
     }
 
@@ -555,6 +551,7 @@ public class HomeController {
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();
         }
+        new PreferencesManager().saveSettings();
     }
 
     // 홈으로 이동
@@ -601,6 +598,8 @@ public class HomeController {
 
             // Main의 전역 Stage를 이용해서 화면 전환
             Main.mainStage.getScene().setRoot(root);
+
+            new PreferencesManager().saveSettings();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -625,6 +624,7 @@ public class HomeController {
     @FXML
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
+        new PreferencesManager().saveSettings();
 
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));

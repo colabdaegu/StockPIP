@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import service.AlertService;
+import service.NetworkManager;
 import ui.Main;
 import config.*;
 
@@ -55,8 +56,6 @@ public class PipMain {
 
         double fontSize = PipSettingsFontSize.getFontSize();
         styleLabels(fontSize); // 2.
-
-        //bindToStock(stock);
 
         updateLabels(stock); // 3.
         timelineRefresh(stock); // 4.
@@ -94,6 +93,7 @@ public class PipMain {
     // 3. 현재가 표시 업데이트
     private void updateLabels(Stocks stock) {
         double current = stock.currentPrice;
+        String name = stock.name;
 
         Color color;
         if (previousPrice < 0) {
@@ -117,6 +117,8 @@ public class PipMain {
         priceLabel.setTextFill(color);
         previousPrice = current;
 
+        nameLabel.setText(name + "(" + stock.getTicker() + ")");
+
         System.out.println("🔄 [" + stock.getTicker() + "] PIP 정보 자동 새로고침");
     }
 
@@ -131,6 +133,14 @@ public class PipMain {
 
         refreshTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(refreshSeconds), event -> {
+                    // 네트워크 검사
+                    if (!NetworkManager.isInternetAvailable()) {
+                        priceLabel.setText("Network Failure");
+                        priceLabel.setTextFill(Color.CORAL);
+                        System.out.println("⚠ PIP 새로고침 중단 - 인터넷 연결 실패\n");
+                        return;
+                    }
+
                     stock.refreshQuote();
                     updateLabels(stock);    /// updateLabels 함수 동작
 

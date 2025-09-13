@@ -56,7 +56,7 @@ public class AlertService {
         // 새 Timeline 생성
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(stock.getRefresh()), event -> {
             // 네트워크 검사
-            if (!isInternetAvailable()) {
+            if (!NetworkManager.isInternetAvailable()) {
                 System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
                 return;
             }
@@ -144,6 +144,8 @@ public class AlertService {
         if (monitoringMap.containsKey(ticker)) {
             monitoringMap.get(ticker).stop();
             monitoringMap.remove(ticker);
+
+            new PreferencesManager().saveSettings();
         }
     }
 
@@ -260,36 +262,6 @@ public class AlertService {
             return timestamp + " - [" + name + "]이(가) 삭제됨 (목표가 달성)";
         } else {
             return timestamp + " - [" + name + "]이(가) 삭제됨 (손절가 도달)";
-        }
-    }
-
-
-    // 네트워크 연결 진단
-    private static boolean isInternetAvailable() {
-        // 1차 검사 : Ping으로 빠르게 확인
-        try {
-            boolean pingSuccess = InetAddress.getByName("8.8.8.8").isReachable(1000);
-            if (pingSuccess) {
-                return true; // Ping 성공 → 인터넷 연결 확인
-            }
-        } catch (IOException e) {
-            // Ping 도중 오류 → HTTP로 2차 확인 진행
-        }
-
-        // 2차 검사 : HTTP 요청으로 다시 확인
-        try {
-            URL url = new URL("https://www.google.com/");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(2000);
-            connection.setReadTimeout(2000);
-            int responseCode = connection.getResponseCode();
-
-            // 응답 코드가 200~399면 성공으로 간주
-            return (responseCode >= 200 && responseCode <= 399);
-        } catch (IOException e) {
-            // HTTP 요청 실패 → 인터넷 연결 안 됨
-            return false;
         }
     }
 

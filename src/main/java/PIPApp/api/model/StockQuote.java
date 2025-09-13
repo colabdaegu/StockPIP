@@ -3,7 +3,6 @@ package api.model;
 import com.google.gson.annotations.SerializedName;
 
 public class StockQuote {
-
     @SerializedName("c")
     private double currentPrice;
 

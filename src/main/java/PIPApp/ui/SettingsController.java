@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import config.*;
+import service.PreferencesManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -195,6 +196,10 @@ public class SettingsController {
         // PIP 폰트 크기 설정: 기본값 28로 설정
         AppConstants.pipFontSize = 28.0;
         fontSizeSlider.setValue(28.0);
+
+
+        // JSON 저장
+        new PreferencesManager().saveSettings();
     }
 
 
@@ -219,6 +224,7 @@ public class SettingsController {
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();
         }
+        new PreferencesManager().saveSettings();
     }
 
     // 홈으로 이동
@@ -276,6 +282,8 @@ public class SettingsController {
 
             // Main의 전역 Stage를 이용해서 화면 전환
             Main.mainStage.getScene().setRoot(root);
+
+            new PreferencesManager().saveSettings();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -291,6 +299,7 @@ public class SettingsController {
     @FXML
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
+        new PreferencesManager().saveSettings();
 
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));

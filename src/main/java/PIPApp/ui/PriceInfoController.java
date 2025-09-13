@@ -14,6 +14,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+import service.NetworkManager;
+import service.PreferencesManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -90,9 +92,11 @@ public class PriceInfoController {
         lowPriceLabel.setText("$" + String.valueOf(stock.lowPrice));
         previousClosePriceLabel.setText("$" + String.valueOf(stock.previousClosePrice));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String refreshTime = stock.api_refreshTime.format(formatter);
-        refreshTimeLabel.setText(refreshTime);
+        if (stock.api_refreshTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String refreshTime = stock.api_refreshTime.format(formatter);
+            refreshTimeLabel.setText(refreshTime);
+        }
 
         System.out.println("🔄 [" + stock.getTicker() + "] 시세 정보 자동 새로고침");
     }
@@ -104,15 +108,16 @@ public class PriceInfoController {
             refreshTimeline.stop();
         }
 
-        int refreshSeconds = stock.getRefresh();
-        if (refreshSeconds <= 0) return;
+        refreshTimeline = new Timeline(new KeyFrame(Duration.seconds(stock.getRefresh()), event -> {
+            // 네트워크 검사
+            if (!NetworkManager.isInternetAvailable()) {
+                System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+                return;
+            }
 
-        refreshTimeline = new Timeline(
-                new KeyFrame(Duration.seconds(refreshSeconds), event -> {
-                    stock.refreshQuote();
-                    updateLabels(stock);
-                })
-        );
+            stock.refreshQuote();
+            updateLabels(stock);
+        }));
 
         refreshTimeline.setCycleCount(Timeline.INDEFINITE);
         refreshTimeline.play();
@@ -145,6 +150,7 @@ public class PriceInfoController {
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();
         }
+        new PreferencesManager().saveSettings();
     }
 
 
@@ -202,6 +208,8 @@ public class PriceInfoController {
 
             // Main의 전역 Stage를 이용해서 화면 전환
             Main.mainStage.getScene().setRoot(root);
+
+            new PreferencesManager().saveSettings();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -229,6 +237,7 @@ public class PriceInfoController {
     @FXML
     private void handleExternalClick(MouseEvent event) {
         System.out.println("외부 사이트 클릭됨");
+        new PreferencesManager().saveSettings();
 
         try {
             Desktop.getDesktop().browse(new URI("https://finviz.com/"));

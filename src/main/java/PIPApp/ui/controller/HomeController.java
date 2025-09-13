@@ -1,8 +1,10 @@
 package ui.controller;
 
-import alertService.AlertService;
+import service.alert.AlertService;
+import api.service.CompanyService;
+import api.service.StockService;
 import config.manager.PreferencesManager;
-import network.NetworkManager;
+import net.NetworkManager;
 import pip.PipLauncher;
 import com.jfoenix.controls.JFXToggleNode;
 import javafx.collections.FXCollections;
@@ -15,8 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import PIPApp.Main;
-import fileLoader.FileLoader;
-import service.*;
+import util.FileLoader;
 import config.*;
 
 import java.time.LocalDateTime;
@@ -123,13 +124,13 @@ public class HomeController {
             tickerToggle.setSelected(false);
             System.out.println("회사명 입력 모드");
 
-            nameList = FileLoader.loadLines("resources/names/company_list_filtered.txt");
+            nameList = FileLoader.loadLines("names/company_list_filtered.txt");
         } else if (option == 1) {
             tickerToggle.setSelected(true);
             companyToggle.setSelected(false);
             System.out.println("티커 입력 모드");
 
-            nameList = FileLoader.loadLines("resources/names/ticker_list_s.txt");
+            nameList = FileLoader.loadLines("names/ticker_list_s.txt");
         }
 
         // 자동완성 연결
@@ -565,7 +566,7 @@ public class HomeController {
     private void handleAssetInfoClick(MouseEvent event) {
         System.out.println("종목 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/assetInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/assetInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -582,7 +583,7 @@ public class HomeController {
     private void handlePriceInfoClick(MouseEvent event) {
         System.out.println("시세 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/priceInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/priceInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -599,7 +600,7 @@ public class HomeController {
     private void handleLogClick(MouseEvent event) {
         System.out.println("로그 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/logInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -616,7 +617,7 @@ public class HomeController {
     private void handleSettingsClick(MouseEvent event) {
         System.out.println("설정 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/settings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/settings.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -646,7 +647,7 @@ public class HomeController {
     private void handleAiClick(MouseEvent event) {
         System.out.println("AI 분석 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/ai.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/ai.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환

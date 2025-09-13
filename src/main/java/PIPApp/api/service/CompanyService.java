@@ -1,4 +1,4 @@
-package service;
+package api.service;
 
 import api.*;
 import api.model.*;

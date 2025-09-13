@@ -1,4 +1,4 @@
-package alertService;
+package service.alert;
 
 import config.StockList;
 import config.Stocks;

@@ -14,7 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import pip.PipLauncher;
-import network.NetworkManager;
+import net.NetworkManager;
 import config.manager.PreferencesManager;
 
 import java.awt.*;
@@ -48,7 +48,7 @@ public class AiController {
     private void setInitialStock() {
         tx1 = "[AAPL]\n" +
                 "**상승 예상**\n" +
-                "\uD83D\uDCC8 $185 - $190 \uD83D\uDCC8\n\n" +
+                "\uD83D\uDCC8 $240 - $245 \uD83D\uDCC8\n\n" +
                 "\uD83D\uDD0E 단기 전망: 아이폰 15 출시 기대감과 서비스 부문 성장으로 긍정적인 모멘텀이 이어질 가능성이 높아요. \uD83D\uDE80";
         tx2 = "[Microsoft Corp]\n" +
                 "**하락 또는 조정 예상**\n" +
@@ -134,7 +134,7 @@ public class AiController {
     private void handleHomeClick(MouseEvent event) {
         System.out.println("홈 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/home.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -151,7 +151,7 @@ public class AiController {
     private void handleAssetInfoClick(MouseEvent event) {
         System.out.println("종목 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/assetInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/assetInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -168,7 +168,7 @@ public class AiController {
     private void handlePriceInfoClick(MouseEvent event) {
         System.out.println("시세 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/priceInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/priceInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -185,7 +185,7 @@ public class AiController {
     private void handleLogClick(MouseEvent event) {
         System.out.println("로그 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/logInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -202,7 +202,7 @@ public class AiController {
     private void handleSettingsClick(MouseEvent event) {
         System.out.println("설정 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/settings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/settings.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환

@@ -1,7 +1,9 @@
 package config;
 
+import api.service.CompanyService;
+import api.service.StockService;
 import javafx.scene.image.Image;
-import service.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-import network.NetworkManager;
+import net.NetworkManager;
 import config.manager.PreferencesManager;
 
 import java.awt.*;
@@ -164,7 +164,7 @@ public class PriceInfoController {
             refreshTimeline.stop();
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/home.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -184,7 +184,7 @@ public class PriceInfoController {
             refreshTimeline.stop();
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/assetInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/assetInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -208,7 +208,7 @@ public class PriceInfoController {
             refreshTimeline.stop();
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/logInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -228,7 +228,7 @@ public class PriceInfoController {
             refreshTimeline.stop();
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/settings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/settings.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -258,7 +258,7 @@ public class PriceInfoController {
     private void handleAiClick(MouseEvent event) {
         System.out.println("AI 분석 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/ai.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/ai.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환

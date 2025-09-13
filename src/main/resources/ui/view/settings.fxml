@@ -31,7 +31,7 @@
                      <graphic>
                         <ImageView fitHeight="106.0" fitWidth="112.0">
                            <image>
-                              <Image url="@../../resources/img/PIP.png" />
+                              <Image url="@../../img/PIP.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -47,7 +47,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resources/img/Home_.png" />
+                              <Image url="@../../img/Home_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="홈" textFill="WHITE">
@@ -64,7 +64,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resources/img/Document_.png" />
+                              <Image url="@../../img/Document_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="종목 정보" textFill="WHITE">
@@ -81,7 +81,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resources/img/Chart_.png" />
+                              <Image url="@../../img/Chart_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="시세 정보" textFill="WHITE">
@@ -98,7 +98,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resources/img/Scroll_.png" />
+                              <Image url="@../../img/Scroll_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="로그" textFill="WHITE">
@@ -115,7 +115,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resources/img/Settings_.png" />
+                              <Image url="@../../img/Settings_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="설정" textFill="WHITE">
@@ -136,7 +136,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resources/img/ExternalLink_.png" />
+                              <Image url="@../../img/ExternalLink_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="외부 사이트" textFill="WHITE">
@@ -153,7 +153,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../resources/img/AI_.png" />
+                              <Image url="@../../img/AI_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="AI 분석 ✨" textFill="WHITE">
@@ -178,7 +178,7 @@
                <children>
                   <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../resources/img/Settings_.png" />
+                        <Image url="@../../img/Settings_.png" />
                      </image>
                   </ImageView>
                   <Label prefHeight="36.0" prefWidth="148.0" text=" 설정" textFill="WHITE">

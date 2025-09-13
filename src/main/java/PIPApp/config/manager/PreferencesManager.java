@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import config.*;
-import network.NetworkManager;
+import net.NetworkManager;
 
 import java.io.File;
 import java.io.FileReader;

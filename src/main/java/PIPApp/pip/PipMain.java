@@ -19,8 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import alertService.AlertService;
-import network.NetworkManager;
+import service.alert.AlertService;
+import net.NetworkManager;
 import config.manager.PreferencesManager;
 import PIPApp.Main;
 import config.*;
@@ -55,7 +55,7 @@ public class PipMain {
         nameLabel = new Label(stock.getName() + "(" + stock.getTicker() + ")");
         priceLabel = new Label("Loading...");
 
-        double fontSize = PipSettingsFontSize.getFontSize();
+        double fontSize = AppConstants.pipFontSize;
         styleLabels(fontSize); // 2.
 
         updateLabels(stock); // 3.
@@ -243,7 +243,7 @@ public class PipMain {
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
         stage.setTitle("StockPipApp");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo/Stock_Logo_fill.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo_fill.png")));
 
         stage.show();
     }

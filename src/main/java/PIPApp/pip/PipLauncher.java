@@ -1,6 +1,6 @@
 package pip;
 
-import alertService.AlertServiceLauncher;
+import service.alert.AlertServiceLauncher;
 import config.StockList;
 import config.Stocks;
 import javafx.stage.Stage;

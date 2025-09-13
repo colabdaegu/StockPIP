@@ -1,7 +1,6 @@
 package ui.controller;
 
 import pip.PipLauncher;
-import pip.PipSettingsFontSize;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -159,12 +158,9 @@ public class SettingsController {
     private void pipFontSettings() {
         fontSizeSlider.setValue(AppConstants.pipFontSize);      // PIP 폰트
 
-        // PIP 폰트 사이즈 설정
-        fontSizeSlider.setValue(PipSettingsFontSize.getFontSize());
-
         fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double fontSize = newValue.doubleValue();
-            PipSettingsFontSize.setFontSize(fontSize);
+            AppConstants.pipFontSize = fontSize;
             System.out.println("PIP 폰트 크기: " + String.format("%.1f", fontSize));
         });
     }
@@ -233,7 +229,7 @@ public class SettingsController {
     private void handleHomeClick(MouseEvent event) {
         System.out.println("홈 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/home.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -250,7 +246,7 @@ public class SettingsController {
     private void handleAssetInfoClick(MouseEvent event) {
         System.out.println("종목 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/assetInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/assetInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -267,7 +263,7 @@ public class SettingsController {
     private void handlePriceInfoClick(MouseEvent event) {
         System.out.println("시세 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/priceInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/priceInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -284,7 +280,7 @@ public class SettingsController {
     private void handleLogClick(MouseEvent event) {
         System.out.println("로그 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/logInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -320,7 +316,7 @@ public class SettingsController {
     private void handleAiClick(MouseEvent event) {
         System.out.println("AI 분석 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/ai.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/view/ai.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환

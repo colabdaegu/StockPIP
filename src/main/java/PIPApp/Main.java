@@ -1,7 +1,7 @@
 package PIPApp;
 
-import alertService.AlertService;
-import alertService.AlertServiceLauncher;
+import service.alert.AlertService;
+import service.alert.AlertServiceLauncher;
 import config.manager.PreferencesManager;
 
 import javafx.scene.image.Image;
@@ -37,7 +37,8 @@ public class Main extends Application {
 
         //primaryStage.initStyle(StageStyle.UNDECORATED);
 
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo/Stock_Logo.png")));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo.png")));
+
 
         primaryStage.setTitle("StockPIP-App");
         primaryStage.setScene(new Scene(root, 1220, 740));

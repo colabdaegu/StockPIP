@@ -1,7 +1,38 @@
 {
-  "stockArray": [],
-  "logText": "2025-09-13 20:29:08 - [ACSI]을(를) 삭제하였습니다.\n",
-  "notificationOption": 0,
+  "stockArray": [
+    {
+      "listeners": [],
+      "ticker": "MSFT",
+      "toggleOption": 0,
+      "targetPrice": 1000.0,
+      "stopPrice": 80.0,
+      "refresh": 7,
+      "refreshMinute": 0,
+      "refreshSecond": 7
+    },
+    {
+      "listeners": [],
+      "ticker": "AMZN",
+      "toggleOption": 1,
+      "targetPrice": 1000.0,
+      "stopPrice": 80.0,
+      "refresh": 20,
+      "refreshMinute": 0,
+      "refreshSecond": 20
+    },
+    {
+      "listeners": [],
+      "ticker": "AAPL",
+      "toggleOption": 1,
+      "targetPrice": 55.0,
+      "stopPrice": 40.0,
+      "refresh": 5,
+      "refreshMinute": 0,
+      "refreshSecond": 5
+    }
+  ],
+  "logText": "2025-09-13 23:58:30 - [AAPL]이(가) 저장되었습니다!\n2025-09-13 23:58:38 - [AAPL]이(가) 목표가에 달성했습니다. / 현재가: $234.07 목표가: $55.0\n2025-09-13 23:58:51 - [AAPL]이(가) 목표가에 달성했습니다. / 현재가: $234.07 목표가: $55.0\n2025-09-14 00:13:41 - [AAPL]이(가) 목표가에 달성했습니다. / 현재가: $234.07 목표가: $55.0\n2025-09-14 00:47:49 - [AAPL]이(가) 목표가에 달성했습니다. / 현재가: $234.07 목표가: $55.0\n2025-09-14 00:48:06 - [AAPL]이(가) 목표가에 달성했습니다. / 현재가: $234.07 목표가: $55.0\n2025-09-14 00:52:16 - [AAPL]이(가) 목표가에 달성했습니다. / 현재가: $234.07 목표가: $55.0\n2025-09-14 01:41:51 - [AAPL]이(가) 목표가에 달성했습니다. / 현재가: $234.07 목표가: $55.0\n",
+  "notificationOption": 1,
   "pipDecimalPoint": 2,
   "pipOutlineOption": false,
   "pipFontSize": 28.0

@@ -72,11 +72,31 @@
     -fx-border-color: #000000;         /* 검은색 테두리 */
     -fx-border-width: 2;               /* 두꺼운 테두리 */
     -fx-border-radius: 3;              /* 모서리 둥근 정도 최소화 */
-    -fx-padding: 10;                   /* 안쪽 여백 */
+
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-family: "Malgun Gothic Bold";
 
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0.5, 1.5, 1.5);
 }
 
+.square-box:focused{
+    -fx-background-color: #f9f9f9;      /* 밝은 회색 */
+    -fx-background-radius: 3;          /* 모서리 둥근 정도 최소화 */
+    -fx-border-color: #000000;         /* 검은색 테두리 */
+    -fx-border-width: 2;               /* 두꺼운 테두리 */
+    -fx-border-radius: 3;              /* 모서리 둥근 정도 최소화 */
+
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-family: "Malgun Gothic Bold";
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0.5, 1.5, 1.5);
+}
+
+.square-box .text {
+    -fx-text-alignment: center;
+}
 
 
 .custom-list {

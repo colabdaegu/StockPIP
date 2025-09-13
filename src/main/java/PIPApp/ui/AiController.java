@@ -1,13 +1,15 @@
 package ui;
 
 import config.StockList;
-import config.Stocks;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import pip.PipLauncher;
@@ -19,28 +21,42 @@ import java.io.IOException;
 import java.net.URI;
 
 public class AiController {
-    @FXML private Label firstLabel;
-    @FXML private Label secondLabel;
-    @FXML private Label thirdLabel;
-    @FXML private Label fourthLabel;
-    @FXML private Label fifthLabel;
-    @FXML private Label sixthLabel;
+    @FXML private TextArea firstLabel;
+    @FXML private TextArea secondLabel;
+    @FXML private TextArea thirdLabel;
+    @FXML private TextArea fourthLabel;
+    @FXML private TextArea fifthLabel;
+    @FXML private TextArea sixthLabel;
 
     @FXML private Button resetButton;
+
+    private Alert alert;
+    private String tx1, tx2, tx3, tx4, tx5, tx6;
 
 
     @FXML
     public void initialize() {
-        // 초기 값 세팅 (있다면)
+        // 정보 세팅
         setInitialStock();
 
         // updateLabel();
     }
 
 
-    // 초기 값 세팅 (있다면)
+    // 정보 세팅
     private void setInitialStock() {
-
+        tx1 = "[AAPL]\n" +
+                "**상승 예상**\n" +
+                "\uD83D\uDCC8 $185 - $190 \uD83D\uDCC8\n\n" +
+                "\uD83D\uDD0E 단기 전망: 아이폰 15 출시 기대감과 서비스 부문 성장으로 긍정적인 모멘텀이 이어질 가능성이 높아요. \uD83D\uDE80";
+        tx2 = "[Microsoft Corp]\n" +
+                "**하락 또는 조정 예상**\n" +
+                "\uD83D\uDCC9 $500 - $510 \uD83D\uDCC9\n\n" +
+                "\uD83D\uDD0E 단기 전망: 클라우드와 AI 성장세는 좋지만 최근 고점이라 단기 차익실현 매물이 나올 수 있어요. ⚠";
+        tx3 = "[AMZN]\n" +
+                "**하락 또는 정체 예상**\n" +
+                "\uD83D\uDCC9 $220 - $230 \uD83D\uDCC9\n\n" +
+                "\uD83D\uDD0E 단기 전망: 물류비와 리테일 둔화가 부담이라 단기 조정 가능성이 있어요. \uD83D\uDCE6";
     }
 
     // AI 분석 최신화
@@ -51,23 +67,42 @@ public class AiController {
             System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
             return;
         }
+        showAlert("Now Loading...", "⏳ 종목 분석 중...");
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
+            // 라벨 업데이트
+            updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
+            resetButton.setText("갱신");
+            System.out.println("AI 갱신됨\n");
 
-        resetButton.setText("갱신");
-        // updateLabel();
-
-        System.out.println("AI 갱신됨\n");
+            hidePopup();
+        }));
+        timeline.play();
     }
 
     // 라벨 업데이트
-    private void updateLabel(Stocks stock) {
-        firstLabel.setText(stock.getName());
-        secondLabel.setText(stock.getName());
-        thirdLabel.setText(stock.getName());
-        fourthLabel.setText(stock.getName());
-        fifthLabel.setText(stock.getName());
-        sixthLabel.setText(stock.getName());
+    private void updateLabel(String tx1, String tx2, String tx3, String tx4, String tx5, String tx6) {
+        firstLabel.setText(tx1);
+        secondLabel.setText(tx2);
+        thirdLabel.setText(tx3);
+        fourthLabel.setText(tx4);
+        fifthLabel.setText(tx5);
+        sixthLabel.setText(tx6);
     }
 
+    // 로딩 팝업
+    private void showAlert(String title, String message) {
+        alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
+    }
+    // 팝업 숨기기
+    private void hidePopup() {
+        if (alert != null) {
+            alert.hide();
+        }
+    }
 
 
     /// 사이드바 함수 ///

@@ -51,6 +51,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="send-notification-0.16.0" level="project" />
   </component>
 </module>

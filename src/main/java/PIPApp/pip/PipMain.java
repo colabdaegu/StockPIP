@@ -174,7 +174,7 @@ public class PipMain {
             }
             pipWindows.clear();
             try {
-                Parent homeRoot = FXMLLoader.load(getClass().getResource("../ui/home.fxml"));
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("/ui/home.fxml"));
                 new PreferencesManager().saveSettings();
                 Main.mainStage.setScene(new Scene(homeRoot, 1220, 740));
                 Main.mainStage.show();

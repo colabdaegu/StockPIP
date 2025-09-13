@@ -28,6 +28,8 @@ public class Main extends Application {
         preferencesManager = new PreferencesManager();
         preferencesManager.loadSettings();
 
+        // ⭐ 알림 체크 스케줄링 시작 ⭐
+        AlertServiceLauncher.startAll();
 
         Parent root = FXMLLoader.load(getClass().getResource("home.fxml"));
 

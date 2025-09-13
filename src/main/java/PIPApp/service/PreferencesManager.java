@@ -44,9 +44,9 @@ public class PreferencesManager {
 
         try (FileWriter writer = new FileWriter(SETTINGS_FILE_NAME)) {
             gson.toJson(root, writer);
-            System.out.println("✅ 설정 저장 완료: " + SETTINGS_FILE_NAME);
+            System.out.println("✅ 저장 완료: " + SETTINGS_FILE_NAME);
         } catch (IOException e) {
-            System.err.println("❌ 설정 저장 실패: " + e.getMessage());
+            System.err.println("❌ 저장 실패: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -97,7 +97,7 @@ public class PreferencesManager {
             if (root.has("pipFontSize"))
                 AppConstants.pipFontSize = root.get("pipFontSize").getAsDouble();
 
-            System.out.println("✅ 설정 로드 완료 (" + StockList.stockArray.size() + "개 종목)");
+            System.out.println("✅ 불러오기 완료 (" + StockList.stockArray.size() + "개 종목)");
 
 
             // 네트워크 검사
@@ -120,7 +120,7 @@ public class PreferencesManager {
             }
             StockList.stockArray = refreshedList;
         } catch (IOException | JsonSyntaxException e) {
-            System.err.println("❌ 설정 로드 실패: " + e.getMessage());
+            System.err.println("❌ 불러오기 실패: " + e.getMessage());
             e.printStackTrace();
         }
     }

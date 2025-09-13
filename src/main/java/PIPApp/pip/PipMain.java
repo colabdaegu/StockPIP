@@ -21,6 +21,7 @@ import javafx.stage.StageStyle;
 
 import service.AlertService;
 import service.NetworkManager;
+import service.PreferencesManager;
 import ui.Main;
 import config.*;
 
@@ -174,6 +175,7 @@ public class PipMain {
             pipWindows.clear();
             try {
                 Parent homeRoot = FXMLLoader.load(getClass().getResource("../ui/home.fxml"));
+                new PreferencesManager().saveSettings();
                 Main.mainStage.setScene(new Scene(homeRoot, 1220, 740));
                 Main.mainStage.show();
             } catch (Exception ex) {

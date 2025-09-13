@@ -176,7 +176,7 @@
          <children>
             <HBox prefHeight="12.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="44.0" prefWidth="300.0" text="Stock pip App" textFill="WHITE">
+                  <Label prefHeight="44.0" prefWidth="300.0" text="Stock PIP App" textFill="WHITE">
                      <font>
                         <Font name="Malgun Gothic Bold" size="30.0" />
                      </font>

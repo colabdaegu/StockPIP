@@ -22,7 +22,7 @@ import javafx.stage.StageStyle;
 import service.AlertService;
 import service.NetworkManager;
 import service.PreferencesManager;
-import ui.Main;
+import PIPApp.Main;
 import config.*;
 
 import java.util.ArrayList;

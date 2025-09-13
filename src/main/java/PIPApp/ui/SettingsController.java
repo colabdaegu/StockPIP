@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
+import PIPApp.Main;
 import config.*;
 import service.PreferencesManager;
 

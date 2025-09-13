@@ -1,5 +1,6 @@
 package ui;
 
+import PIPApp.Main;
 import config.StockList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

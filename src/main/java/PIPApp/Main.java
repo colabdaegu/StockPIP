@@ -1,4 +1,4 @@
-package ui;
+package PIPApp;
 
 import service.*;
 
@@ -31,7 +31,7 @@ public class Main extends Application {
         // ⭐ 알림 체크 스케줄링 시작 ⭐
         AlertServiceLauncher.startAll();
 
-        Parent root = FXMLLoader.load(getClass().getResource("home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/home.fxml"));
 
         //primaryStage.initStyle(StageStyle.UNDECORATED);
 

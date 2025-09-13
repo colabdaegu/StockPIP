@@ -45,7 +45,7 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         preferencesManager.saveSettings(); // 앱 종료 시 저장
-        System.out.println("-주식 종목 설정이 JSON 파일에 저장되었습니다.");
+        System.out.println("- 주식 종목 설정이 JSON 파일에 저장되었습니다.");
         super.stop();
     }
 

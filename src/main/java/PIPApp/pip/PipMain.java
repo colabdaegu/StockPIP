@@ -19,9 +19,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import service.AlertService;
-import service.NetworkManager;
-import service.PreferencesManager;
+import alertService.AlertService;
+import network.NetworkManager;
+import config.manager.PreferencesManager;
 import PIPApp.Main;
 import config.*;
 
@@ -174,7 +174,7 @@ public class PipMain {
             }
             pipWindows.clear();
             try {
-                Parent homeRoot = FXMLLoader.load(getClass().getResource("/ui/home.fxml"));
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("/ui/view/home.fxml"));
                 new PreferencesManager().saveSettings();
                 Main.mainStage.setScene(new Scene(homeRoot, 1220, 740));
                 Main.mainStage.show();

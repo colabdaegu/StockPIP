@@ -1,4 +1,4 @@
-package service;
+package alertService;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -15,7 +15,9 @@ import java.util.Map;
 import config.*;
 import pip.PipCloseManager;
 import pip.PipMain;
-import ui.*;
+import network.NetworkManager;
+import config.manager.PreferencesManager;
+import ui.controller.LogInfoController;
 
 import java.awt.SystemTray;
 import java.awt.Toolkit;

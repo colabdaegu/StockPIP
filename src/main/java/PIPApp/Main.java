@@ -1,6 +1,8 @@
 package PIPApp;
 
-import service.*;
+import alertService.AlertService;
+import alertService.AlertServiceLauncher;
+import config.manager.PreferencesManager;
 
 import javafx.scene.image.Image;
 import javafx.animation.Timeline;
@@ -31,7 +33,7 @@ public class Main extends Application {
         // ⭐ 알림 체크 스케줄링 시작 ⭐
         AlertServiceLauncher.startAll();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/ui/home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/view/home.fxml"));
 
         //primaryStage.initStyle(StageStyle.UNDECORATED);
 

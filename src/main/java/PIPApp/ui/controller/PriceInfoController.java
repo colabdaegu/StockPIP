@@ -1,9 +1,11 @@
-package ui;
+package ui.controller;
 
 import PIPApp.Main;
 import pip.PipLauncher;
 import config.*;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,28 +13,29 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import service.NetworkManager;
-import service.PreferencesManager;
+import javafx.util.Duration;
+import network.NetworkManager;
+import config.manager.PreferencesManager;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import java.time.format.DateTimeFormatter;
 
-public class AssetInfoController {
-    @FXML private Label nameLabel;      // 회사명
-    @FXML private Label tickerLabel;    // 티커
-    @FXML private Label industryLabel;  // 산업군
-    @FXML private Label countryLabel;   // 국가
-    @FXML private Label currencyLabel;  // 통화
-    @FXML private Label exchangeLabel;  // 거래소
-    @FXML private Label ipoDateLabel;   // IPO일
-    @FXML private Label marketCapitalizationLabel;  // 시가총액
+public class PriceInfoController {
+    @FXML private Label nameLabel;    // 회사명
+    @FXML private Label currentPriceLabel;  // 현재가
+    @FXML private Label openPriceLabel;     // 시가
+    @FXML private Label highPriceLabel;     // 당일 최고가
+    @FXML private Label lowPriceLabel;      // 당일 최저가
+    @FXML private Label previousClosePriceLabel;      // 전일 종가
 
-    @FXML private ImageView logoUrlLabel;   // 로고 이미지
+    @FXML private Label refreshTimeLabel;   // 최근 갱신 시간
 
     @FXML private ComboBox<String> comboBoxID;  // 콤보박스
+
+    private Timeline refreshTimeline;  // 주기적 업데이트용 타임라인
 
 
     @FXML
@@ -62,19 +65,12 @@ public class AssetInfoController {
 
             for (Stocks stock : StockList.getStockArray()) {
                 if (stock.getTicker().equals(selectedTicker)) {
-                    updateInformation(stock);
-                    updateLabel(stock);
+                    updateLabels(stock);
+                    timelineRefresh(stock);
                     break;
                 }
             }
         });
-    }
-
-    // 정보 업데이트
-    private void updateInformation(Stocks stock) {
-        if (NetworkManager.isInternetAvailable()) {
-            stock.refreshProfile();
-        }
     }
 
 
@@ -83,33 +79,49 @@ public class AssetInfoController {
         if (!StockList.getStockArray().isEmpty()) {
             Stocks firstStock = StockList.getStockArray().get(0);
             comboBoxID.getSelectionModel().select(firstStock.getTicker());
-
-
-            updateLabel(firstStock);
-
-            if (countryLabel.getText() == "null" || countryLabel.getText().isBlank()) {
-                updateInformation(firstStock);
-            }
+            updateLabels(firstStock);
+            timelineRefresh(firstStock);
         }
     }
 
     // 라벨 업데이트
-    private void updateLabel(Stocks stock) {
-        if (stock.logoUrl != null && stock.logoUrl.getImage() != null) {
-            logoUrlLabel.setVisible(true);
-            logoUrlLabel.setImage(stock.logoUrl.getImage());
-        } else {
-            logoUrlLabel.setVisible(false);
+    private void updateLabels(Stocks stock) {
+        nameLabel.setText("[ " + stock.getName() + " ]");
+        currentPriceLabel.setText("$" + String.valueOf(stock.currentPrice));
+        openPriceLabel.setText("$" + String.valueOf(stock.openPrice));
+        highPriceLabel.setText("$" + String.valueOf(stock.highPrice));
+        lowPriceLabel.setText("$" + String.valueOf(stock.lowPrice));
+        previousClosePriceLabel.setText("$" + String.valueOf(stock.previousClosePrice));
+
+        if (stock.api_refreshTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String refreshTime = stock.api_refreshTime.format(formatter);
+            refreshTimeLabel.setText(refreshTime);
         }
 
-        nameLabel.setText(stock.getName());
-        tickerLabel.setText(String.valueOf(stock.ticker));
-        industryLabel.setText(String.valueOf(stock.industry));
-        countryLabel.setText(String.valueOf(stock.country));
-        currencyLabel.setText(String.valueOf(stock.currency));
-        exchangeLabel.setText(String.valueOf(stock.exchange));
-        ipoDateLabel.setText(String.valueOf(stock.ipoDate));
-        marketCapitalizationLabel.setText(String.valueOf(stock.marketCapitalization) + "M");
+        System.out.println("🔄 [" + stock.getTicker() + "] 시세 정보 자동 새로고침");
+    }
+
+
+    /// 선택된 종목의 주기에 따라 자동 새로고침 시작
+    private void timelineRefresh(Stocks stock) {
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
+
+        refreshTimeline = new Timeline(new KeyFrame(Duration.seconds(stock.getRefresh()), event -> {
+            // 네트워크 검사
+            if (!NetworkManager.isInternetAvailable()) {
+                System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+                return;
+            }
+
+            stock.refreshQuote();
+            updateLabels(stock);
+        }));
+
+        refreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        refreshTimeline.play();
     }
 
 
@@ -121,6 +133,11 @@ public class AssetInfoController {
         if (!StockList.getStockArray().isEmpty()){
             // 현재 메인 스테이지 닫기
             Main.mainStage.close();
+
+            // 타임라인 정지
+            if (refreshTimeline != null) {
+                refreshTimeline.stop();
+            }
 
             // 새 PIP 스테이지 열기
             PipLauncher.launchAllPipWindows();
@@ -137,12 +154,17 @@ public class AssetInfoController {
         new PreferencesManager().saveSettings();
     }
 
+
+
     // 홈으로 이동
     @FXML
     private void handleHomeClick(MouseEvent event) {
         System.out.println("홈 클릭됨");
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/home.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -156,14 +178,13 @@ public class AssetInfoController {
 
     // 종목 정보로 이동
     @FXML
-    private void handleAssetInfoClick(MouseEvent event) { System.out.println("종목 정보 클릭됨"); }
-
-    // 시세 정보로 이동
-    @FXML
-    private void handlePriceInfoClick(MouseEvent event) {
-        System.out.println("시세 정보 클릭됨");
+    private void handleAssetInfoClick(MouseEvent event) {
+        System.out.println("종목 정보 클릭됨");
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("priceInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/assetInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -175,12 +196,19 @@ public class AssetInfoController {
         }
     }
 
+    // 시세 정보로 이동
+    @FXML
+    private void handlePriceInfoClick(MouseEvent event) { System.out.println("시세 정보 클릭됨"); }
+
     // 로그로 이동
     @FXML
     private void handleLogClick(MouseEvent event) {
         System.out.println("로그 클릭됨");
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -196,8 +224,11 @@ public class AssetInfoController {
     @FXML
     private void handleSettingsClick(MouseEvent event) {
         System.out.println("설정 클릭됨");
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/settings.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -227,7 +258,7 @@ public class AssetInfoController {
     private void handleAiClick(MouseEvent event) {
         System.out.println("AI 분석 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ai.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/ai.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환

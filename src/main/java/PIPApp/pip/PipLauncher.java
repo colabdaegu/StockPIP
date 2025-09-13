@@ -1,8 +1,8 @@
 package pip;
 
+import alertService.AlertServiceLauncher;
 import config.StockList;
 import config.Stocks;
-import service.*;
 import javafx.stage.Stage;
 
 public class PipLauncher {

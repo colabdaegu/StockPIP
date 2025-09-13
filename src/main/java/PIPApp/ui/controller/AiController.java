@@ -1,4 +1,4 @@
-package ui;
+package ui.controller;
 
 import PIPApp.Main;
 import config.StockList;
@@ -14,8 +14,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import pip.PipLauncher;
-import service.NetworkManager;
-import service.PreferencesManager;
+import network.NetworkManager;
+import config.manager.PreferencesManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -134,7 +134,7 @@ public class AiController {
     private void handleHomeClick(MouseEvent event) {
         System.out.println("홈 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/home.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -151,7 +151,7 @@ public class AiController {
     private void handleAssetInfoClick(MouseEvent event) {
         System.out.println("종목 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("assetInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/assetInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -168,7 +168,7 @@ public class AiController {
     private void handlePriceInfoClick(MouseEvent event) {
         System.out.println("시세 정보 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("priceInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/priceInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -185,7 +185,7 @@ public class AiController {
     private void handleLogClick(MouseEvent event) {
         System.out.println("로그 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("logInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/logInfo.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환
@@ -202,7 +202,7 @@ public class AiController {
     private void handleSettingsClick(MouseEvent event) {
         System.out.println("설정 클릭됨");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/settings.fxml"));
             Parent root = loader.load();
 
             // Main의 전역 Stage를 이용해서 화면 전환

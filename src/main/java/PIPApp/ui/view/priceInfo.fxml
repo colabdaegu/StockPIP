@@ -9,28 +9,26 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.AssetInfoController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.PriceInfoController">
    <left>
-      <VBox prefHeight="200.0" prefWidth="340.0" spacing="30.0" styleClass="primary-color" stylesheets="@values/styles.css" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="340.0" spacing="30.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
          <children>
             <VBox alignment="CENTER" prefHeight="202.0" prefWidth="340.0" spacing="15.0">
                <VBox.margin>
                   <Insets top="50.0" />
                </VBox.margin>
                <children>
-                  <Button fx:id="pipButton" contentDisplay="TOP" graphicTextGap="10" onAction="#pipClick" prefHeight="173.0" prefWidth="286.0" styleClass="buttonPIP" stylesheets="@values/styles.css" textFill="WHITE">
+                  <Button fx:id="pipButton" contentDisplay="TOP" graphicTextGap="10" onAction="#pipClick" prefHeight="173.0" prefWidth="286.0" styleClass="buttonPIP" stylesheets="@../values/styles.css" textFill="WHITE">
                      <graphic>
                         <ImageView fitHeight="106.0" fitWidth="112.0">
                            <image>
-                              <Image url="@../resources/img/PIP.png" />
+                              <Image url="@../../resources/img/PIP.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -42,11 +40,11 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="458.0" prefWidth="340.0" spacing="15.0">
                <children>
-                  <HBox fx:id="homeBox" alignment="CENTER" onMouseClicked="#handleHomeClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected" stylesheets="@values/styles.css">
+                  <HBox fx:id="homeBox" alignment="CENTER" onMouseClicked="#handleHomeClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected" stylesheets="@../values/styles.css">
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/img/Home_.png" />
+                              <Image url="@../../resources/img/Home_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="홈" textFill="WHITE">
@@ -59,14 +57,31 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox fx:id="assetInfoBox" alignment="CENTER" onMouseClicked="#handleAssetInfoClick" prefHeight="45.0" prefWidth="200.0">
+                  <HBox fx:id="assetInfoBox" alignment="CENTER" onMouseClicked="#handleAssetInfoClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/img/Document_.png" />
+                              <Image url="@../../resources/img/Document_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="종목 정보" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="priceInfoBox" alignment="CENTER" onMouseClicked="#handlePriceInfoClick" prefHeight="45.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/img/Chart_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="32.0" prefWidth="192.0" text="시세 정보" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic" size="20.0" />
                            </font>
@@ -80,28 +95,11 @@
                         <String fx:value="selected-border" />
                      </styleClass>
                   </HBox>
-                  <HBox fx:id="priceInfoBox" alignment="CENTER" onMouseClicked="#handlePriceInfoClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
-                     <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../resources/img/Chart_.png" />
-                           </image>
-                        </ImageView>
-                        <Label prefHeight="32.0" prefWidth="192.0" text="시세 정보" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic" size="20.0" />
-                           </font>
-                           <padding>
-                              <Insets left="15.0" />
-                           </padding>
-                        </Label>
-                     </children>
-                  </HBox>
                   <HBox fx:id="logBox" alignment="CENTER" onMouseClicked="#handleLogClick" prefHeight="45.0" prefWidth="200.0" styleClass="selected">
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/img/Scroll_.png" />
+                              <Image url="@../../resources/img/Scroll_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="로그" textFill="WHITE">
@@ -118,7 +116,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/img/Settings_.png" />
+                              <Image url="@../../resources/img/Settings_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="설정" textFill="WHITE">
@@ -135,7 +133,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/img/ExternalLink_.png" />
+                              <Image url="@../../resources/img/ExternalLink_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="외부 사이트" textFill="WHITE">
@@ -152,7 +150,7 @@
                      <children>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/img/AI_.png" />
+                              <Image url="@../../resources/img/AI_.png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="32.0" prefWidth="192.0" text="AI 분석 ✨" textFill="WHITE">
@@ -171,16 +169,16 @@
       </VBox>
    </left>
    <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="80.0" styleClass="secondary-color" stylesheets="@values/styles.css" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="50.0" styleClass="secondary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="780.0">
                <children>
                   <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../resources/img/Document_.png" />
+                        <Image url="@../../resources/img/Chart_.png" />
                      </image>
                   </ImageView>
-                  <Label prefHeight="36.0" prefWidth="200.0" text=" 종목 정보" textFill="WHITE">
+                  <Label prefHeight="36.0" prefWidth="200.0" text=" 시세 정보" textFill="WHITE">
                      <font>
                         <Font name="Malgun Gothic Bold" size="25.0" />
                      </font>
@@ -191,115 +189,128 @@
                   <ComboBox fx:id="comboBoxID" prefWidth="150.0" />
                </children>
             </HBox>
-            <VBox prefHeight="495.0" prefWidth="780.0" spacing="30.0">
+            <VBox prefHeight="101.0" prefWidth="780.0">
                <children>
-                  <HBox prefHeight="334.0" prefWidth="780.0">
+                  <Label fx:id="nameLabel" alignment="CENTER" prefHeight="36.0" prefWidth="631.0" textFill="#f0f0f0">
+                     <font>
+                        <Font name="Malgun Gothic Bold" size="25.0" />
+                     </font>
+                     <effect>
+                        <DropShadow color="rgba(0,0,0,0.8)" offsetX="2" offsetY="2" radius="4" />
+                     </effect>
+                  </Label>
+                  <Pane prefHeight="13.0" prefWidth="780.0" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="780.0">
                      <children>
-                        <GridPane prefHeight="322.0" prefWidth="557.0" styleClass="grid-with-border">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="377.0" minWidth="10.0" prefWidth="118.5" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.5" minWidth="10.0" prefWidth="436.5" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
+                        <HBox prefHeight="53.0" prefWidth="631.0" styleClass="rounded-box">
                            <children>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="회사명">
+                              <Label alignment="CENTER" prefHeight="29.0" prefWidth="139.0" text="현재가">
                                  <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
+                                    <Font name="Malgun Gothic Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="티커" GridPane.rowIndex="1">
+                              <Line endX="-106.0" endY="-385.04730224609375" startX="-106.0" startY="-413.3402099609375" strokeWidth="1.5" />
+                              <Label fx:id="currentPriceLabel" alignment="CENTER" prefHeight="29.0" prefWidth="447.0">
                                  <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="산업군" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="국가" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="통화" GridPane.rowIndex="4">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="거래소" GridPane.rowIndex="5">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="IPO일" GridPane.rowIndex="6">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="12.0" prefWidth="900.0" text="시가총액" GridPane.rowIndex="7">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="nameLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="tickerLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="industryLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="countryLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="exchangeLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="currencyLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="ipoDateLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="marketCapitalizationLabel" alignment="CENTER" prefHeight="12.0" prefWidth="900.0" textFill="#0883ff" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                 <font>
-                                    <Font name="Malgun Gothic Bold" size="17.0" />
+                                    <Font name="Malgun Gothic Bold" size="20.0" />
                                  </font>
                               </Label>
                            </children>
-                        </GridPane>
-                        <Pane prefHeight="100.0" prefWidth="89.0" />
+                        </HBox>
                      </children>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="780.0">
+               </children>
+            </VBox>
+            <VBox prefHeight="374.0" prefWidth="780.0" spacing="25.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="780.0">
                      <children>
-                        <Pane prefHeight="120.0" prefWidth="217.0" />
-                        <ImageView fx:id="logoUrlLabel" fitHeight="120.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                        <HBox prefHeight="53.0" prefWidth="631.0" styleClass="rounded-box">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="29.0" prefWidth="139.0" text="시가">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="19.0" />
+                                 </font>
+                              </Label>
+                              <Line endX="-106.0" endY="-385.04730224609375" startX="-106.0" startY="-413.3402099609375" strokeWidth="1.5" />
+                              <Label fx:id="openPriceLabel" alignment="CENTER" prefHeight="29.0" prefWidth="447.0">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="780.0">
+                     <children>
+                        <HBox prefHeight="53.0" prefWidth="631.0" styleClass="rounded-box">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="29.0" prefWidth="139.0" text="당일 최고가">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="19.0" />
+                                 </font>
+                              </Label>
+                              <Line endX="-106.0" endY="-385.04730224609375" startX="-106.0" startY="-413.3402099609375" strokeWidth="1.5" />
+                              <Label fx:id="highPriceLabel" alignment="CENTER" prefHeight="29.0" prefWidth="447.0">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="780.0">
+                     <children>
+                        <HBox prefHeight="53.0" prefWidth="631.0" styleClass="rounded-box">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="29.0" prefWidth="139.0" text="당일 최저가">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="19.0" />
+                                 </font>
+                              </Label>
+                              <Line endX="-106.0" endY="-385.04730224609375" startX="-106.0" startY="-413.3402099609375" strokeWidth="1.5" />
+                              <Label fx:id="lowPriceLabel" alignment="CENTER" prefHeight="29.0" prefWidth="447.0">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="780.0">
+                     <children>
+                        <HBox prefHeight="53.0" prefWidth="631.0" styleClass="rounded-box">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="29.0" prefWidth="139.0" text="전일 종가">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="19.0" />
+                                 </font>
+                              </Label>
+                              <Line endX="-106.0" endY="-385.04730224609375" startX="-106.0" startY="-413.3402099609375" strokeWidth="1.5" />
+                              <Label fx:id="previousClosePriceLabel" alignment="CENTER" prefHeight="29.0" prefWidth="447.0">
+                                 <font>
+                                    <Font name="Malgun Gothic Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="33.0" prefWidth="780.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="215.0" text="마지막 업데이트 시각 : " textFill="#fffffe">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="refreshTimeLabel" alignment="CENTER" prefHeight="14.0" prefWidth="220.0" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="16.0" />
+                           </font>
+                        </Label>
                      </children>
                   </HBox>
                </children>

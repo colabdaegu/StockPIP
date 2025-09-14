@@ -1,5 +1,6 @@
 package ui.controller;
 
+import javafx.scene.layout.BorderPane;
 import service.alert.AlertService;
 import api.service.CompanyService;
 import api.service.StockService;
@@ -78,8 +79,14 @@ public class HomeController {
 
         // 종목 이름 토글 - 이벤트 리스너
         toggleListner();
-    }
 
+        // 엔터키 저장 리스너
+        enterKeySaveListener(nameField);
+        enterKeySaveListener(targetPriceField);
+        enterKeySaveListener(stopPriceField);
+        enterKeySaveListener(refreshField_Minute);
+        enterKeySaveListener(refreshField_Second);
+    }
 
     // 리스트뷰 초기 설정
     private void setupListView() {
@@ -454,6 +461,11 @@ public class HomeController {
         if (alert != null) {
             alert.hide();
         }
+    }
+
+    // 엔터키 저장 리스너
+    private void enterKeySaveListener(TextField textField) {
+        textField.setOnAction(event -> saveClick(null));
     }
 
 

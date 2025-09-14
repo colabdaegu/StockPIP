@@ -61,10 +61,6 @@ public class PipMain {
         updateLabels(stock); // 3.
         timelineRefresh(stock); // 4.
 
-        double ratio = fontSize / 28.0;
-        double newWidth = Math.max(300, 300 * ratio);
-        double newHeight = Math.max(120, 120 * ratio);
-
         stage.setX(0);
         stage.setY(0 + (fontSize * 5) * index);
 
@@ -75,6 +71,10 @@ public class PipMain {
         StackPane root = new StackPane(center, buttonBox);
         applyOutlineStyle(root, buttonBox); // 7.
         enableDragAndResize(stage, root);   // 8.
+
+        double ratio = fontSize / 28.0;
+        double newWidth = Math.max(150, 300 * ratio);
+        double newHeight = Math.max(60, 120 * ratio);
 
         setupStage(stage, root, newWidth, newHeight); // 9.
 
@@ -159,15 +159,20 @@ public class PipMain {
 
     // 5. 버튼 생성 및 핸들러
     private HBox createButtonBar() {
+        double fontSize = AppConstants.pipFontSize;
+        double buttonFontSize = (fontSize * 0.71 > 10) ? fontSize * 0.71 : 10;
+
         Button closeBtn = new Button("✕");
-        closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
+        closeBtn.setStyle("-fx-background-color: transparent; " + "-fx-text-fill: white; " +
+                        "-fx-font-size: " + buttonFontSize + "px;");
         closeBtn.setOnAction(e -> {
             stop(1);
             if (pipWindows.isEmpty()) Platform.exit();
         });
 
         Button settingsBtn = new Button("⚙");
-        settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px;");
+        settingsBtn.setStyle("-fx-background-color: transparent; " + "-fx-text-fill: white; " +
+                        "-fx-font-size: " + buttonFontSize + "px;");
         settingsBtn.setOnAction(e -> {
             for (PipMain pip : new ArrayList<>(pipWindows)) {
                 pip.stop(0);

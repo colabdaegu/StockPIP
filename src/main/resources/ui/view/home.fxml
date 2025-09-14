@@ -192,7 +192,7 @@
                               <Font name="Malgun Gothic Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="281.0" text="【 23:30~06:00 】" textFill="#fffdfd">
+                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="281.0" text="Mon–Fri 【 23:30~06:00 】" textFill="#fffdfd">
                            <font>
                               <Font name="Malgun Gothic" size="14.0" />
                            </font>

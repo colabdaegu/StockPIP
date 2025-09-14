@@ -69,7 +69,7 @@ public class AiController {
             return;
         }
         showAlert("Now Loading...", "⏳ 종목 분석 중...");
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), e -> {
             // 라벨 업데이트
             updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
             resetButton.setText("갱신");

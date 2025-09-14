@@ -152,8 +152,8 @@ public class AlertService {
     private static void showAlert(int type, Alert.AlertType warningType, String name, String ticker, String title, String message, String timestamp) {
         Platform.runLater(() -> {
             // 기존 알림창이 떠있으면 닫기
-            if (alertMap.containsKey(name)) {
-                Alert oldAlert = alertMap.get(name);
+            if (alertMap.containsKey(ticker)) {
+                Alert oldAlert = alertMap.get(ticker);
                 if (oldAlert.isShowing()) {
                     oldAlert.close();
                 }

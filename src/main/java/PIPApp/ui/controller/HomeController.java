@@ -209,7 +209,7 @@ public class HomeController {
                 hidePopup();
 
                 warningMessageLabel.setVisible(true);
-                warningMessageLabel.setText("※ 해당 종목은 회사명으로의 조회가 어렵습니다. 티커명으로 직접 입력해 주세요.");
+                warningMessageLabel.setText("※ 해당 종목은 회사명으로의 조회가 어렵습니다. 티커명으로 직접 입력해 주십시오.");
                 System.out.println("⚠ 회사명 → 티커 매핑 실패\n");
                 return;
             }

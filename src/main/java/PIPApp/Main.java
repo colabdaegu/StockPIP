@@ -67,6 +67,7 @@ public class Main extends Application {
         if (!exists) {
             Stocks newStock = new Stocks(defaultTicker, toggleOption, targetPrice, stopPrice, refreshMinute, refreshSecond);
             StockList.getStockArray().add(newStock);
+            System.out.println("\uD83C\uDD99 테스트 데이터 (" + defaultTicker + ") 추가");
         }
     }
 

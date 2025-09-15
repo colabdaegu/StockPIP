@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.image.ImageView;
+import net.NetworkManager;
 
 
 public class Stocks {
@@ -62,11 +63,11 @@ public class Stocks {
     }
 
     public void refreshQuote() {
-//        // 네트워크 검사
-//        if (!NetworkManager.isInternetAvailable()) {
-//            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
-//            return;
-//        }
+        // 네트워크 검사
+        if (!NetworkManager.isInternetAvailable()) {
+            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+            return;
+        }
 
         StockService stockService = new StockService();
         var quote = stockService.getLiveStockQuote(this.ticker);
@@ -106,11 +107,11 @@ public class Stocks {
 
     // 회사 프로필 조회
     public void refreshProfile() {
-//        // 네트워크 검사
-//        if (!NetworkManager.isInternetAvailable()) {
-//            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
-//            return;
-//        }
+        // 네트워크 검사
+        if (!NetworkManager.isInternetAvailable()) {
+            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+            return;
+        }
 
         CompanyService companyService = new CompanyService();
 

@@ -65,10 +65,12 @@ public class AiController {
     private void resetClick(ActionEvent event) {
         // 네트워크 검사
         if (!NetworkManager.isInternetAvailable()) {
-            System.out.println("⚠ 모니터링 중단 - 인터넷 연결 실패\n");
+            updateLabel("","","","","","");
+            showAlert(Alert.AlertType.ERROR,"StockPIP", "서버와의 연결에 실패하였습니다.");
+            System.out.println("⚠ 인터넷 연결 실패\n");
             return;
         }
-        showAlert("Now Loading...", "⏳ 종목 분석 중...");
+        showAlert(Alert.AlertType.INFORMATION,"Now Loading...", "⏳ 종목 분석 중...");
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), e -> {
             // 라벨 업데이트
             updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
@@ -91,8 +93,8 @@ public class AiController {
     }
 
     // 로딩 팝업
-    private void showAlert(String title, String message) {
-        alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

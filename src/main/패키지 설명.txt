@@ -1,0 +1,112 @@
+1.  프로젝트 최상위 디렉터리 (StockPIPApp/)
+    * `.idea/`
+        * IntelliJ IDEA 설정 폴더. 프로젝트 설정, 런/디버그 설정 등 IDE 메타데이터가 들어있음.
+    * `out/`
+        * 컴파일된 .class 결과물(IDE 빌드 출력). 실 파일 수정 후 Clean/Rebuild하면 갱신.
+    * `src/`
+        * 모든 자바 소스 코드와 리소스 파일들이 위치한 루트.
+        * `main/`
+            * 애플리케이션 코드를 포함하는 폴더.
+            * `java/`
+                * 자바 소스 코드(`.java` 파일)가 저장되는 핵심 폴더.
+                * `PIPApp/`
+                    * 프로그램의 진입점(Main). IntelliJ IDEA에서 '소스 루트'로 지정.
+                    * `Main.java`
+                        * JavaFX 애플리케이션 진입점(Entry Point).
+                    * `api/`
+                        * 외부 주식 데이터(Finnhub)와의 통신을 담당.
+                        * `model/`
+                            * `FinnhubApiClient.java`
+                                * Finnhub API를 직접 호출하는 HTTP 클라이언트.
+                            * `model/`
+                                * `CompanyProfile.java`
+                                    * 회사 프로필 DTO (회사명, 티커, 웹사이트 등).
+                                * `StockQuote.java`
+                                    * 시세 DTO (현재가, 시가, 고가, 저가 등).
+                            * `service/`
+                                * `CompanyService.java`
+                                    * 회사 프로필 DTO 조회를 담당하는 서비스 레이어.
+                                * `StockService.java`
+                                    * 시세 조회를 담당하는 서비스 레이어.
+                    * `config/`
+                        * 앱 설정 상수와 현재 앱 상태(등록된 종목 리스트 등)를 관리.
+                        * `AppConstants.java`
+                            * 전역 상수 (예: 알림옵션, pip 관련 설정, decimal point 등).
+                        * `StockList.java`
+                            * 메모리상의 추적 종목 목록과 로그 관리.
+                        * `Stocks.java`
+                            * 개별 종목을 표현하는 도메인 모델(티커, 이름, target, stop, refresh 등).
+                        * `manager/`
+                            * `PreferencesManager.java`
+                                * (JSON 수행)앱 설정 + 등록된 종목을 디스크에 저장/복원.
+                    * `net/`
+                        * `NetworkManager.java`
+                            * 인터넷 연결 가능 여부 체크 유틸.
+                    * `pip/`
+                        * PIP 창을 띄우고 주기적으로 갱신하는 로직을 모아둠.
+                        * `PipLauncher.java`
+                            * 등록된 종목들을 기반으로 PIP 윈도우들 일괄 생성/종료 관리.
+                        * `PipMain.java`
+                            * 개별 PIP 윈도우 클래스 생성.
+                        * `PipCloseManager.java`
+                            * PIP 관련 보조 유틸(마지막 창 닫기 처리).
+                    * `service/`
+                        * `alert/`
+                            * 알람 체크 로직(가격 비교 → 팝업 메시지) 모듈.
+                            * `AlertServiceLauncher.java`
+                                * 모든 등록 종목에 대해 AlertService를 시작해주는 유틸.
+                            * `AlertService.java`
+                                * 각 종목별 알림 모니터링 기능.
+                    * `ui/`
+                        * 사용자 인터페이스(UI) 관련 클래스들을 모아두는 패키지.
+                        * `controller/`
+                            * fxml 요소와 각각 상호작용하는 컨트롤러.
+                            * `HomeController.java`
+                                * 홈 화면(Ticker/Company 입력, 저장, 삭제, PIP 전환 등) 이벤트 처리.
+                            * `AssetInfoController.java`
+                                * 종목별 프로필 상세 조회.
+                            * `PriceInfoController.java`
+                                * 종목별 시세 차트.
+                            * `LogInfoController.java`
+                                * 사용자 로그 표시.
+                            * `SettingsController.java`
+                                * 사용자 환경설정.
+                            * `AiController.java`
+                                * 종목별 AI 분석 및 예측.
+                    * `util/`
+                        * 유틸리티 기능 모음.
+                        * `FileLoader.java`
+                            * 리소스를 읽어 반환.
+            * `resources/`
+                * 런타임 리소스.
+                * `img/`
+                    * 사이드바 아이콘 등(png).
+                * `logo/`
+                    * 앱 아이콘(ico).
+                * `names/`
+                    * 자동완성 기능에 사용되는 회사명/티커 이름(txt).
+                * `ui/`
+                    * 사용자 인터페이스(UI) 관련 리소스.
+                    * `view/`
+                        * fxml 프론트 화면에 표시되는 요소.
+                        * `home.fxml`
+                            * 홈 화면 fxml.
+                        * `assetInfo.fxml`
+                            * 종목별 프로필 fxml.
+                        * `priceInfo.fxml`
+                            * 종목별 시세 차트 fxml.
+                        * `logInfo.fxml`
+                            * 사용자 로그 fxml.
+                        * `settings.fxml`
+                            * 환경설정 fxml.
+                        * `ai.fxml`
+                            * 종목별 AI 분석 fxml.
+                    * `values/`
+                        * `styles.css`
+                            * JavaFX 애플리케이션의 전체 테마/디자인을 담당하는 전역 CSS.
+    * `.gitignore`
+        * 버전 관리 시스템(Git)이 추적하지 않아야 할 파일이나 폴더(예: IDE 설정 파일, 컴파일된 파일) 목록을 정의.
+    * `README.md`
+        * 프로젝트에 대한 설명, 설정 방법, 실행 방법 등 전반적인 정보를 담는 문서 파일.
+    * `StockPIP.iml`
+        * IntelliJ IDEA가 이 프로젝트의 모듈을 인식하는 데 필요한 설정 정보를 담고 있는 파일.

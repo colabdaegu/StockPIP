@@ -291,7 +291,7 @@ public class HomeController {
             hidePopup();
 
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("※ 알림 주기는 0이 될 수 없습니다.");
+            warningMessageLabel.setText("※ 알림 주기는 0이 될 수 없습니다..");
             System.out.println("⚠ 알림 주기는 0이 될 수 없음\n");
             return;
         }

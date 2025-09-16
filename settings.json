@@ -1,6 +1,17 @@
 {
-  "stockArray": [],
-  "logText": "",
+  "stockArray": [
+    {
+      "listeners": [],
+      "ticker": "AAPL",
+      "toggleOption": 1,
+      "targetPrice": 555.0,
+      "stopPrice": 5.0,
+      "refresh": 2,
+      "refreshMinute": 0,
+      "refreshSecond": 2
+    }
+  ],
+  "logText": "2025-09-16 13:02:11 - [AACB]이(가) 저장되었습니다!\n2025-09-16 13:02:18 - [AACBU]이(가) 저장되었습니다!\n2025-09-16 13:26:33 - [AACBU]이(가) 저장되었습니다!\n2025-09-16 13:26:46 - [AACB]이(가) 저장되었습니다!\n2025-09-16 15:08:01 - [AAPL]이(가) 저장되었습니다!\n2025-09-16 15:08:06 - [AAPL]이(가) 저장되었습니다!\n2025-09-16 15:11:54 - [AAPL]이(가) 저장되었습니다!\n2025-09-16 15:12:00 - [AAPL]이(가) 저장되었습니다!\n2025-09-16 15:19:44 - [AAPL]이(가) 저장되었습니다!\n2025-09-16 15:28:21 - [AAPL]이(가) 저장되었습니다!\n2025-09-16 15:28:31 - [AAPL]이(가) 저장되었습니다!\n",
   "notificationOption": 0,
   "pipDecimalPoint": 2,
   "pipOutlineOption": false,

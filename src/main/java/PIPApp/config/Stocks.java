@@ -102,6 +102,8 @@ public class Stocks {
         if (quote != null) {
             currentPrice = quote.getCurrentPrice();
             api_refreshTime = LocalDateTime.now();
+        } else {
+            api_refreshTime = LocalDateTime.of(1999, 9, 9, 9, 9, 9);
         }
     }
 
@@ -227,6 +229,11 @@ public class Stocks {
     public double getPreviousClosePrice() { return previousClosePrice; }
     public void setPreviousClosePrice(double previousClosePrice) { this.previousClosePrice = previousClosePrice; }
 
-    public LocalDateTime getApi_refreshTime() { return api_refreshTime; }
+    public LocalDateTime getApi_refreshTime() {
+        if (api_refreshTime == null) {
+            return LocalDateTime.of(1999, 9, 9, 9, 9, 9);
+        }
+        return api_refreshTime;
+    }
     public void setApi_refreshTime(LocalDateTime api_refreshTime) { this.api_refreshTime = api_refreshTime; }
 }

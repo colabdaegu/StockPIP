@@ -234,8 +234,23 @@ public class HomeController {
             }
         }
 
+
+        // 알림 주기-정수 여부 확인
+        if ((!refreshMinuteStr.isEmpty() && !refreshMinuteStr.matches("\\d+"))
+                || (!refreshSecondStr.isEmpty() && !refreshSecondStr.matches("\\d+"))) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
+            System.out.println("⚠ 알림 주기 - 데이터 타입이 맞지 않음\n");
+            return;
+        }
+
+
         // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
-        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty() || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty()) || ((!refreshMinuteStr.isEmpty() && !refreshMinuteStr.matches("\\d+")) || (!refreshSecondStr.isEmpty() && !refreshSecondStr.matches("\\d+"))) || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
+        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty()
+                || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty())
+                || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
             hidePopup();
 
             warningMessageLabel.setVisible(true);
@@ -269,39 +284,24 @@ public class HomeController {
         }
 
 
-        // 새로고침 주기-분은 입력된 경우에만 파싱 시도
-        if (!refreshMinuteStr.isEmpty()) {
-            try {
-                refreshMinute = Integer.parseInt(refreshMinuteStr);
-            } catch (NumberFormatException e) {
-                hidePopup();
-
-                warningMessageLabel.setVisible(true);
-                warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
-                System.out.println("⚠ 새로고침(분) - 데이터 타입이 맞지 않음\n");
-                return;
-            }
-        }
-        // 새로고침 주기-초는 입력된 경우에만 파싱 시도
-        if (!refreshSecondStr.isEmpty()) {
-            try {
-                refreshSecond = Integer.parseInt(refreshSecondStr);
-            } catch (NumberFormatException e) {
-                hidePopup();
-
-                warningMessageLabel.setVisible(true);
-                warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
-                System.out.println("⚠ 새로고침(초) - 데이터 타입이 맞지 않음\n");
-                return;
-            }
-        }
-        // 새로고침 값이 0이면 유효성 처리
+        refreshMinute = refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr);
+        refreshSecond = refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr);
+        // 알림 주기 값이 0이면 유효성 처리
         if ((refreshMinute + refreshSecond) == 0) {
             hidePopup();
 
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("※ 새로고침 주기는 0이 될 수 없습니다.");
-            System.out.println("⚠ 새로고침 주기는 0이 될 수 없음\n");
+            warningMessageLabel.setText("※ 알림 주기는 0이 될 수 없습니다.");
+            System.out.println("⚠ 알림 주기는 0이 될 수 없음\n");
+            return;
+        }
+        // 알림 주기 값이 2초 이하일 경우 (성능 문제)
+        else if ((refreshMinuteStr.isEmpty() || refreshMinute == 0) && refreshSecond < 2) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("(※성능 안정화) 알림 주기는 최소 2초 이상이어야 합니다. ");
+            System.out.println("(⚠ 성능 안정화) 알림 주기는 최소 2초 이상이어야 함\n");
             return;
         }
 
@@ -400,7 +400,7 @@ public class HomeController {
         }
         System.out.println("목표가: " + targetPrice);
         System.out.println("손절가: " + stopPrice);
-        System.out.println("새로고침: " + refreshMinute + "분 " + refreshSecond + "초");
+        System.out.println("알림 주기: " + refreshMinute + "분 " + refreshSecond + "초");
         System.out.println();
 
         //// ✅ StockList에 저장

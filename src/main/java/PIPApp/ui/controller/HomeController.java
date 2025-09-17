@@ -131,7 +131,7 @@ public class HomeController {
             tickerToggle.setSelected(false);
             System.out.println("회사명 입력 모드");
 
-            nameList = FileLoader.loadLines("names/company_list_filtered.txt");
+            nameList = FileLoader.loadLines("names/company_list_filtered_ok.txt");
         } else if (option == 1) {
             tickerToggle.setSelected(true);
             companyToggle.setSelected(false);
@@ -334,11 +334,11 @@ public class HomeController {
 
                 warningMessageLabel.setVisible(true);
                 if (toggleOption == 0) {
-                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + " / 폐지된 종목으로 확인됩니다.");
+                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + " / 주가가 0으로 조회되는 종목입니다.");
                 } else if (toggleOption == 1) {
-                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + " / 폐지된 종목으로 확인됩니다.");
+                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + " / 주가가 0으로 조회되는 종목입니다.");
                 }
-                System.out.println("⚠ 폐지된 종목임\n");
+                System.out.println("⚠ 주가 데이터 없음\n");
                 return;
             }
             else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면

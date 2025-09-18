@@ -25,16 +25,11 @@ public class Main extends Application {
 
         mainStage = primaryStage;
 
-        String defaultData = "AAPL";
-        Stocks newStock = new Stocks(defaultData, 1, 220, 200, 0, 10);
-        StockList.getStockArray().removeIf(stock -> stock.getTicker().equalsIgnoreCase(defaultData));
-        StockList.getStockArray().add(newStock);
-
         /// PreferencesManager를 초기화하고 설정을 로드 ///
         preferencesManager = new PreferencesManager();
         preferencesManager.loadSettings();
 
-        // 디폴트용 데이터 (삭제 시 0개로 시작)
+        // 디폴트용 데이터 (종목이 0개일 시 defaultTicker 종목 하나 넣고 시작)
         startDefaultStock("AAPL", 1, 300, 200, 0, 10);
 
         /// ⭐ 알림 체크 스케줄링 시작 ///
@@ -61,10 +56,10 @@ public class Main extends Application {
 
     // 테스트용 데이터
     public void startDefaultStock(String defaultTicker, int toggleOption, double targetPrice, double stopPrice, int refreshMinute, int refreshSecond) {
-        boolean exists = StockList.getStockArray()
-                .stream()
-                .anyMatch(stock -> stock.getTicker().equalsIgnoreCase(defaultTicker));
-        if (!exists) {
+//        boolean exists = StockList.getStockArray()
+//                .stream()
+//                .anyMatch(stock -> stock.getTicker().equalsIgnoreCase(defaultTicker));
+        if (StockList.getStockArray().isEmpty()) {
             Stocks newStock = new Stocks(defaultTicker, toggleOption, targetPrice, stopPrice, refreshMinute, refreshSecond);
             StockList.getStockArray().add(newStock);
             System.out.println("\uD83C\uDD99 테스트 데이터 (" + defaultTicker + ") 추가");

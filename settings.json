@@ -1,27 +1,6 @@
 {
-  "stockArray": [
-    {
-      "listeners": [],
-      "ticker": "ELUT",
-      "toggleOption": 0,
-      "targetPrice": 555.0,
-      "stopPrice": 0.001,
-      "refresh": 5,
-      "refreshMinute": 0,
-      "refreshSecond": 5
-    },
-    {
-      "listeners": [],
-      "ticker": "ELYS",
-      "toggleOption": 0,
-      "targetPrice": 555.0,
-      "stopPrice": 1.0E-5,
-      "refresh": 5,
-      "refreshMinute": 0,
-      "refreshSecond": 5
-    }
-  ],
-  "logText": "2025-09-16 15:31:51 - [AAPL]을(를) 삭제하였습니다.\n2025-09-17 21:43:39 - [FEDERATED HERMES INC]이(가) 저장되었습니다!\n2025-09-17 23:47:39 - [A10 NETWORKS INC]이(가) 저장되었습니다!\n2025-09-17 23:47:43 - [AAPL]을(를) 삭제하였습니다.\n2025-09-17 23:47:44 - [Federated Hermes Inc]을(를) 삭제하였습니다.\n2025-09-17 23:47:45 - [A10 Networks Inc]을(를) 삭제하였습니다.\n2025-09-17 23:48:05 - [ELUTIA INC]이(가) 저장되었습니다!\n2025-09-17 23:51:45 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n",
+  "stockArray": [],
+  "logText": "",
   "notificationOption": 0,
   "pipDecimalPoint": 2,
   "pipOutlineOption": false,

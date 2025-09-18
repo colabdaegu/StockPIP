@@ -334,9 +334,9 @@ public class HomeController {
 
                 warningMessageLabel.setVisible(true);
                 if (toggleOption == 0) {
-                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + " / 주가가 0으로 조회되는 종목입니다.");
+                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + " / 주가가 0.0으로 조회되는 종목입니다.");
                 } else if (toggleOption == 1) {
-                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + " / 주가가 0으로 조회되는 종목입니다.");
+                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + " / 주가가 0.0으로 조회되는 종목입니다.");
                 }
                 System.out.println("⚠ 주가 데이터 없음\n");
                 return;

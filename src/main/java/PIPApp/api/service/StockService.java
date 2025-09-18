@@ -3,6 +3,8 @@ package api.service;
 import api.*;
 import api.model.*;
 
+import java.text.DecimalFormat;
+
 public class StockService {
 
     private final FinnhubApiClient finnhubApiClient;

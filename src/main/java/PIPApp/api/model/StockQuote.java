@@ -2,6 +2,8 @@ package api.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DecimalFormat;
+
 public class StockQuote {
     @SerializedName("c")
     private double currentPrice;

@@ -170,11 +170,110 @@ public class HomeController {
     }
 
 
+    // 현재가 조회 버튼
+    @FXML
+    private void currentButton(ActionEvent event) {
+        /// 경고 메시지 숨기고 시작
+        warningMessageLabel.setVisible(false);
+        warningMessageLabel.setStyle("-fx-text-fill: RED;");
+        warningMessageLabel.setText("");
+        showAlert("Now Loading...", "⏳ 유효성 검사 중...", 0);
+
+        String name_Str = nameField.getText().toUpperCase().trim();
+
+        String company = "", ticker = "";
+
+
+        // 네트워크 검사
+        if (!NetworkManager.isInternetAvailable()) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 인터넷에 연결되어 있지 않습니다.");
+            System.out.println("⚠ 인터넷 연결 실패\n");
+            return;
+        }
+
+        // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
+        if (name_Str.isEmpty()) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 종목을 입력해 주십시오.");
+            System.out.println("⚠⚠ 입력 누락\n\n");
+            return;
+        }
+
+        // 이름 유효성 검사
+        if (toggleOption == 0) {
+            company = name_Str;
+            if (!nameList.contains(company)) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 종목 이름이 유효하지 않습니다.");
+                System.out.println("⚠ 존재하지 않는 종목 이름\n");
+                return;
+            }
+
+            CompanyService companyService = new CompanyService();
+            var profileOpt = companyService.getCompanyInfoByName(company);
+            if (profileOpt.isEmpty()) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 해당 종목은 회사명으로의 조회가 어렵습니다. 티커명으로 직접 입력해 주십시오.");
+                System.out.println("⚠ 회사명 → 티커 매핑 실패\n");
+                return;
+            }
+            ticker = profileOpt.get().getTicker();
+
+        } else if (toggleOption == 1) {
+            ticker = name_Str;
+            if (!nameList.contains(ticker)) {
+                hidePopup();
+
+                warningMessageLabel.setVisible(true);
+                warningMessageLabel.setText("※ 종목 이름이 유효하지 않습니다.");
+                System.out.println("⚠ 존재하지 않는 종목 이름\n");
+                return;
+            }
+        }
+
+        // 티커가 결측치인지 검사
+        if (ticker == null || ticker.isEmpty()) {
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 티커 정보를 찾을 수 없습니다.");
+            System.out.println("⚠ 티커가 null 또는 빈 문자열임\n");
+            return;
+        }
+
+        StockService stockService = new StockService();
+        var quote = stockService.getLiveStockQuote(ticker);
+        if (quote != null) {
+            double currentPrice = quote.getCurrentPrice();
+            warningMessageLabel.setStyle("-fx-text-fill: WHITE;");
+            warningMessageLabel.setVisible(true);
+            if (toggleOption == 0) {
+                warningMessageLabel.setText("[" + company + "] 현재가: $" + df.format(currentPrice));
+                System.out.println("[" + company + "] 현재가: $" + df.format(currentPrice));
+            } else if (toggleOption == 1) {
+                warningMessageLabel.setText("[" + ticker + "] 현재가: $" + df.format(currentPrice));
+                System.out.println("[" + ticker + "] 현재가: $" + df.format(currentPrice));
+            }
+        }
+        hidePopup();
+    }
+
+
     // 저장 버튼의 이벤트
     @FXML
     private void saveClick(ActionEvent event) {
         /// 경고 메시지 숨기고 시작
         warningMessageLabel.setVisible(false);
+        warningMessageLabel.setStyle("-fx-text-fill: RED;");
         warningMessageLabel.setText("");
         showAlert("Now Loading...", "⏳ 유효성 검사 중...", 0);
 
@@ -201,6 +300,20 @@ public class HomeController {
             System.out.println("⚠ 인터넷 연결 실패\n");
             return;
         }
+
+
+        // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
+        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty()
+                || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty())
+                || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
+            hidePopup();
+
+            warningMessageLabel.setVisible(true);
+            warningMessageLabel.setText("※ 모든 항목을 올바르게 입력해 주십시오.");
+            System.out.println("⚠⚠ 입력 누락\n\n");
+            return;
+        }
+
 
         // 이름 유효성 검사
         if (toggleOption == 0) {
@@ -247,19 +360,6 @@ public class HomeController {
             warningMessageLabel.setVisible(true);
             warningMessageLabel.setText("※ 숫자(정수) 형식으로 입력해 주십시오.");
             System.out.println("⚠ 알림 주기 - 데이터 타입이 맞지 않음\n");
-            return;
-        }
-
-
-        // 유효성 검사 - 빈칸 유무 (분이나 초는 둘 중에 하나만 입력돼도 됨)
-        if (name_Str.isEmpty() || targetPriceStr.isEmpty() || stopPriceStr.isEmpty()
-                || (refreshMinuteStr.isEmpty() && refreshSecondStr.isEmpty())
-                || ((refreshMinuteStr.isEmpty() ? 0 : Integer.parseInt(refreshMinuteStr)) + (refreshSecondStr.isEmpty() ? 0 : Integer.parseInt(refreshSecondStr)) == 0)){
-            hidePopup();
-
-            warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("※ 모든 항목을 올바르게 입력해 주십시오.");
-            System.out.println("⚠⚠ 입력 누락\n\n");
             return;
         }
 
@@ -377,7 +477,7 @@ public class HomeController {
 
             warningMessageLabel.setVisible(true);
             warningMessageLabel.setText("※ 티커 정보를 찾을 수 없습니다.");
-            System.out.println("⚠ 저장 실패 - 티커가 null 또는 빈 문자열임\n");
+            System.out.println("⚠ 티커가 null 또는 빈 문자열임\n");
             return;
         }
 

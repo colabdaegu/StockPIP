@@ -21,6 +21,7 @@ import config.manager.PreferencesManager;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 
 public class PriceInfoController {
@@ -86,12 +87,14 @@ public class PriceInfoController {
 
     // 라벨 업데이트
     private void updateLabels(Stocks stock) {
+        DecimalFormat df = new DecimalFormat("#,##0.######");   // 지수 표시 방지
+
         nameLabel.setText("[ " + stock.getName() + " ]");
-        currentPriceLabel.setText("$" + String.valueOf(stock.currentPrice));
-        openPriceLabel.setText("$" + String.valueOf(stock.openPrice));
-        highPriceLabel.setText("$" + String.valueOf(stock.highPrice));
-        lowPriceLabel.setText("$" + String.valueOf(stock.lowPrice));
-        previousClosePriceLabel.setText("$" + String.valueOf(stock.previousClosePrice));
+        currentPriceLabel.setText("$" + df.format(stock.currentPrice));
+        openPriceLabel.setText("$" + df.format(stock.openPrice));
+        highPriceLabel.setText("$" + df.format(stock.highPrice));
+        lowPriceLabel.setText("$" + df.format(stock.lowPrice));
+        previousClosePriceLabel.setText("$" + df.format(stock.previousClosePrice));
 
         if (stock.api_refreshTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

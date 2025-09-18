@@ -21,6 +21,7 @@ import PIPApp.Main;
 import util.FileLoader;
 import config.*;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -63,6 +64,9 @@ public class HomeController {
 
     // 성공 팝업
     private Alert alert;
+
+    // 지수 표시 방지
+    DecimalFormat df = new DecimalFormat("#,##0.######");
 
 
     @FXML
@@ -182,9 +186,9 @@ public class HomeController {
         String refreshSecondStr = refreshField_Second.getText().trim();
 
 
-        String company = "";
-        String ticker = "";
-        double targetPrice, stopPrice;
+        // 유효성 검사 후 문제 없으면 최종적으로 저장될 변수들
+        String company = "", ticker = "";
+        double targetPrice = 0.0, stopPrice = 0.0;
         int refreshMinute = 0, refreshSecond = 0;
 
 
@@ -334,9 +338,9 @@ public class HomeController {
 
                 warningMessageLabel.setVisible(true);
                 if (toggleOption == 0) {
-                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + " / 주가가 0.0으로 조회되는 종목입니다.");
+                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + df.format(currentPrice) + " / 주가가 0.0으로 조회되는 종목입니다.");
                 } else if (toggleOption == 1) {
-                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + " / 주가가 0.0으로 조회되는 종목입니다.");
+                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + df.format(currentPrice) + " / 주가가 0.0으로 조회되는 종목입니다.");
                 }
                 System.out.println("⚠ 주가 데이터 없음\n");
                 return;
@@ -346,9 +350,9 @@ public class HomeController {
 
                 warningMessageLabel.setVisible(true);
                 if (toggleOption == 0) {
-                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + df.format(currentPrice) + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
                 } else if (toggleOption == 1) {
-                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + currentPrice + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + df.format(currentPrice) + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
                 }
                 System.out.println("⚠ 손절가가 현재가보다 높음\n");
                 return;
@@ -379,10 +383,10 @@ public class HomeController {
 
 
         // 동일 종목 이름이 있다면 기존 항목 삭제
-        for (int i = 0; i < StockList.getStockArray().size(); i++) {
-            Stocks s = StockList.getStockArray().get(i);
+        for (int l = 0; l < StockList.getStockArray().size(); l++) {
+            Stocks s = StockList.getStockArray().get(l);
             if (s.getTicker().equals(ticker)) {
-                StockList.getStockArray().remove(i);
+                StockList.getStockArray().remove(l);
                 if (toggleOption == 0) {
                     System.out.println(company + ", 업데이트됨\n");
                 } else if (toggleOption == 1) {
@@ -398,8 +402,8 @@ public class HomeController {
         } else if (toggleOption == 1) {
             System.out.println("종목명: " + ticker);
         }
-        System.out.println("목표가: " + targetPrice);
-        System.out.println("손절가: " + stopPrice);
+        System.out.println("목표가: " + df.format(targetPrice));
+        System.out.println("손절가: " + df.format(stopPrice));
         System.out.println("알림 주기: " + refreshMinute + "분 " + refreshSecond + "초");
         System.out.println();
 
@@ -493,12 +497,12 @@ public class HomeController {
                 return;
             }
             String ticker = profileOpt.get().getTicker();
-            for (int i = 0; i < StockList.getStockArray().size(); i++) {
-                Stocks s = StockList.getStockArray().get(i);
+            for (int j = 0; j < StockList.getStockArray().size(); j++) {
+                Stocks s = StockList.getStockArray().get(j);
                 if (s.getTicker().equals(ticker)) {
                     AlertService.stopMonitoring(ticker);     /// 해당 종목의 알림 이벤트 삭제
                     listViews.remove(ticker);
-                    StockList.getStockArray().remove(i);
+                    StockList.getStockArray().remove(j);
                     listViewId.setItems(listViews);
 
                     // 삭제 로그
@@ -510,12 +514,12 @@ public class HomeController {
                 }
             }
         } else if (toggleOption == 1) {
-            for (int i = 0; i < StockList.getStockArray().size(); i++) {
-                Stocks s = StockList.getStockArray().get(i);
+            for (int k = 0; k < StockList.getStockArray().size(); k++) {
+                Stocks s = StockList.getStockArray().get(k);
                 if (s.getTicker().equals(currentName)) {
                     AlertService.stopMonitoring(currentName);     /// 해당 종목의 알림 이벤트 삭제
                     listViews.remove(currentName);
-                    StockList.getStockArray().remove(i);
+                    StockList.getStockArray().remove(k);
                     listViewId.setItems(listViews);
 
                     // 삭제 로그

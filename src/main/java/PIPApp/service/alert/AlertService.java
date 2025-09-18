@@ -8,6 +8,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.util.Duration;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -32,6 +33,9 @@ public class AlertService {
     private static final Map<String, Timeline> monitoringMap = new HashMap<>();
     // 종목별 알림창 최신화 관리
     private static final Map<String, Alert> alertMap = new HashMap<>();
+
+    // 지수 표시 방지
+    private static final DecimalFormat df = new DecimalFormat("#,##0.######");
 
     // 모든 모니터링 중단
     public static void stopAllMonitoring() {
@@ -78,13 +82,13 @@ public class AlertService {
                 StockList.appendLog(logLine);
                 LogInfoController.appendToLogArea(logLine);
 
-                System.out.println(api_refreshTime + " - [" + ticker + "] 목표가 달성 / 현재가: $" + currentPrice + " 목표가: $" + targetPrice + "\n");
+                System.out.println(api_refreshTime + " - [" + ticker + "] 목표가 달성 / 현재가: $" + df.format(currentPrice) + " 목표가: $" + df.format(targetPrice) + "\n");
                 if (AppConstants.notificationOption == 0) {
-                    String AlertMessage = "(" + timestamp + ") " + name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + currentPrice + "\n 목표가: $" + targetPrice;
+                    String AlertMessage = "(" + timestamp + ") " + name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + df.format(currentPrice) + "\n 목표가: $" + df.format(targetPrice);
                     showAlert(0, Alert.AlertType.INFORMATION, name, ticker, "📈 목표가 달성", AlertMessage, timestamp);
                     beep();
                 } else if (AppConstants.notificationOption == 1) {
-                    String NotificationMessage = name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + currentPrice + "\n 목표가: $" + targetPrice;
+                    String NotificationMessage = name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + df.format(currentPrice) + "\n 목표가: $" + df.format(targetPrice);
                     showNotification("📈 목표가 달성!", NotificationMessage);
 
                     // 모니터링 종료
@@ -104,9 +108,9 @@ public class AlertService {
                 StockList.appendLog(logLine);
                 LogInfoController.appendToLogArea(logLine);
 
-                System.out.println(api_refreshTime + " - [" + ticker + "] 손절가 도달 / 현재가: $" + currentPrice + " 목표가: $" + stopPrice + "\n");
+                System.out.println(api_refreshTime + " - [" + ticker + "] 손절가 도달 / 현재가: $" + df.format(currentPrice) + " 목표가: $" + df.format(stopPrice) + "\n");
                 if (AppConstants.notificationOption == 0) {
-                    String AlertMessage = "(" + timestamp + ") " + name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + currentPrice + "\n 손절가: $" + stopPrice;
+                    String AlertMessage = "(" + timestamp + ") " + name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + df.format(currentPrice) + "\n 손절가: $" + df.format(stopPrice);
                     showAlert(1, Alert.AlertType.INFORMATION, name, ticker, "📉 손절가 도달", AlertMessage, timestamp);
                     beep();
 
@@ -118,7 +122,7 @@ public class AlertService {
                     stopMonitoring(ticker);
                     StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
                 } else if (AppConstants.notificationOption == 1) {
-                    String NotificationMessage = name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + currentPrice;
+                    String NotificationMessage = name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + df.format(currentPrice);
                     showNotification("📉 손절가 도달", NotificationMessage);
 
                     String logLineNotification = formatLog(1, timestamp, name);
@@ -248,9 +252,9 @@ public class AlertService {
     // 로그 포맷 함수
     private static String formatLog(int type, String timestamp, String name, String message, double currentPrice, double targetOrStopPrice) {
         if (type == 0) {
-            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " 목표가: $" + targetOrStopPrice;
+            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + df.format(currentPrice) + " 목표가: $" + df.format(targetOrStopPrice);
         } else {
-            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + currentPrice + " --> 삭제";
+            return timestamp + " - [" + name + "]이(가) " + message + " / 현재가: $" + df.format(currentPrice) + " --> 삭제";
         }
     }
 

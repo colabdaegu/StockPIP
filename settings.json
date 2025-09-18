@@ -1,6 +1,27 @@
 {
-  "stockArray": [],
-  "logText": "",
+  "stockArray": [
+    {
+      "listeners": [],
+      "ticker": "CDT",
+      "toggleOption": 1,
+      "targetPrice": 5555.0,
+      "stopPrice": 0.001,
+      "refresh": 5,
+      "refreshMinute": 0,
+      "refreshSecond": 5
+    },
+    {
+      "listeners": [],
+      "ticker": "EPIX",
+      "toggleOption": 1,
+      "targetPrice": 5.0,
+      "stopPrice": 0.1,
+      "refresh": 7,
+      "refreshMinute": 0,
+      "refreshSecond": 7
+    }
+  ],
+  "logText": "2025-09-18 14:47:42 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 14:47:55 - [AAPL]을(를) 삭제하였습니다.\n2025-09-18 19:13:38 - [CDT]이(가) 저장되었습니다!\n2025-09-18 19:18:53 - [EPIX]이(가) 저장되었습니다!\n2025-09-18 19:27:07 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 19:27:13 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 19:27:23 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 19:27:31 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $2.0E-4 목표가: $5.0E-6\n2025-09-18 19:28:51 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 19:28:59 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $2.0E-4 목표가: $5.0E-6\n2025-09-18 19:40:54 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.000005\n2025-09-18 19:41:01 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.000005\n2025-09-18 19:41:08 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.000005\n2025-09-18 19:41:11 - [Elys BMG Group Inc]이(가) 삭제됨 (목표가 달성)\n2025-09-18 19:42:51 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 19:56:57 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 19:57:41 - [ELYS BMG GROUP INC]이(가) 저장되었습니다!\n2025-09-18 19:57:46 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.0001\n2025-09-18 19:57:52 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.0001\n2025-09-18 19:57:56 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.0001\n2025-09-18 19:58:01 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.0001\n2025-09-18 19:58:07 - [Elys BMG Group Inc]이(가) 목표가에 달성했습니다. / 현재가: $0.0002 목표가: $0.0001\n2025-09-18 19:58:09 - [Elys BMG Group Inc]이(가) 삭제됨 (목표가 달성)\n",
   "notificationOption": 0,
   "pipDecimalPoint": 2,
   "pipOutlineOption": false,

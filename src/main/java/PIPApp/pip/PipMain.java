@@ -115,6 +115,14 @@ public class PipMain {
             case 4 -> priceLabel.setText(String.format("$ %,.4f", current));
             case 5 -> priceLabel.setText(String.format("$ %,.5f", current));
         }
+        // 사용자가 설정한 소수점 자릿수보다 값이 적은 값에 대해서는 항상 해당하는 소수점대로 표시
+        if ((current < 1 && current >= 0.1) && (AppConstants.pipDecimalPoint < 1)) { priceLabel.setText(String.format("$ %,.1f", current)); }
+        else if ((current < 0.1 && current >= 0.01) && (AppConstants.pipDecimalPoint < 2)) { priceLabel.setText(String.format("$ %,.2f", current)); }
+        else if ((current < 0.01 && current >= 0.001) && (AppConstants.pipDecimalPoint < 3)) { priceLabel.setText(String.format("$ %,.3f", current)); }
+        else if ((current < 0.001 && current >= 0.0001) && (AppConstants.pipDecimalPoint < 4)) { priceLabel.setText(String.format("$ %,.4f", current)); }
+        else if ((current < 0.0001 && current >= 0.00001) && (AppConstants.pipDecimalPoint < 5)) { priceLabel.setText(String.format("$ %,.5f", current)); }
+        else if ((current < 0.00001 && current >= 0.000001) && (AppConstants.pipDecimalPoint <= 5)) { priceLabel.setText(String.format("$ %,.6f", current)); }
+
         priceLabel.setTextFill(color);
         previousPrice = current;
 

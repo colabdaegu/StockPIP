@@ -1,4 +1,4 @@
-package pip;
+package pip.basicMode;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -30,8 +30,8 @@ import java.util.List;
 
 import javafx.scene.image.Image;
 
-public class PipMain {
-    private static final List<PipMain> pipWindows = new ArrayList<>();
+public class PipBasicMain {
+    private static final List<PipBasicMain> pipWindows = new ArrayList<>();
 
     private Stage stage;
     private double offsetX, offsetY;
@@ -175,6 +175,8 @@ public class PipMain {
                         "-fx-font-size: " + buttonFontSize + "px;");
         closeBtn.setOnAction(e -> {
             stop(1);
+            AlertService.pauseTickerMonitoring(thisTicker);  // ✕ 눌린 종목에 한해서만 일시적으로 모니터링 중단
+
             if (pipWindows.isEmpty()) Platform.exit();
         });
 
@@ -182,7 +184,7 @@ public class PipMain {
         settingsBtn.setStyle("-fx-background-color: transparent; " + "-fx-text-fill: white; " +
                         "-fx-font-size: " + buttonFontSize + "px;");
         settingsBtn.setOnAction(e -> {
-            for (PipMain pip : new ArrayList<>(pipWindows)) {
+            for (PipBasicMain pip : new ArrayList<>(pipWindows)) {
                 pip.stop(0);
             }
             pipWindows.clear();
@@ -295,7 +297,7 @@ public class PipMain {
     }
 
 
-    public static List<PipMain> getPipWindows() {
+    public static List<PipBasicMain> getPipWindows() {
         return pipWindows;
     }
 

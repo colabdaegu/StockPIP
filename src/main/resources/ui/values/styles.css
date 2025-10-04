@@ -144,3 +144,10 @@
 .right-toggle:selected {
     -fx-background-color: #E53935; /* 티커 ON → 빨강색 */
 }
+
+
+.spinner .text-field {
+    -fx-font-family: "Malgun Gothic";
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+}

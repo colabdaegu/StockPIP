@@ -1,10 +1,12 @@
 package ui.controller;
 
 import PIPApp.Main;
+import ai.AiAnalysis;
+import ai.AnalysisPreparer;
 import config.StockList;
+import config.Stocks;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.util.Duration;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
+import javafx.util.Duration;
 import pip.PipLauncher;
 import net.NetworkManager;
 import config.manager.PreferencesManager;
@@ -20,6 +23,8 @@ import config.manager.PreferencesManager;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AiController {
     @FXML private TextArea firstLabel;
@@ -32,7 +37,7 @@ public class AiController {
     @FXML private Button resetButton;
 
     private Alert alert;
-    private String tx1, tx2, tx3, tx4, tx5, tx6;
+    private String tx1 = "", tx2 = "", tx3 = "", tx4 = "", tx5 = "", tx6 = "";
 
 
     @FXML
@@ -65,21 +70,55 @@ public class AiController {
     private void resetClick(ActionEvent event) {
         // 네트워크 검사
         if (!NetworkManager.isInternetAvailable()) {
-            updateLabel("","","","","","");
             showAlert(Alert.AlertType.ERROR,"StockPIP", "서버와의 연결에 실패하였습니다.");
             System.out.println("⚠ 인터넷 연결 실패\n");
             return;
         }
+        updateLabel("","","","","","");
         showAlert(Alert.AlertType.INFORMATION,"Now Loading...", "⏳ 종목 분석 중...");
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), e -> {
-            // 라벨 업데이트
-            updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
-            resetButton.setText("갱신");
-            System.out.println("AI 갱신됨\n");
 
-            hidePopup();
-        }));
-        timeline.play();
+        // 랜덤 종목 - 6개 선정
+        List<String> selectedTickers = randomTicker();
+
+        // 학습 데이터 선정 (JSON에 저장 데이터 저장)
+//        for (String ticker : selectedTickers) {
+//            AnalysisPreparer.start(ticker);
+//        }
+//
+//        // AI 분석 (JSON 불러와서 Gemini한테 넘김[이전 주가 주세 70% + 현재 이슈 30%])
+//        List<String> tx = new ArrayList<>();
+//        for (String ticker : selectedTickers) {
+//            tx.add(AiAnalysis.start(ticker));
+//        }
+//
+//        // 최종 입력
+//        tx1 = tx.get(0);
+//        tx2 = tx.get(1);
+//        tx3 = tx.get(2);
+//        tx4 = tx.get(3);
+//        tx5 = tx.get(4);
+//        tx6 = tx.get(5);
+
+
+        /// 임시
+        String geminiAnswer = AnalysisPreparer.askGemini("애플 주식 전망 간단히 한 문장으로 설명해줘");
+        tx1 = "[Gemini AI 응답]\n" + geminiAnswer;
+
+        // 라벨 갱신
+        updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
+        resetButton.setText("갱신");
+        System.out.println("AI 갱신됨\n");
+
+//        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), e -> {
+//            // 라벨 업데이트
+//            updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
+//            resetButton.setText("갱신");
+//            System.out.println("AI 갱신됨\n");
+//
+//            hidePopup();
+//        }));
+//        timeline.play();
+        hidePopup();
     }
 
     // 라벨 업데이트
@@ -107,6 +146,29 @@ public class AiController {
         }
     }
 
+
+    private List<String> randomTicker() {
+        // StockList에 저장된 전체 종목 티커 모으기
+        List<String> tickers = new ArrayList<>();
+        for (Stocks stock : StockList.getStockArray()) {
+            tickers.add(stock.getTicker());
+        }
+
+        // 뽑은 종목 저장할 리스트
+        List<String> picked = new ArrayList<>();
+
+        // 6개 종목 선정시 종료
+        int i = 0;
+        while (!tickers.isEmpty() && i < 6) {
+            int randomIndex = (int) (Math.random() * tickers.size());
+            String randomElement = tickers.get(randomIndex);
+            picked.add(randomElement);
+            tickers.remove(randomIndex);
+            i++;
+        }
+
+        return picked;
+    }
 
     /// 사이드바 함수 ///
     // PIP 활성화

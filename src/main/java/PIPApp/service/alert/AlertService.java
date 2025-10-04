@@ -14,10 +14,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import config.*;
-import pip.PipCloseManager;
-import pip.PipMain;
+import pip.basicMode.PipBasicCloseManager;
+import pip.integrationMode.PipIntegrationCloseManager;
+import pip.basicMode.PipBasicMain;
 import net.NetworkManager;
 import config.manager.PreferencesManager;
+import pip.integrationMode.PipIntegrationMain;
 import ui.controller.LogInfoController;
 
 import java.awt.SystemTray;
@@ -98,6 +100,8 @@ public class AlertService {
 //                    StockList.appendLog(logLineNotification);
 //                    System.out.println("[" + ticker + "] - 삭제됨");
                 }
+
+                new PreferencesManager().saveSettings();
             }
 
             // 손절가 도달 시
@@ -133,12 +137,21 @@ public class AlertService {
                     stopMonitoring(ticker);
                     StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
                 }
+
+                new PreferencesManager().saveSettings();
             }
         }));
 
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
         monitoringMap.put(ticker, timeline);
+    }
+
+    // 모니터링 일시중단
+    public static void pauseTickerMonitoring(String ticker) {
+        if (monitoringMap.containsKey(ticker)) {
+            monitoringMap.get(ticker).stop();
+        }
     }
 
     // 모니터링 중단
@@ -197,8 +210,13 @@ public class AlertService {
                         System.out.println("[" + ticker + "] - 삭제됨");
 
                         // 삭제 전용 매니저 호출
-                        PipCloseManager closeManager = new PipCloseManager(PipMain.getPipWindows());
-                        closeManager.closePipByTicker(ticker);
+                        if (AppConstants.pipModeOption == 0) {
+                            PipBasicCloseManager closeManager = new PipBasicCloseManager(PipBasicMain.getPipWindows());
+                            closeManager.closePipByTicker(ticker);
+                        } else if (AppConstants.pipModeOption == 1) {
+                            PipIntegrationCloseManager closeManager = new PipIntegrationCloseManager(PipIntegrationMain.getPipWindows());
+                            closeManager.closePipByTicker(ticker);
+                        }
                     } else if (newVal == closeButton) {
                         System.out.println("알림창 닫기");
                     }
@@ -215,17 +233,26 @@ public class AlertService {
 
     // Windows 알림 센터 알림
     public static void showNotification(String title, String message) {
-        // SystemTray 지원 여부 확인
-        if (!SystemTray.isSupported()) {
-            System.out.println("경고: SystemTray가 지원되지 않는 시스템");
-            return;
-        }
-
         try {
+            // SystemTray 지원 여부 확인
+            if (!SystemTray.isSupported()) {
+                System.out.println("경고: SystemTray가 지원되지 않는 시스템");
+                return;
+            }
+
             SystemTray tray = SystemTray.getSystemTray();
 
-            // 아이콘 (없으면 작은 기본 이미지)
-            Image image = Toolkit.getDefaultToolkit().createImage(new byte[0]);
+            // 아이콘 로드
+            java.net.URL iconURL = AlertService.class.getResource("/logo/Stock_Logo.png"); // 아이콘 파일명 확인 필요
+            Image image;
+
+            if (iconURL != null) {
+                image = Toolkit.getDefaultToolkit().getImage(iconURL);
+            } else {
+                System.out.println("⚠ 아이콘을 찾을 수 없음");
+                // 아이콘이 없을 때 대비용 (에러 방지)
+                image = new java.awt.image.BufferedImage(16, 16, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+            }
 
             TrayIcon trayIcon = new TrayIcon(image, "Stock Alert");
             trayIcon.setImageAutoSize(true);
@@ -233,7 +260,7 @@ public class AlertService {
             tray.add(trayIcon);
 
             // 알림 표시
-            trayIcon.displayMessage(title, message, MessageType.INFO);
+            trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
 
             // 잠시 뒤 Tray에서 제거 (안 해주면 중복 추가될 수 있음)
             new Thread(() -> {

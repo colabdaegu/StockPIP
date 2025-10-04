@@ -1,5 +1,6 @@
 package ui.controller;
 
+import javafx.scene.control.Label;
 import pip.PipLauncher;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.event.ActionEvent;
@@ -26,7 +27,10 @@ public class SettingsController {
     @FXML private ToggleButton notification_2_Button;
     @FXML private ToggleButton notification_3_Button;
 
-    @FXML RadioButton decimal_0, decimal_1, decimal_2, decimal_3, decimal_4, decimal_5;
+    @FXML private Spinner<Integer> decimalSpinner;
+    @FXML private Label decimalLabel;
+
+    @FXML RadioButton mode_A, mode_B;
 
 
     @FXML
@@ -34,6 +38,9 @@ public class SettingsController {
         /// ✅ AppConstants 값 → UI 컴포넌트 초기화
         // 알림 선택
         notificationSettings();
+
+        // PIP 모드
+        pipModeSettings();
 
         // PIP 소수점 표시
         pipDecimalPointSettings();
@@ -78,59 +85,47 @@ public class SettingsController {
         });
     }
 
-    // PIP 소수점 표시
-    private void pipDecimalPointSettings() {
+    // PIP 모드
+    private void pipModeSettings() {
         ToggleGroup group = new ToggleGroup();
-        decimal_0.setToggleGroup(group);
-        decimal_1.setToggleGroup(group);
-        decimal_2.setToggleGroup(group);
-        decimal_3.setToggleGroup(group);
-        decimal_4.setToggleGroup(group);
-        decimal_5.setToggleGroup(group);
+        mode_A.setToggleGroup(group);
+        mode_B.setToggleGroup(group);
 
-        switch (AppConstants.pipDecimalPoint) {
-            case 0 -> decimal_0.setSelected(true);
-            case 1 -> decimal_1.setSelected(true);
-            case 2 -> decimal_2.setSelected(true);
-            case 3 -> decimal_3.setSelected(true);
-            case 4 -> decimal_4.setSelected(true);
-            case 5 -> decimal_5.setSelected(true);
+        switch (AppConstants.pipModeOption) {
+            case 0 -> mode_A.setSelected(true);
+            case 1 -> mode_B.setSelected(true);
         }
 
-        decimal_0.setOnAction(e -> {
-            if (decimal_0.isSelected()) {
-                AppConstants.pipDecimalPoint = 0;
-                System.out.println("소수점 표시 안 함");
+        mode_A.setOnAction(e -> {
+            if (mode_A.isSelected()) {
+                AppConstants.pipModeOption = 0;
+                System.out.println("PIP - A모드로 전환");
             }
         });
-        decimal_1.setOnAction(e -> {
-            if (decimal_1.isSelected()) {
-                AppConstants.pipDecimalPoint = 1;
-                System.out.println("소수점 1자리로 표시");
+        mode_B.setOnAction(e -> {
+            if (mode_B.isSelected()) {
+                AppConstants.pipModeOption = 1;
+                System.out.println("PIP - B모드로 전환");
             }
         });
-        decimal_2.setOnAction(e -> {
-            if (decimal_2.isSelected()) {
-                AppConstants.pipDecimalPoint = 2;
-                System.out.println("소수점 2자리로 표시");
-            }
-        });
-        decimal_3.setOnAction(e -> {
-            if (decimal_3.isSelected()) {
-                AppConstants.pipDecimalPoint = 3;
-                System.out.println("소수점 3자리로 표시");
-            }
-        });
-        decimal_4.setOnAction(e -> {
-            if (decimal_4.isSelected()) {
-                AppConstants.pipDecimalPoint = 4;
-                System.out.println("소수점 4자리로 표시");
-            }
-        });
-        decimal_5.setOnAction(e -> {
-            if (decimal_5.isSelected()) {
-                AppConstants.pipDecimalPoint = 5;
-                System.out.println("소수점 5자리로 표시");
+    }
+
+    // PIP 소수점 표시
+    private void pipDecimalPointSettings() {
+        SpinnerValueFactory<Integer> valueFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 5, AppConstants.pipDecimalPoint);
+        decimalSpinner.setValueFactory(valueFactory);
+
+        decimalSpinner.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                AppConstants.pipDecimalPoint = newVal;
+                if (newVal == 0) {
+                    decimalLabel.setText("(소수점 표시 없음)");
+                    System.out.println("소수점 표시 안 함");
+                } else {
+                    decimalLabel.setText("자리");
+                    System.out.println("소수점 " + newVal + "자리로 표시");
+                }
             }
         });
     }
@@ -177,14 +172,15 @@ public class SettingsController {
         notification_2_Button.setSelected(false);
         notification_3_Button.setSelected(false);
 
+        // PIP 모드
+        AppConstants.pipModeOption = 0;
+        mode_A.setSelected(true);
+        mode_B.setSelected(false);
+
         // PIP 소수점 표시
         AppConstants.pipDecimalPoint = 2;
-        decimal_0.setSelected(false);
-        decimal_1.setSelected(false);
-        decimal_2.setSelected(true);
-        decimal_3.setSelected(false);
-        decimal_4.setSelected(false);
-        decimal_5.setSelected(false);
+        decimalSpinner.getValueFactory().setValue(2);
+        decimalLabel.setText("자리");
 
         // PIP 테두리 고정 설정: 기본값으로 설정
         AppConstants.pipOutlineOption = false;

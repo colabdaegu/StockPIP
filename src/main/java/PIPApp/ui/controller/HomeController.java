@@ -445,18 +445,18 @@ public class HomeController {
                 System.out.println("⚠ 주가 데이터 없음\n");
                 return;
             }
-            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
-                hidePopup();
-
-                warningMessageLabel.setVisible(true);
-                if (toggleOption == 0) {
-                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + df.format(currentPrice) + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
-                } else if (toggleOption == 1) {
-                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + df.format(currentPrice) + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
-                }
-                System.out.println("⚠ 손절가가 현재가보다 높음\n");
-                return;
-            }
+//            else if (stopPrice >= currentPrice) {    // 손절가가 현재가보다 높거나 같으면
+//                hidePopup();
+//
+//                warningMessageLabel.setVisible(true);
+//                if (toggleOption == 0) {
+//                    warningMessageLabel.setText("※ [" + company + "] 현재가: $" + df.format(currentPrice) + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+//                } else if (toggleOption == 1) {
+//                    warningMessageLabel.setText("※ [" + ticker + "] 현재가: $" + df.format(currentPrice) + ", 손절가: $" + String.format("%.10f", stopPrice).replaceAll("\\.?0+$", "") + " / 손절가가 현재가보다 높습니다.");
+//                }
+//                System.out.println("⚠ 손절가가 현재가보다 높음\n");
+//                return;
+//            }
         }
 
 
@@ -465,8 +465,8 @@ public class HomeController {
             hidePopup();
 
             warningMessageLabel.setVisible(true);
-            warningMessageLabel.setText("※ 손절가 및 목표가는 0보다 같거나 작을 수 없습니다.");
-            System.out.println("⚠ 손절가 및 목표가 입력이 0이하임\n");
+            warningMessageLabel.setText("※ 목표가 및 손절가는 0보다 같거나 작을 수 없습니다.");
+            System.out.println("⚠ 목표가 및 손절가 입력이 0이하임\n");
             return;
         }
 

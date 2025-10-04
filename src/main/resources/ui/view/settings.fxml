@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -235,44 +236,38 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
                      <children>
+                        <Label prefHeight="29.0" prefWidth="165.0" text="PIP 모드" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <RadioButton fx:id="mode_A" mnemonicParsing="false" selected="true" text="기본" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="12.0" />
+                           </font></RadioButton>
+                        <Pane prefHeight="30.0" prefWidth="25.0" />
+                        <RadioButton fx:id="mode_B" mnemonicParsing="false" text="통합" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="12.0" />
+                           </font></RadioButton>
+                        <Pane prefHeight="30.0" prefWidth="25.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="780.0">
+                     <children>
                         <Label prefHeight="29.0" prefWidth="165.0" text="PIP 소수점 표시" textFill="WHITE">
                            <font>
                               <Font name="Malgun Gothic Bold" size="20.0" />
                            </font>
                         </Label>
-                        <RadioButton fx:id="decimal_0" mnemonicParsing="false" text="없음" textFill="WHITE">
+                        <Spinner fx:id="decimalSpinner" prefWidth="50.0">
+                        </Spinner>
+                        <Pane prefHeight="30.0" prefWidth="5.0" />
+                        <Label fx:id="decimalLabel" text="자리" textFill="WHITE">
                            <font>
-                              <Font name="Malgun Gothic" size="12.0" />
-                           </font></RadioButton>
-                        <Pane prefHeight="30.0" prefWidth="25.0" />
-                        <RadioButton fx:id="decimal_1" mnemonicParsing="false" text="1자리" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic" size="12.0" />
-                           </font></RadioButton>
-                        <Pane prefHeight="30.0" prefWidth="25.0" />
-                        <RadioButton fx:id="decimal_2" mnemonicParsing="false" selected="true" text="2자리" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic" size="12.0" />
+                              <Font name="Malgun Gothic" size="14.0" />
                            </font>
-                        </RadioButton>
-                        <Pane prefHeight="30.0" prefWidth="25.0" />
-                        <RadioButton fx:id="decimal_3" mnemonicParsing="false" text="3자리" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic" size="12.0" />
-                           </font>
-                        </RadioButton>
-                        <Pane prefHeight="30.0" prefWidth="25.0" />
-                        <RadioButton fx:id="decimal_4" mnemonicParsing="false" text="4자리" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic" size="12.0" />
-                           </font>
-                        </RadioButton>
-                        <Pane prefHeight="30.0" prefWidth="25.0" />
-                        <RadioButton fx:id="decimal_5" mnemonicParsing="false" text="5자리" textFill="WHITE">
-                           <font>
-                              <Font name="Malgun Gothic" size="12.0" />
-                           </font>
-                        </RadioButton>
+                        </Label>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="780.0">

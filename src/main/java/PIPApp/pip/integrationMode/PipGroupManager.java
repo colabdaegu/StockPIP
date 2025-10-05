@@ -1,8 +1,11 @@
 package pip.integrationMode;
 
+import config.AppConstants;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -14,7 +17,7 @@ import java.util.List;
 public class PipGroupManager {
     private static PipGroupManager instance;
     private Stage groupStage;
-    private VBox container;
+    private Pane container;
     private final List<PipIntegrationMain> pipWindows = new ArrayList<>();
 
     // 드래그 오프셋
@@ -32,7 +35,12 @@ public class PipGroupManager {
 
     public void createGroupStage() {
         if (groupStage != null) return;
-        container = new VBox(0);
+
+        if (AppConstants.pipModeDirectionOption == 0) {
+            container = new VBox(0);
+        } else if (AppConstants.pipModeDirectionOption == 1) {
+            container = new HBox(0);
+        }
         container.setStyle("-fx-background-color: rgba(0,0,0,0.0); -fx-border-color: transparent; -fx-border-width: 0px;");
 
         Scene scene = new Scene(container);

@@ -25,7 +25,6 @@ public class PipLauncher {
         }
         else if (AppConstants.pipModeOption == 1) {
             PipGroupManager groupManager = PipGroupManager.getInstance();
-            //PipGroupManager groupManager = new PipGroupManager();
             groupManager.createGroupStage();
 
             Stage groupStage = groupManager.getGroupStage();

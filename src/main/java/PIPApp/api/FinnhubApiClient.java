@@ -1,6 +1,8 @@
 package api;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import api.model.*;
 import config.*;
@@ -75,9 +77,37 @@ public class FinnhubApiClient {
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            CompanyProfile profile = gson.fromJson(response.body(), CompanyProfile.class);
+            String body = response.body();
+
+
+            if (body == null || body.isBlank()) {
+                System.err.println("⚠ Finnhub API로부터 빈 응답을 받았습니다. (" + symbol + ")");
+                return Optional.empty();
+            }
+
+            body = body.trim();
+
+            if (!body.startsWith("{")) {
+                System.err.println("⚠ 예상치 못한 응답 형식입니다. JSON이 아닙니다. (" + symbol + "): " + body);
+                return Optional.empty();
+            }
+
+            JsonElement element = JsonParser.parseString(body);
+            if (!element.isJsonObject()) {
+                System.err.println("⚠ 응답이 JSON 객체 형식이 아닙니다. (" + symbol + "): " + body);
+                return Optional.empty();
+            }
+
+            CompanyProfile profile = gson.fromJson(element, CompanyProfile.class);
             return Optional.ofNullable(profile);
-        } catch (IOException | InterruptedException | JsonSyntaxException e) {
+
+        } catch (IOException | InterruptedException e) {
+            System.err.println("⚠ 종목 프로필을 가져오는 중 문제가 발생했습니다. (" + symbol + ")");
+            e.printStackTrace();
+            return Optional.empty();
+
+        } catch (JsonSyntaxException e) {
+            System.err.println("⚠ 응답을 CompanyProfile로 변환하는 중 오류가 발생했습니다. (" + symbol + ")");
             e.printStackTrace();
             return Optional.empty();
         }

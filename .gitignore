@@ -65,3 +65,7 @@ production/                # IntelliJ IDEA 빌드 시 생성될 수 있는 폴�
 # OS 생성 파일
 .DS_Store                  # macOS
 Thumbs.db                  # Windows
+
+
+# API 키
+apikey.json

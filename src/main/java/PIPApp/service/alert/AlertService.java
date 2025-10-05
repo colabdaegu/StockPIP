@@ -25,9 +25,8 @@ import ui.controller.LogInfoController;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
-import java.awt.TrayIcon.MessageType;
 import java.awt.Image;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class AlertService {
@@ -55,6 +54,9 @@ public class AlertService {
         if (monitoringMap.containsKey(ticker)) {
             stopMonitoring(ticker);
         }
+
+        // 윈도우 알림 - 중복 알림 방지
+        AtomicBoolean windowNotification = new AtomicBoolean(false);
 
 
         // 새 Timeline 생성
@@ -89,12 +91,12 @@ public class AlertService {
                     String AlertMessage = "(" + timestamp + ") " + name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + df.format(currentPrice) + "\n 목표가: $" + df.format(targetPrice);
                     showAlert(0, Alert.AlertType.INFORMATION, name, ticker, "📈 목표가 달성", AlertMessage, timestamp);
                     beep();
-                } else if (AppConstants.notificationOption == 1) {
+                } else if (AppConstants.notificationOption == 1 && !windowNotification.get()) {
                     String NotificationMessage = name + "이(가) 목표가에 달성!  \n\n" + " 현재가: $" + df.format(currentPrice) + "\n 목표가: $" + df.format(targetPrice);
                     showNotification("📈 목표가 달성!", NotificationMessage);
 
-                    // 모니터링 종료
-                    monitoringMap.get(ticker).stop();
+                    // 알림 종료 (최초 1회만)
+                    windowNotification.set(true);
 
 //                    String logLineNotification = formatLog(0, timestamp, name);
 //                    StockList.appendLog(logLineNotification);
@@ -112,7 +114,7 @@ public class AlertService {
                 StockList.appendLog(logLine);
                 LogInfoController.appendToLogArea(logLine);
 
-                System.out.println(api_refreshTime + " - [" + ticker + "] 손절가 도달 / 현재가: $" + df.format(currentPrice) + " 목표가: $" + df.format(stopPrice) + "\n");
+                System.out.println(api_refreshTime + " - [" + ticker + "] 손절가 도달 / 현재가: $" + df.format(currentPrice) + " 손절가: $" + df.format(stopPrice) + "\n");
                 if (AppConstants.notificationOption == 0) {
                     String AlertMessage = "(" + timestamp + ") " + name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + df.format(currentPrice) + "\n 손절가: $" + df.format(stopPrice);
                     showAlert(1, Alert.AlertType.INFORMATION, name, ticker, "📉 손절가 도달", AlertMessage, timestamp);
@@ -120,23 +122,17 @@ public class AlertService {
 
                     String logLineNotification = formatLog(1, timestamp, name);
                     StockList.appendLog(logLineNotification);
-                    System.out.println("[" + ticker + "] - 삭제됨");
-
-                    // 모니터링 종료 및 데이터 삭제
-                    stopMonitoring(ticker);
-                    StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
                 } else if (AppConstants.notificationOption == 1) {
                     String NotificationMessage = name + "이(가) 손절가에 도달  \n\n" + " 현재가: $" + df.format(currentPrice);
                     showNotification("📉 손절가 도달", NotificationMessage);
 
                     String logLineNotification = formatLog(1, timestamp, name);
                     StockList.appendLog(logLineNotification);
-                    System.out.println("[" + ticker + "] - 삭제됨");
-
-                    // 모니터링 종료 및 데이터 삭제
-                    stopMonitoring(ticker);
-                    StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
                 }
+                // 모니터링 종료 및 데이터 삭제
+                stopMonitoring(ticker);
+                StockList.getStockArray().removeIf(s -> s.getTicker().equals(ticker));
+                System.out.println("[" + ticker + "] - 삭제됨");
 
                 new PreferencesManager().saveSettings();
             }

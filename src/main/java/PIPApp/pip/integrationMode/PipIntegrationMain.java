@@ -31,6 +31,7 @@ import java.util.List;
 
 public class PipIntegrationMain {
     private static final List<PipIntegrationMain> pipWindows = new ArrayList<>();
+
     private Timeline refreshTimeline;
     private double previousPrice = -1;
     private Label nameLabel;
@@ -38,15 +39,18 @@ public class PipIntegrationMain {
     private String thisTicker;
     private StackPane root;
 
-    // 드래그 오프셋 (각 노드에서 그룹 Stage로 드래그할 때 사용)
+    private HBox buttonBox;
+    private int myIndex;
+
+    // 드래그 오프셋
     private double dragOffsetX;
     private double dragOffsetY;
 
     // main. Entry Point (integration mode)
-    // groupStage: 모든 노드를 감싸는 최상위 Stage (PipGroupManager.getGroupStage())
     public void PipMainIntegration(Stocks stock, int index, Stage groupStage) {
         pipWindows.add(this);
         thisTicker = stock.getTicker();
+        this.myIndex = index;
 
         nameLabel = new Label(stock.getName() + "(" + stock.getTicker() + ")");
         priceLabel = new Label("Loading...");
@@ -56,7 +60,7 @@ public class PipIntegrationMain {
         updateLabels(stock);
         timelineRefresh(stock);
 
-        HBox buttonBox = createButtonBar();
+        buttonBox = createButtonBar();
         StackPane center = VBoxSpacing(nameLabel, priceLabel);
         center.setAlignment(Pos.CENTER);
 
@@ -68,7 +72,7 @@ public class PipIntegrationMain {
         double newHeight = Math.max(60, 120 * ratio);
         root.setPrefSize(newWidth, newHeight);
 
-        // 개별 노드에서 드래그하면 groupStage를 이동시키도록 설정
+        // 드래그시 그룹 노드 이동
         enableDragToMoveGroup(root, groupStage);
 
         AlertService.startMonitoring(stock);
@@ -178,48 +182,42 @@ public class PipIntegrationMain {
     // 5. 버튼 생성 및 핸들러
     private HBox createButtonBar() {
         // 첫 번째 PIP 창만 버튼 표시
-        boolean isFirst = pipWindows.get(0) == this;
-        HBox box = new HBox();
+        double fontSize = AppConstants.pipFontSize;
+        double buttonFontSize = (fontSize * 0.71 > 10) ? fontSize * 0.71 : 10;
 
-        if (isFirst) {
-            double fontSize = AppConstants.pipFontSize;
-            double buttonFontSize = (fontSize * 0.71 > 10) ? fontSize * 0.71 : 10;
+        Button closeBtn = new Button("✕");
+        closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: " + buttonFontSize + "px;");
+        closeBtn.setOnAction(e -> {
+            stop(1);
+            Platform.exit();
+        });
 
-            Button closeBtn = new Button("✕");
-            closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: " + buttonFontSize + "px;");
-            closeBtn.setOnAction(e -> {
-                stop(1);
-                Platform.exit();
-            });
+        Button settingsBtn = new Button("⚙");
+        settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: " + buttonFontSize + "px;");
+        settingsBtn.setOnAction(e -> {
+            // 모든 pip 창 정리 (통합 모드에서 group Stage 닫음)
+            for (PipIntegrationMain pip : new ArrayList<>(pipWindows)) {
+                pip.stop(0);
+            }
+            pipWindows.clear();
 
-            Button settingsBtn = new Button("⚙");
-            settingsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: " + buttonFontSize + "px;");
-            settingsBtn.setOnAction(e -> {
-                // 모든 pip 창 정리 (통합 모드에서 group Stage 닫음)
-                for (PipIntegrationMain pip : new ArrayList<>(pipWindows)) {
-                    pip.stop(0);
-                }
-                pipWindows.clear();
+            PipGroupManager.getInstance().closeGroupStage();
 
-                PipGroupManager.getInstance().closeGroupStage();
+            try {
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("/ui/view/home.fxml"));
+                new PreferencesManager().saveSettings();
+                Main.mainStage.setScene(new javafx.scene.Scene(homeRoot, 1220, 740));
+                Main.mainStage.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
-                try {
-                    Parent homeRoot = FXMLLoader.load(getClass().getResource("/ui/view/home.fxml"));
-                    new PreferencesManager().saveSettings();
-                    Main.mainStage.setScene(new javafx.scene.Scene(homeRoot, 1220, 740));
-                    Main.mainStage.show();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
+        HBox box = new HBox(8, settingsBtn, closeBtn);
+        box.setAlignment(Pos.TOP_RIGHT);
+        box.setPadding(new Insets(8));
 
-            box = new HBox(8, settingsBtn, closeBtn);
-            box.setAlignment(Pos.TOP_RIGHT);
-            box.setPadding(new Insets(8));
-        }
-
-        // 첫 번째가 아니면 빈 박스
-        box.setVisible(isFirst);
+        box.setVisible(false);
         return box;
     }
 
@@ -241,35 +239,43 @@ public class PipIntegrationMain {
             root.setOnMouseEntered(e -> setAllPipOutlineVisible(true));
             root.setOnMouseExited(e -> setAllPipOutlineVisible(false));
         } else {
-            root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 0 1 0 1;");
-            buttonBox.setVisible(true);
+            if (AppConstants.pipModeDirectionOption == 0) {
+                root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 0 1 0 1;");
+                buttonBox.setVisible(myIndex == 0);
+            } else if (AppConstants.pipModeDirectionOption == 1) {
+                root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 1 0 1 0;");
+                for (int i = 0; i < pipWindows.size(); i++) {
+                    PipIntegrationMain pip = pipWindows.get(i);
+                    pip.buttonBox.setVisible(i == pipWindows.size() - 1);
+                }
+            }
         }
     }
 
     // pipWindows 전체에 외곽선과 버튼 보이기/숨기기
     private void setAllPipOutlineVisible(boolean visible) {
-        for (PipIntegrationMain pip : pipWindows) {
-            StackPane r = pip.getRootNode();
-            if (r == null) continue;
-
-            HBox buttons = null;
-            // root 내부에서 버튼 찾기
-            for (var child : r.getChildren()) {
-                if (child instanceof HBox hbox) {
-                    buttons = hbox;
-                    break;
-                }
-            }
+        for (int i = 0; i < pipWindows.size(); i++) {
+            PipIntegrationMain pip = pipWindows.get(i);
+            if (pip.root == null) continue;
 
             if (visible) {
-                r.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 0 1 0 1;");
-                if (buttons != null) buttons.setVisible(true);
+                if (AppConstants.pipModeDirectionOption == 0) {
+                    pip.root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 0 1 0 1;");
+                } else if (AppConstants.pipModeDirectionOption == 1) {
+                    pip.root.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-border-color: white; -fx-border-width: 1 0 1 0;");
+                }
             } else {
-                r.setStyle("-fx-background-color: transparent;");
-                if (buttons != null) buttons.setVisible(false);
+                pip.root.setStyle("-fx-background-color: transparent;");
+            }
+
+            if (AppConstants.pipModeDirectionOption == 0) {
+                pip.buttonBox.setVisible(visible && i == 0);
+            } else if (AppConstants.pipModeDirectionOption == 1) {
+                pip.buttonBox.setVisible(visible && i == pipWindows.size() - 1);
             }
         }
     }
+
 
     // 10. 종료 시 타임라인 멈추고 노드 제거
     public void stop(int option) {
@@ -297,6 +303,26 @@ public class PipIntegrationMain {
 
         if (option == 1) {
             pipWindows.remove(this);
+            reindexWindows();
+        }
+    }
+
+    private static void reindexWindows() {
+        for (int i = 0; i < pipWindows.size(); i++) {
+            PipIntegrationMain pip = pipWindows.get(i);
+            pip.myIndex = i;
+            if (pip.buttonBox != null) {
+                // pipOutlineOption이 true일 때만 항상 표시
+                if (AppConstants.pipOutlineOption) {
+                    if (AppConstants.pipModeDirectionOption == 0) {
+                        pip.buttonBox.setVisible(i == 0);
+                    } else if (AppConstants.pipModeDirectionOption == 1) {
+                        pip.buttonBox.setVisible(i == pipWindows.size() - 1);
+                    }
+                } else {
+                    pip.buttonBox.setVisible(false);
+                }
+            }
         }
     }
 

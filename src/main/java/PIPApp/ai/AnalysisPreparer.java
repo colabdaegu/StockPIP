@@ -10,8 +10,32 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class AnalysisPreparer {
-    private static final String API_KEY = "AIzaSyB2RaIO7JD2yCgk8ZejdYL_FTlDBn1KpJo"; // API 키
-    private static final String MODEL_NAME = "gemini-2.0-flash"; // 모델명
+    private static String AI_API_KEY;
+    private static String AI_MODEL_NAME;
+
+    // static 초기화 블록에서 apikey.json 읽기
+    static {
+        try {
+            File file = new File("apikey.json");
+
+            if (!file.exists()) {
+                System.err.println("⚠ apikey 파일을 찾을 수 없습니다.");
+                AI_API_KEY = "";
+                AI_MODEL_NAME = "";
+            } else {
+                try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
+                    JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
+                    AI_API_KEY = json.get("AI_API_KEY").getAsString();
+                    AI_MODEL_NAME = json.get("AI_MODEL_NAME").getAsString();
+                    System.out.println("✅ apikey 로드 완료");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AI_API_KEY = "";
+            AI_MODEL_NAME = "";
+        }
+    }
 
     public static void start() {
         System.out.println("AI 준비 중...");
@@ -22,7 +46,7 @@ public class AnalysisPreparer {
         try {
             // 1. API URL 만들기
             String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/"
-                    + MODEL_NAME + ":generateContent?key=" + API_KEY;
+                    + AI_MODEL_NAME + ":generateContent?key=" + AI_API_KEY;
 
             // 2. 보낼 JSON 데이터 (질문 내용 포함)
             String jsonInput = "{\n" +

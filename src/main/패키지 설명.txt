@@ -13,6 +13,12 @@
                     * 프로그램의 진입점(Main). IntelliJ IDEA에서 '소스 루트'로 지정.
                     * `Main.java`
                         * JavaFX 애플리케이션 진입점(Entry Point).
+                    * `ai/`
+                        * AI 분석 관련 처리를 담당.
+                        * `AiAnalysis.java`
+                            * Ge-mini AI한테 분석을 맡김.
+                        * `AnalysisPreparer.java`
+                            * AI 분석에 사용할 이전 데이터들을 API로부터 받아옴.
                     * `api/`
                         * 외부 주식 데이터(Finnhub)와의 통신을 담당.
                         * `model/`
@@ -46,10 +52,20 @@
                         * PIP 창을 띄우고 주기적으로 갱신하는 로직을 모아둠.
                         * `PipLauncher.java`
                             * 등록된 종목들을 기반으로 PIP 윈도우들 일괄 생성/종료 관리.
-                        * `PipMain.java`
-                            * 개별 PIP 윈도우 클래스 생성.
-                        * `PipCloseManager.java`
-                            * PIP 관련 보조 유틸(마지막 창 닫기 처리).
+                        * `basicMode/`
+                            * PIP 모드 - 기본
+                            * `PipBasicMain.java`
+                                * 개별 PIP 윈도우 클래스 생성.
+                            * `PipBasicCloseManager.java`
+                                * PIP 관련 보조 유틸(마지막 창 닫기 처리).
+                        * `integrationMode/`
+                            * PIP 모드 - 통합
+                            * `PipIntegrationMain.java`
+                                * 통합(종목별) PIP 윈도우 클래스 생성.
+                            * `PipGroupManager.java`
+                                * 종목별 PIP 윈도우 클래스들을 통합 관리.
+                            * `PipIntegrationCloseManager.java`
+                                * PIP 관련 보조 유틸(마지막 창 닫기 처리).
                     * `service/`
                         * `alert/`
                             * 알람 체크 로직(가격 비교 → 팝업 메시지) 모듈.

@@ -300,6 +300,7 @@ public class PipIntegrationMain {
         }
     }
 
+
     // 마지막 창일 경우 (알림창 표시를 위한 더미 Stage)
     private static void handleLastWindowClose() {
         Stage tempStage = new Stage();

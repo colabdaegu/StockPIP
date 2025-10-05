@@ -151,3 +151,13 @@
     -fx-font-size: 14px;
     -fx-text-fill: black;
 }
+
+
+.round-border-box {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
+    -fx-padding: 5;
+}

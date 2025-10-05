@@ -40,6 +40,7 @@ public class PreferencesManager {
         // ✅ AppConstants 값 저장
         root.addProperty("notificationOption", AppConstants.notificationOption);
         root.addProperty("pipModeOption", AppConstants.pipModeOption);
+        root.addProperty("pipModeDirectionOption", AppConstants.pipModeDirectionOption);
         root.addProperty("pipDecimalPoint", AppConstants.pipDecimalPoint);
         root.addProperty("pipOutlineOption", AppConstants.pipOutlineOption);
         root.addProperty("pipFontSize", AppConstants.pipFontSize);
@@ -92,6 +93,9 @@ public class PreferencesManager {
 
             if (root.has("pipModeOption"))
                 AppConstants.pipModeOption = root.get("pipModeOption").getAsInt();
+
+            if (root.has("pipModeDirectionOption"))
+                AppConstants.pipModeDirectionOption = root.get("pipModeDirectionOption").getAsInt();
 
             if (root.has("pipDecimalPoint"))
                 AppConstants.pipDecimalPoint = root.get("pipDecimalPoint").getAsInt();

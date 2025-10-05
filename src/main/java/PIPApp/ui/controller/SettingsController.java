@@ -31,6 +31,7 @@ public class SettingsController {
     @FXML private Label decimalLabel;
 
     @FXML RadioButton mode_A, mode_B;
+    @FXML RadioButton mode_row, mode_column;
 
 
     @FXML
@@ -41,6 +42,8 @@ public class SettingsController {
 
         // PIP 모드
         pipModeSettings();
+        // PIP 모드 - 방향
+        pipModeDirectionSettings();
 
         // PIP 소수점 표시
         pipDecimalPointSettings();
@@ -92,22 +95,62 @@ public class SettingsController {
         mode_B.setToggleGroup(group);
 
         switch (AppConstants.pipModeOption) {
-            case 0 -> mode_A.setSelected(true);
-            case 1 -> mode_B.setSelected(true);
+            case 0 -> {
+                mode_A.setSelected(true);
+                setDirectionControlsEnabled(false);
+            }
+            case 1 -> {
+                mode_B.setSelected(true);
+                setDirectionControlsEnabled(true);
+            }
         }
 
         mode_A.setOnAction(e -> {
             if (mode_A.isSelected()) {
                 AppConstants.pipModeOption = 0;
                 System.out.println("PIP - A모드로 전환");
+
+                setDirectionControlsEnabled(false);
             }
         });
         mode_B.setOnAction(e -> {
             if (mode_B.isSelected()) {
                 AppConstants.pipModeOption = 1;
                 System.out.println("PIP - B모드로 전환");
+
+                setDirectionControlsEnabled(true);
             }
         });
+    }
+
+    // PIP 모드 - 방향
+    private void pipModeDirectionSettings() {
+        ToggleGroup groupDirection = new ToggleGroup();
+        mode_row.setToggleGroup(groupDirection);
+        mode_column.setToggleGroup(groupDirection);
+
+        switch (AppConstants.pipModeDirectionOption) {
+            case 0 -> mode_row.setSelected(true);
+            case 1 -> mode_column.setSelected(true);
+        }
+
+        mode_row.setOnAction(e -> {
+            if (mode_row.isSelected()) {
+                AppConstants.pipModeDirectionOption = 0;
+                System.out.println("PIP 방향 - 세로로 전환");
+            }
+        });
+        mode_column.setOnAction(e -> {
+            if (mode_column.isSelected()) {
+                AppConstants.pipModeDirectionOption = 1;
+                System.out.println("PIP 방향 - 가로로 전환");
+            }
+        });
+    }
+    // PIP 모드 - 방향 : 라디오버튼 활성/비활성 제어
+    private void setDirectionControlsEnabled(boolean enabled) {
+        mode_row.setDisable(!enabled);
+        mode_column.setDisable(!enabled);
     }
 
     // PIP 소수점 표시
@@ -176,6 +219,12 @@ public class SettingsController {
         AppConstants.pipModeOption = 0;
         mode_A.setSelected(true);
         mode_B.setSelected(false);
+        // PIP 모드 - 방향
+        AppConstants.pipModeDirectionOption = 0;
+        mode_row.setSelected(true);
+        mode_column.setSelected(false);
+        // PIP 모드 - 방향 : 활성화 여부
+        setDirectionControlsEnabled(false);
 
         // PIP 소수점 표시
         AppConstants.pipDecimalPoint = 2;

@@ -113,7 +113,7 @@ public class AiController {
         System.out.println("AI 갱신됨\n");
 
         // 데이터 분석용 임시 JSON 파일 지우기 (data/)
-        deleteJsonDataFiles();
+//        deleteJsonDataFiles();
 
         hidePopup();
     }
@@ -173,13 +173,13 @@ public class AiController {
     private void deleteJsonDataFiles() {
         File dataDir = new File("data");
         if (!dataDir.exists()) {
-            System.out.println("⚠ data 폴더가 존재하지 않습니다. 임시 파일 삭제 불가");
+            System.out.println("⚠ 'data' 폴더가 존재하지 않습니다. 임시 파일 삭제 불가");
             return;
         }
 
         File[] files = dataDir.listFiles();
         if (files == null || files.length == 0) {
-            System.out.println("⚠ data 폴더가 비어 있습니다.");
+            System.out.println("⚠ 'data' 폴더가 비어 있습니다.");
             return;
         }
 

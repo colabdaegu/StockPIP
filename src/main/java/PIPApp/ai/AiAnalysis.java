@@ -57,22 +57,23 @@ public class AiAnalysis {
             JsonArray closePrices = candleData.getAsJsonArray("closePrices");
             int n = closePrices.size();
 
-            int seventyFivePercent = (int) Math.ceil(n * 0.75);
-
-            // 최근 75% 주가 데이터 추출
+            // 최근 30일 간의 데이터
             StringBuilder priceDataStr = new StringBuilder();
-            for (int i = n - seventyFivePercent; i < n; i++) {
-                priceDataStr.append(closePrices.get(i).getAsDouble()).append(", ");
+            for (int i = 0; i < n; i++) {
+                priceDataStr.append(closePrices.get(i).getAsDouble());
+                if (i < n - 1) priceDataStr.append(", ");
             }
 
             // AI 프롬프트 작성
             String aiPrompt = "티커: " + ticker + "\n" +
-                    "최근 30일 주가 데이터 중 75%: " + priceDataStr.toString() + "\n" +
-                    "최근 뉴스/재무/제품/시장 동향 조사 25% 기반 단기 전망 포함\n" +
+                    "해당 종목의 전망치 예측 분석을 다음과 같이 요청\n" +
+                    "최근 30일 주가 데이터(가중치 75%): " + priceDataStr.toString() + "\n" +
+                    "최근 뉴스/제품/이슈/시장 동향 조사(가중치 25%)\n" +
+                    "요약) 최근 30일 주가 데이터의 분석 결과에 75% + AI의 자체 조사(최근 뉴스, 제품, 이슈, 시장 동향)에 25% = 100%의 비중을 두어 종합 판단.\n\n" +
                     "반드시 세 가지 항목만 출력:\n" +
                     "① 현재값과 예측값 수치 기반 예측 (상승 예상/정체 예상/하락 예상 중 하나, 예: 상승 예상)\n" +
                     "② 예측값 수치 (예: $210 - $215)\n" +
-                    "③ 회사 전망 (최근 뉴스/재무/제품/시장 동향 조사 했을 때 내용을 한두 줄로 아주 간단히 요약, 문장은 공손체 종결어미 “-요”, 예: 아이폰 15 출시 기대감과 서비스 부문 성장으로 긍정적인 모멘텀이 이어질 가능성이 높아요.)\n" +
+                    "③ 회사 전망 (최근 뉴스/제품/이슈/시장 동향 조사 했을 때 내용을 한두 줄로 아주 간단히 요약, 문장은 공손체 종결어미 “-요.”, 예: 아이폰 15 출시 기대감과 서비스 부문 성장으로 긍정적인 모멘텀이 이어질 가능성이 높아요.)\n" +
                     "다른 내용은 절대로 출력 금지.\n" +
                     "출력 형식:\n" +
                     "① ...\n" +
@@ -102,17 +103,27 @@ public class AiAnalysis {
                 }
             }
 
+            // ① 현재값과 예측값 수치 기반 예측 - API 유효성 검사
+            String trendDisplay;
+            if (priceTrend.contains("예상")) trendDisplay = "**" + priceTrend + "**";
+            else trendDisplay = "\nAPI 에러";
+
             // ② 예측값 수치 - 이모지 처리
             String rangeDisplay;
             if (priceTrend.contains("상승")) rangeDisplay = "📈 " + priceRange + " 📈";
             else if (priceTrend.contains("하락")) rangeDisplay = "📉 " + priceRange + " 📉";
             else rangeDisplay = priceRange; // 정체 예상 또는 기타
 
+            // ③ 회사 전망
+            String companyDisplay;
+            if (companyOutlook.contains(".")) companyDisplay = "\uD83D\uDD0E 단기 전망: " + companyOutlook + " \uD83D\uDD0E";
+            else companyDisplay = "";
+
             // 화면 출력용 문자열
             String result = "[" + ticker + "]\n" +
-                    "**" + priceTrend + "**\n" +
+                    trendDisplay + "\n" +
                     rangeDisplay + "\n\n" +
-                    "\uD83D\uDD0E 단기 전망: " + companyOutlook + " \uD83D\uDD0E";
+                    companyDisplay;
 
             System.out.println(result + "\n");
             return result;

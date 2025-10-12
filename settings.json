@@ -9,9 +9,69 @@
       "refresh": 10,
       "refreshMinute": 0,
       "refreshSecond": 10
+    },
+    {
+      "listeners": [],
+      "ticker": "AFSC",
+      "toggleOption": 1,
+      "targetPrice": 555.0,
+      "stopPrice": 1.0,
+      "refresh": 20,
+      "refreshMinute": 0,
+      "refreshSecond": 20
+    },
+    {
+      "listeners": [],
+      "ticker": "ACSYF",
+      "toggleOption": 1,
+      "targetPrice": 555.0,
+      "stopPrice": 0.002,
+      "refresh": 50,
+      "refreshMinute": 0,
+      "refreshSecond": 50
+    },
+    {
+      "listeners": [],
+      "ticker": "BCS",
+      "toggleOption": 1,
+      "targetPrice": 555.0,
+      "stopPrice": 0.002,
+      "refresh": 55,
+      "refreshMinute": 0,
+      "refreshSecond": 55
+    },
+    {
+      "listeners": [],
+      "ticker": "MSFT",
+      "toggleOption": 0,
+      "targetPrice": 555.0,
+      "stopPrice": 0.002,
+      "refresh": 70,
+      "refreshMinute": 0,
+      "refreshSecond": 70
+    },
+    {
+      "listeners": [],
+      "ticker": "ABTS",
+      "toggleOption": 0,
+      "targetPrice": 555.0,
+      "stopPrice": 0.002,
+      "refresh": 70,
+      "refreshMinute": 0,
+      "refreshSecond": 70
+    },
+    {
+      "listeners": [],
+      "ticker": "BNGO",
+      "toggleOption": 0,
+      "targetPrice": 555.0,
+      "stopPrice": 0.002,
+      "refresh": 80,
+      "refreshMinute": 0,
+      "refreshSecond": 80
     }
   ],
-  "logText": "2025-10-05 23:56:36 - [Microsoft Corp]이(가) 목표가에 달성했습니다. / 현재가: $517.35 목표가: $55\n2025-10-05 23:56:38 - [Microsoft Corp]이(가) 삭제됨 (목표가 달성)\n2025-10-06 16:15:22 - [QQQM]이(가) 저장되었습니다!\n2025-10-06 16:17:32 - [PLTR]이(가) 저장되었습니다!\n2025-10-12 14:15:17 - [AAPL]이(가) 저장되었습니다!\n2025-10-12 16:48:31 - [PLTR]을(를) 삭제하였습니다.\n2025-10-12 16:49:03 - [ACCS]이(가) 저장되었습니다!\n2025-10-12 16:49:12 - [BCS]이(가) 저장되었습니다!\n2025-10-12 16:49:23 - [MICROSOFT CORP]이(가) 저장되었습니다!\n2025-10-12 16:49:33 - [ABSCI CORP]이(가) 저장되었습니다!\n2025-10-12 16:49:44 - [APPLE INC]이(가) 저장되었습니다!\n2025-10-12 16:49:56 - [ARBE ROBOTICS LTD]이(가) 저장되었습니다!\n2025-10-12 17:20:08 - [QQQM]을(를) 삭제하였습니다.\n2025-10-12 17:20:08 - [ACCS]을(를) 삭제하였습니다.\n2025-10-12 17:20:09 - [BCS]을(를) 삭제하였습니다.\n2025-10-12 17:20:36 - [Microsoft Corp]을(를) 삭제하였습니다.\n2025-10-12 17:20:37 - [Absci Corp]을(를) 삭제하였습니다.\n2025-10-12 17:20:38 - [Apple Inc]을(를) 삭제하였습니다.\n2025-10-12 17:21:11 - [Arbe Robotics Ltd]을(를) 삭제하였습니다.\n",
+  "logText": "2025-10-05 23:56:36 - [Microsoft Corp]이(가) 목표가에 달성했습니다. / 현재가: $517.35 목표가: $55\n2025-10-05 23:56:38 - [Microsoft Corp]이(가) 삭제됨 (목표가 달성)\n2025-10-06 16:15:22 - [QQQM]이(가) 저장되었습니다!\n2025-10-06 16:17:32 - [PLTR]이(가) 저장되었습니다!\n2025-10-12 14:15:17 - [AAPL]이(가) 저장되었습니다!\n2025-10-12 16:48:31 - [PLTR]을(를) 삭제하였습니다.\n2025-10-12 16:49:03 - [ACCS]이(가) 저장되었습니다!\n2025-10-12 16:49:12 - [BCS]이(가) 저장되었습니다!\n2025-10-12 16:49:23 - [MICROSOFT CORP]이(가) 저장되었습니다!\n2025-10-12 16:49:33 - [ABSCI CORP]이(가) 저장되었습니다!\n2025-10-12 16:49:44 - [APPLE INC]이(가) 저장되었습니다!\n2025-10-12 16:49:56 - [ARBE ROBOTICS LTD]이(가) 저장되었습니다!\n2025-10-12 17:20:08 - [QQQM]을(를) 삭제하였습니다.\n2025-10-12 17:20:08 - [ACCS]을(를) 삭제하였습니다.\n2025-10-12 17:20:09 - [BCS]을(를) 삭제하였습니다.\n2025-10-12 17:20:36 - [Microsoft Corp]을(를) 삭제하였습니다.\n2025-10-12 17:20:37 - [Absci Corp]을(를) 삭제하였습니다.\n2025-10-12 17:20:38 - [Apple Inc]을(를) 삭제하였습니다.\n2025-10-12 17:21:11 - [Arbe Robotics Ltd]을(를) 삭제하였습니다.\n2025-10-12 18:08:41 - [AFSC]이(가) 저장되었습니다!\n2025-10-12 18:08:50 - [ACSYF]이(가) 저장되었습니다!\n2025-10-12 18:08:59 - [BCS]이(가) 저장되었습니다!\n2025-10-12 18:09:12 - [MICROSOFT CORP]이(가) 저장되었습니다!\n2025-10-12 18:09:19 - [ABITS GROUP INC]이(가) 저장되었습니다!\n2025-10-12 18:09:29 - [BIONANO GENOMICS INC]이(가) 저장되었습니다!\n",
   "notificationOption": 0,
   "pipModeOption": 0,
   "pipModeDirectionOption": 0,

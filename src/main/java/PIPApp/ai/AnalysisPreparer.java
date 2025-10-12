@@ -35,6 +35,16 @@ public class AnalysisPreparer {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonOutput = gson.toJson(data);
 
+        // data 폴더 존재 확인 및 생성
+        File dataDir = new File("data");
+        if (!dataDir.exists()) {
+            boolean created = dataDir.mkdirs();
+            if (created)
+                System.out.println("📁 'data' 폴더 생성 완료");
+            else
+                System.err.println("⚠ 'data' 폴더 생성 실패 (쓰기 권한 확인 필요)");
+        }
+
         // JSON 파일 저장
         File file = new File("data/analysis_" + ticker + ".json");
         try (FileWriter writer = new FileWriter(file)) {

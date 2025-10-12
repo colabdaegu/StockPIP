@@ -47,7 +47,7 @@ public class AiController {
         // 정보 세팅
         setInitialStock();
 
-        /// API 테스트용
+        /// API 테스트
 //        String geminiAnswer = AiAnalysis.askGemini("애플 주식 전망 간단히 한 문장으로 설명해줘");
 //        tx1 = "[Gemini AI 응답]\n" + geminiAnswer;
 //        System.out.println(tx1);

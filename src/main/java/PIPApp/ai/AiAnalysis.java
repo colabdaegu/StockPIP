@@ -106,7 +106,7 @@ public class AiAnalysis {
             // ① 현재값과 예측값 수치 기반 예측 - API 유효성 검사
             String trendDisplay;
             if (priceTrend.contains("예상")) trendDisplay = "**" + priceTrend + "**";
-            else trendDisplay = "\nAPI 에러";
+            else trendDisplay = "\n\n\nAPI 에러";
 
             // ② 예측값 수치 - 이모지 처리
             String rangeDisplay;

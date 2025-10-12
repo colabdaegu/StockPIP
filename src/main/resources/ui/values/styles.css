@@ -1,18 +1,18 @@
 .primary-color{
-    -fx-background-color: #3C2A5D;
+    -fx-background-color: #1E5246;
 }
 
 .secondary-color{
-    -fx-background-color: #2D1B4C;
+    -fx-background-color: #123B32;
 }
 
 .button-home{
-    -fx-background-color: #5A3E85;
+    -fx-background-color: #278C5C;
     -fx-background-radius: 30;
 }
 
 .buttonPIP{
-    -fx-background-color: linear-gradient(to bottom left, #7263D9, #4B3C91);
+    -fx-background-color: linear-gradient(to bottom left, #4FD18F, #2F8C63);
     -fx-background-radius: 5;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.3, 0, 4);
 }
@@ -20,7 +20,7 @@
 .text-input{
     -fx-background-color: rgba(0,0,0,0);
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: #8E7CC3;
+    -fx-border-color: #A8F0A0;
     -fx-text-inner-color: #fff;
     -fx-font-family: "Malgun Gothic";
 }
@@ -41,7 +41,7 @@
 }
 
 .selected:hover{
-    -fx-background-color: #4B3678;
+    -fx-background-color: #2DA36A;
 }
 
 .grid-with-border {
@@ -101,7 +101,7 @@
 
 .custom-list {
     -fx-background-color: transparent;
-    -fx-border-color: #8E7CC3;
+    -fx-border-color: #A8F0A0;
     -fx-border-radius: 8px;
     -fx-padding: 5;
     -fx-control-inner-background: #1e1e2e;

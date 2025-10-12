@@ -113,7 +113,7 @@ public class AiController {
         System.out.println("AI 갱신됨\n");
 
         // 데이터 분석용 임시 JSON 파일 지우기 (data/)
-//        deleteJsonDataFiles();
+        deleteJsonDataFiles();
 
         hidePopup();
     }

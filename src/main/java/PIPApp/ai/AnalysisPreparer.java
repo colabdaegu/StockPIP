@@ -1,110 +1,48 @@
 package ai;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import api.model.StockCandleData;
+import api.service.StockCandleService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.NetworkManager;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Optional;
 
 public class AnalysisPreparer {
-    private static String AI_API_KEY;
-    private static String AI_MODEL_NAME;
-
-    // static 초기화 블록에서 apikey.json 읽기
-    static {
-        try {
-            File file = new File("apikey.json");
-
-            if (!file.exists()) {
-                System.err.println("⚠ apikey 파일을 찾을 수 없습니다.");
-                AI_API_KEY = "";
-                AI_MODEL_NAME = "";
-            } else {
-                try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
-                    JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
-                    AI_API_KEY = json.get("AI_API_KEY").getAsString();
-                    AI_MODEL_NAME = json.get("AI_MODEL_NAME").getAsString();
-                    System.out.println("✅ apikey 로드 완료");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            AI_API_KEY = "";
-            AI_MODEL_NAME = "";
+    public static void start(String ticker) {
+        // 인터넷 연결 체크
+        if (!NetworkManager.isInternetAvailable()) {
+            System.out.println("⚠ 인터넷 연결 실패\n");
+            return;
+        } else {
+            System.out.println("🔍 [" + ticker + "] AI 분석 데이터 준비 중...");
         }
-    }
 
-    public static void start() {
-        System.out.println("AI 준비 중...");
-    }
+        StockCandleService candleService = new StockCandleService();
+        Optional<StockCandleData> candleOpt = candleService.getRecentDailyCandles(ticker);
 
-    // Gemini에게 질문 보내고 답변 받기
-    public static String askGemini(String question) {
-        try {
-            // 1. API URL 만들기
-            String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/"
-                    + AI_MODEL_NAME + ":generateContent?key=" + AI_API_KEY;
+        if (candleOpt.isEmpty()) {
+            System.err.println("⚠ [" + ticker + "] 최근 시세 데이터를 불러오지 못했습니다.");
+            return;
+        }
 
-            // 2. 보낼 JSON 데이터 (질문 내용 포함)
-            String jsonInput = "{\n" +
-                    "  \"contents\": [\n" +
-                    "    {\n" +
-                    "      \"parts\": [\n" +
-                    "        {\"text\": \"" + question + "\"}\n" +
-                    "      ]\n" +
-                    "    }\n" +
-                    "  ]\n" +
-                    "}";
+        StockCandleData data = candleOpt.get();
 
-            // 3. HTTP 연결 설정
-            URL url = new URL(apiUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST"); // POST 요청
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            conn.setDoOutput(true);
+        // JSON으로 변환
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonOutput = gson.toJson(data);
 
-            // 4. JSON 데이터 보내기
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = jsonInput.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            // 5. 응답 코드 확인
-            int responseCode = conn.getResponseCode();
-            if (responseCode != 200) {
-                return "⚠ 오류 발생: 응답 코드 " + responseCode;
-            }
-
-            // 6. 응답 읽기
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = in.readLine()) != null) {
-                response.append(line);
-            }
-            in.close();
-
-            // 7. JSON 파싱
-            JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
-            JsonArray candidates = jsonObject.getAsJsonArray("candidates");
-            if (candidates != null && candidates.size() > 0) {
-                JsonObject content = candidates.get(0).getAsJsonObject()
-                        .getAsJsonObject("content");
-                JsonArray parts = content.getAsJsonArray("parts");
-                if (parts != null && parts.size() > 0) {
-                    String text = parts.get(0).getAsJsonObject().get("text").getAsString();
-                    return text;
-                }
-            }
-
-            return "⚠ AI 응답을 파싱할 수 없습니다.";
-
-        } catch (Exception e) {
+        // JSON 파일 저장
+        File file = new File("data/analysis_" + ticker + ".json");
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(jsonOutput);
+            System.out.println("✅ [" + ticker + "] 시세 데이터 저장 완료 → " + file.getPath());
+        } catch (IOException e) {
+            System.err.println("⚠ [" + ticker + "] JSON 파일 저장 중 오류 발생");
             e.printStackTrace();
-            return "⚠ 오류: " + e.getMessage();
         }
     }
 }

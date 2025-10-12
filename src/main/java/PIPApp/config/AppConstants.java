@@ -1,6 +1,8 @@
 package config;
 
 import java.net.http.HttpClient;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson; // Gson 라이브러리 임포트
 import com.google.gson.GsonBuilder; // GsonBuilder 임포트 (Gson 객체 설정을 위함)
@@ -24,4 +26,7 @@ public final class AppConstants {
     public static int pipDecimalPoint = 2;        // PIP 소수점 표시
     public static boolean pipOutlineOption = false; // PIP 테두리 고정
     public static double pipFontSize = 28.0;        // PIP 폰트 크기
+
+    // AI 분석 - 임시 저장용 변수
+    public static List<String> tx = new ArrayList<>();
 }

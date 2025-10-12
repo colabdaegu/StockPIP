@@ -3,6 +3,7 @@ package ui.controller;
 import PIPApp.Main;
 import ai.AiAnalysis;
 import ai.AnalysisPreparer;
+import config.AppConstants;
 import config.StockList;
 import config.Stocks;
 import javafx.animation.KeyFrame;
@@ -21,6 +22,7 @@ import net.NetworkManager;
 import config.manager.PreferencesManager;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -44,25 +46,24 @@ public class AiController {
     public void initialize() {
         // 정보 세팅
         setInitialStock();
-
-        // updateLabel();
     }
 
 
     // 정보 세팅
     private void setInitialStock() {
-        tx1 = "[AAPL]\n" +
-                "**상승 예상**\n" +
-                "\uD83D\uDCC8 $240 - $245 \uD83D\uDCC8\n\n" +
-                "\uD83D\uDD0E 단기 전망: 아이폰 15 출시 기대감과 서비스 부문 성장으로 긍정적인 모멘텀이 이어질 가능성이 높아요. \uD83D\uDE80";
-        tx2 = "[Microsoft Corp]\n" +
-                "**하락 또는 조정 예상**\n" +
-                "\uD83D\uDCC9 $500 - $510 \uD83D\uDCC9\n\n" +
-                "\uD83D\uDD0E 단기 전망: 클라우드와 AI 성장세는 좋지만 최근 고점이라 단기 차익실현 매물이 나올 수 있어요. ⚠";
-        tx3 = "[AMZN]\n" +
-                "**하락 또는 정체 예상**\n" +
-                "\uD83D\uDCC9 $220 - $230 \uD83D\uDCC9\n\n" +
-                "\uD83D\uDD0E 단기 전망: 물류비와 리테일 둔화가 부담이라 단기 조정 가능성이 있어요. \uD83D\uDCE6";
+        if (!AppConstants.tx.isEmpty()) {
+            tx1 = (AppConstants.tx.size() > 0) ? AppConstants.tx.get(0) : "";
+            tx2 = (AppConstants.tx.size() > 1) ? AppConstants.tx.get(1) : "";
+            tx3 = (AppConstants.tx.size() > 2) ? AppConstants.tx.get(2) : "";
+            tx4 = (AppConstants.tx.size() > 3) ? AppConstants.tx.get(3) : "";
+            tx5 = (AppConstants.tx.size() > 4) ? AppConstants.tx.get(4) : "";
+            tx6 = (AppConstants.tx.size() > 5) ? AppConstants.tx.get(5) : "";
+
+            // 라벨 갱신
+            updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
+
+            resetButton.setText("갱신");
+        }
     }
 
     // AI 분석 최신화
@@ -74,6 +75,10 @@ public class AiController {
             System.out.println("⚠ 인터넷 연결 실패\n");
             return;
         }
+
+        if (!AppConstants.tx.isEmpty()) {
+            AppConstants.tx.clear();
+        }
         updateLabel("","","","","","");
         showAlert(Alert.AlertType.INFORMATION,"Now Loading...", "⏳ 종목 분석 중...");
 
@@ -81,43 +86,35 @@ public class AiController {
         List<String> selectedTickers = randomTicker();
 
         // 학습 데이터 선정 (JSON에 저장 데이터 저장)
-//        for (String ticker : selectedTickers) {
-//            AnalysisPreparer.start(ticker);
-//        }
-//
-//        // AI 분석 (JSON 불러와서 Gemini한테 넘김[이전 주가 주세 70% + 현재 이슈 30%])
-//        List<String> tx = new ArrayList<>();
-//        for (String ticker : selectedTickers) {
-//            tx.add(AiAnalysis.start(ticker));
-//        }
-//
-//        // 최종 입력
-//        tx1 = tx.get(0);
-//        tx2 = tx.get(1);
-//        tx3 = tx.get(2);
-//        tx4 = tx.get(3);
-//        tx5 = tx.get(4);
-//        tx6 = tx.get(5);
+        for (String ticker : selectedTickers) {
+            AnalysisPreparer.start(ticker);
+        }
 
+        // AI 분석 (JSON 불러와서 Gemini한테 넘김[이전 주가 주세 75% + 현재 이슈 25%])
+        for (String ticker : selectedTickers) {
+            AppConstants.tx.add(AiAnalysis.start(ticker));
+        }
 
-        /// 임시
-        String geminiAnswer = AnalysisPreparer.askGemini("애플 주식 전망 간단히 한 문장으로 설명해줘");
-        tx1 = "[Gemini AI 응답]\n" + geminiAnswer;
+        // 최종 입력
+        tx1 = (AppConstants.tx.size() > 0) ? AppConstants.tx.get(0) : "";
+        tx2 = (AppConstants.tx.size() > 1) ? AppConstants.tx.get(1) : "";
+        tx3 = (AppConstants.tx.size() > 2) ? AppConstants.tx.get(2) : "";
+        tx4 = (AppConstants.tx.size() > 3) ? AppConstants.tx.get(3) : "";
+        tx5 = (AppConstants.tx.size() > 4) ? AppConstants.tx.get(4) : "";
+        tx6 = (AppConstants.tx.size() > 5) ? AppConstants.tx.get(5) : "";
+
+//        /// 임시
+//        String geminiAnswer = AnalysisPreparer.askGemini("애플 주식 전망 간단히 한 문장으로 설명해줘");
+//        tx1 = "[Gemini AI 응답]\n" + geminiAnswer;
 
         // 라벨 갱신
         updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
         resetButton.setText("갱신");
         System.out.println("AI 갱신됨\n");
 
-//        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), e -> {
-//            // 라벨 업데이트
-//            updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);
-//            resetButton.setText("갱신");
-//            System.out.println("AI 갱신됨\n");
-//
-//            hidePopup();
-//        }));
-//        timeline.play();
+        // 데이터 분석용 임시 JSON 파일 지우기 (data/)
+        deleteJsonDataFiles();
+
         hidePopup();
     }
 
@@ -167,7 +164,27 @@ public class AiController {
             i++;
         }
 
+        System.out.println(picked);
         return picked;
+    }
+
+
+    // 데이터 분석용 임시 JSON 파일 지우기 (data/)
+    private void deleteJsonDataFiles() {
+        File dataDir = new File("data");
+        if (!dataDir.exists()) {
+            System.out.println("⚠ data 폴더가 존재하지 않습니다. 임시 파일 삭제 불가");
+            return;
+        }
+
+        File[] files = dataDir.listFiles();
+        if (files == null || files.length == 0) {
+            System.out.println("⚠ data 폴더가 비어 있습니다.");
+            return;
+        }
+
+        for (File file : files) { file.delete(); }
+        System.out.println("🗑 임시 파일 삭제 완료");
     }
 
     /// 사이드바 함수 ///

@@ -107,6 +107,7 @@ public class PipBasicMain {
             color = Color.LIGHTGRAY;
         }
 
+
         switch (AppConstants.pipDecimalPoint) {
             case 0 -> priceLabel.setText(String.format("$ %,.0f", current));
             case 1 -> priceLabel.setText(String.format("$ %,.1f", current));
@@ -257,7 +258,7 @@ public class PipBasicMain {
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
-        stage.setTitle("StockPipApp");
+        stage.setTitle("Mini-Stock");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo_fill.png")));
 
         stage.show();

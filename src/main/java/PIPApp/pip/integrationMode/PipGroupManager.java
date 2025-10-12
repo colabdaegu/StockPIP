@@ -50,7 +50,7 @@ public class PipGroupManager {
         groupStage.initStyle(StageStyle.TRANSPARENT);
         groupStage.setAlwaysOnTop(true);
         groupStage.setScene(scene);
-        groupStage.setTitle("StockPipApp");
+        groupStage.setTitle("Mini-Stock");
         groupStage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo_fill.png")));
 
         groupStage.setX(0);

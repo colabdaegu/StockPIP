@@ -42,7 +42,7 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/logo/Stock_Logo.png")));
 
 
-        primaryStage.setTitle("StockPIP-App");
+        primaryStage.setTitle("Mini-Stock");
         primaryStage.setScene(new Scene(root, 1220, 740));
         primaryStage.show();
     }

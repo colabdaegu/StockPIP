@@ -73,7 +73,7 @@
   ],
   "logText": "",
   "notificationOption": 0,
-  "pipModeOption": 0,
+  "pipModeOption": 1,
   "pipModeDirectionOption": 0,
   "pipDecimalPoint": 2,
   "pipOutlineOption": false,

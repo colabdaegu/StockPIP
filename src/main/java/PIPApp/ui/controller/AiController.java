@@ -46,6 +46,11 @@ public class AiController {
     public void initialize() {
         // 정보 세팅
         setInitialStock();
+
+        /// API 테스트용
+//        String geminiAnswer = AiAnalysis.askGemini("애플 주식 전망 간단히 한 문장으로 설명해줘");
+//        tx1 = "[Gemini AI 응답]\n" + geminiAnswer;
+//        System.out.println(tx1);
     }
 
 
@@ -102,10 +107,6 @@ public class AiController {
         tx4 = (AppConstants.tx.size() > 3) ? AppConstants.tx.get(3) : "";
         tx5 = (AppConstants.tx.size() > 4) ? AppConstants.tx.get(4) : "";
         tx6 = (AppConstants.tx.size() > 5) ? AppConstants.tx.get(5) : "";
-
-//        /// 임시
-//        String geminiAnswer = AnalysisPreparer.askGemini("애플 주식 전망 간단히 한 문장으로 설명해줘");
-//        tx1 = "[Gemini AI 응답]\n" + geminiAnswer;
 
         // 라벨 갱신
         updateLabel(tx1, tx2, tx3, tx4, tx5, tx6);

@@ -15,6 +15,29 @@ public class AiAnalysis {
     static {
         try {
             File file = new File("apikey.json");
+
+            // 패키징용 - API_KEY 가져오기
+            if (!file.exists()) {
+                try {
+                    String jarDir = new File(AiAnalysis.class
+                            .getProtectionDomain()
+                            .getCodeSource()
+                            .getLocation()
+                            .toURI())
+                            .getParent();
+
+                    File altFile = new File(jarDir, "apikey.json");
+                    if (altFile.exists()) {
+                        file = altFile;
+                    } else {
+                        System.err.println("⚠ StockPIP.jar과 같은 경로에 apikey.json이 위치해야 합니다.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // 프로젝트용 - API_KEY 가져오기
             if (!file.exists()) {
                 System.err.println("⚠ apikey 파일을 찾을 수 없습니다.");
                 AI_API_KEY = "";
@@ -106,7 +129,7 @@ public class AiAnalysis {
             // ① 현재값과 예측값 수치 기반 예측 - API 유효성 검사
             String trendDisplay;
             if (priceTrend.contains("예상")) trendDisplay = "**" + priceTrend + "**";
-            else trendDisplay = "\n\n\nAPI 에러";
+            else trendDisplay = "\n\n\nGemini API 에러";
 
             // ② 예측값 수치 - 이모지 처리
             String rangeDisplay;

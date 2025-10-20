@@ -261,7 +261,7 @@ public class SettingsController {
             System.out.println("⚠ 종목이 비어있어 PIP창을 활성화시킬 수 없습니다.\n\n");
 
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("StockPIP");
+            alert.setTitle("Mini-Stock");
             alert.setHeaderText(null);
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();

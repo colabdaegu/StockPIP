@@ -30,7 +30,7 @@ public class AiAnalysis {
                     if (altFile.exists()) {
                         file = altFile;
                     } else {
-                        System.err.println("⚠ StockPIP.jar과 같은 경로에 apikey.json이 위치해야 합니다.");
+                        System.err.println("⚠ Mini-Stock.jar과 같은 경로에 apikey.json이 위치해야 합니다.");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

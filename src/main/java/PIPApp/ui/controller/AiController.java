@@ -76,7 +76,7 @@ public class AiController {
     private void resetClick(ActionEvent event) {
         // 네트워크 검사
         if (!NetworkManager.isInternetAvailable()) {
-            showAlert(Alert.AlertType.ERROR,"StockPIP", "서버와의 연결에 실패하였습니다.");
+            showAlert(Alert.AlertType.ERROR,"Mini-Stock", "서버와의 연결에 실패하였습니다.");
             System.out.println("⚠ 인터넷 연결 실패\n");
             return;
         }
@@ -85,6 +85,13 @@ public class AiController {
             AppConstants.tx.clear();
         }
         updateLabel("","","","","","");
+        if (StockList.getStockArray().isEmpty()){
+            System.out.println("⚠ 종목이 비어있어 AI 분석을 시작할 수 없습니다.\n\n");
+
+            showAlert(Alert.AlertType.WARNING,"Mini-Stock", "종목을 먼저 입력해 주십시오.");
+
+            return;
+        }
         showAlert(Alert.AlertType.INFORMATION,"Now Loading...", "⏳ 종목 분석 중...");
 
         // 랜덤 종목 - 6개 선정
@@ -203,7 +210,7 @@ public class AiController {
             System.out.println("⚠ 종목이 비어있어 PIP창을 활성화시킬 수 없습니다.\n\n");
 
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("StockPIP");
+            alert.setTitle("Mini-Stock");
             alert.setHeaderText(null);
             alert.setContentText("종목을 먼저 입력해 주십시오.");
             alert.showAndWait();

@@ -1,8 +1,8 @@
-# StockPIPApp
+# Mini-Stock
 
 📱 PIP 어플리케이션 구현 상세 기획서
 ----------------------------------
-프로젝트명: Stock PIP
+프로젝트명: Mini-Stock
 개발 환경: Java 17 이상, JavaFX, JFoenix, IntelliJ IDEA, GSON, REST API (Finnhub 또는 한국투자증권 Open API)
 
 ⸻

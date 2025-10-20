@@ -85,6 +85,13 @@ public class AiController {
             AppConstants.tx.clear();
         }
         updateLabel("","","","","","");
+        if (StockList.getStockArray().isEmpty()){
+            System.out.println("⚠ 종목이 비어있어 AI 분석을 시작할 수 없습니다.\n\n");
+
+            showAlert(Alert.AlertType.WARNING,"StockPIP", "종목을 먼저 입력해 주십시오.");
+
+            return;
+        }
         showAlert(Alert.AlertType.INFORMATION,"Now Loading...", "⏳ 종목 분석 중...");
 
         // 랜덤 종목 - 6개 선정

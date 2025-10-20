@@ -1,79 +1,8 @@
 {
-  "stockArray": [
-    {
-      "listeners": [],
-      "ticker": "AAPL",
-      "toggleOption": 1,
-      "targetPrice": 300.0,
-      "stopPrice": 200.0,
-      "refresh": 10,
-      "refreshMinute": 0,
-      "refreshSecond": 10
-    },
-    {
-      "listeners": [],
-      "ticker": "AFSC",
-      "toggleOption": 1,
-      "targetPrice": 555.0,
-      "stopPrice": 1.0,
-      "refresh": 20,
-      "refreshMinute": 0,
-      "refreshSecond": 20
-    },
-    {
-      "listeners": [],
-      "ticker": "ACSYF",
-      "toggleOption": 1,
-      "targetPrice": 555.0,
-      "stopPrice": 0.002,
-      "refresh": 50,
-      "refreshMinute": 0,
-      "refreshSecond": 50
-    },
-    {
-      "listeners": [],
-      "ticker": "BCS",
-      "toggleOption": 1,
-      "targetPrice": 555.0,
-      "stopPrice": 0.002,
-      "refresh": 55,
-      "refreshMinute": 0,
-      "refreshSecond": 55
-    },
-    {
-      "listeners": [],
-      "ticker": "MSFT",
-      "toggleOption": 0,
-      "targetPrice": 555.0,
-      "stopPrice": 0.002,
-      "refresh": 70,
-      "refreshMinute": 0,
-      "refreshSecond": 70
-    },
-    {
-      "listeners": [],
-      "ticker": "ABTS",
-      "toggleOption": 0,
-      "targetPrice": 555.0,
-      "stopPrice": 0.002,
-      "refresh": 70,
-      "refreshMinute": 0,
-      "refreshSecond": 70
-    },
-    {
-      "listeners": [],
-      "ticker": "BNGO",
-      "toggleOption": 0,
-      "targetPrice": 555.0,
-      "stopPrice": 0.002,
-      "refresh": 80,
-      "refreshMinute": 0,
-      "refreshSecond": 80
-    }
-  ],
+  "stockArray": [],
   "logText": "",
   "notificationOption": 0,
-  "pipModeOption": 1,
+  "pipModeOption": 0,
   "pipModeDirectionOption": 0,
   "pipDecimalPoint": 2,
   "pipOutlineOption": false,

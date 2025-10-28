@@ -4,18 +4,16 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
 
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.AiController">
    <left>
       <VBox prefHeight="200.0" prefWidth="340.0" spacing="30.0" styleClass="primary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
@@ -170,25 +168,40 @@
       </VBox>
    </left>
    <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="80.0" styleClass="secondary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="44.0" styleClass="secondary-color" stylesheets="@../values/styles.css" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="780.0">
+            <VBox prefHeight="72.0" prefWidth="780.0">
                <children>
-                  <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../img/AI_.png" />
-                     </image>
-                  </ImageView>
-                  <Label prefHeight="36.0" prefWidth="200.0" text=" AI 분석 ✨" textFill="WHITE">
-                     <font>
-                        <Font name="Malgun Gothic Bold" size="25.0" />
-                     </font>
-                     <effect>
-                        <DropShadow color="rgba(0,0,0,0.8)" offsetX="2" offsetY="2" radius="4" />
-                     </effect>
-                  </Label>
+                  <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="780.0">
+                     <children>
+                        <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/AI_.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="36.0" prefWidth="200.0" text=" AI 분석 ✨" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic Bold" size="25.0" />
+                           </font>
+                           <effect>
+                              <DropShadow color="rgba(0,0,0,0.8)" offsetX="2" offsetY="2" radius="4" />
+                           </effect>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Pane prefHeight="10.0" />
+                  <HBox prefHeight="22.0" prefWidth="780.0">
+                     <children>
+                        <Pane prefWidth="37.0" />
+                        <Label text="저장된 종목 중에서 최대 6개까지 AI 전망치 분석" textFill="WHITE">
+                           <font>
+                              <Font name="Malgun Gothic" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="495.0" prefWidth="673.0" spacing="30.0">
                <children>
                   <HBox prefHeight="516.0" prefWidth="780.0">
@@ -201,16 +214,16 @@
                                        <children>
                                           <HBox alignment="CENTER" prefHeight="175.0" prefWidth="668.0" spacing="40.0">
                                              <children>
-                                                <TextArea fx:id="firstLabel" prefHeight="176.0" prefWidth="175.0" wrapText="true" editable="false" styleClass="square-box" text="" />
-                                                <TextArea fx:id="secondLabel" prefHeight="176.0" prefWidth="175.0" wrapText="true" editable="false" styleClass="square-box" text="" />
-                                                <TextArea fx:id="thirdLabel" prefHeight="176.0" prefWidth="175.0" wrapText="true" editable="false" styleClass="square-box" text="" />
+                                                <TextArea fx:id="firstLabel" editable="false" prefHeight="176.0" prefWidth="175.0" styleClass="square-box" text="" wrapText="true" />
+                                                <TextArea fx:id="secondLabel" editable="false" prefHeight="176.0" prefWidth="175.0" styleClass="square-box" text="" wrapText="true" />
+                                                <TextArea fx:id="thirdLabel" editable="false" prefHeight="176.0" prefWidth="175.0" styleClass="square-box" text="" wrapText="true" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" prefHeight="175.0" prefWidth="668.0" spacing="40.0">
                                              <children>
-                                                <TextArea fx:id="fourthLabel" prefHeight="176.0" prefWidth="175.0" wrapText="true" editable="false" styleClass="square-box" text="" />
-                                                <TextArea fx:id="fifthLabel" prefHeight="176.0" prefWidth="175.0" wrapText="true" editable="false" styleClass="square-box" text="" />
-                                                <TextArea fx:id="sixthLabel" prefHeight="176.0" prefWidth="175.0" wrapText="true" editable="false" styleClass="square-box" text="" />
+                                                <TextArea fx:id="fourthLabel" editable="false" prefHeight="176.0" prefWidth="175.0" styleClass="square-box" text="" wrapText="true" />
+                                                <TextArea fx:id="fifthLabel" editable="false" prefHeight="176.0" prefWidth="175.0" styleClass="square-box" text="" wrapText="true" />
+                                                <TextArea fx:id="sixthLabel" editable="false" prefHeight="176.0" prefWidth="175.0" styleClass="square-box" text="" wrapText="true" />
                                              </children>
                                           </HBox>
                                        </children>

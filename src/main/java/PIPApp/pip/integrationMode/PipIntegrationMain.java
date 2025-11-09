@@ -124,6 +124,7 @@ public class PipIntegrationMain {
             color = Color.LIGHTGRAY;
         }
 
+
         switch (AppConstants.pipDecimalPoint) {
             case 0 -> priceLabel.setText(String.format("$ %,.0f", current));
             case 1 -> priceLabel.setText(String.format("$ %,.1f", current));

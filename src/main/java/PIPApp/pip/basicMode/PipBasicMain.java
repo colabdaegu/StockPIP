@@ -107,6 +107,11 @@ public class PipBasicMain {
             color = Color.LIGHTGRAY;
         }
 
+//        // AAPL일 경우 무조건 RED 고정
+//        if ("AAPL".equalsIgnoreCase(stock.getTicker())) {
+//            color = Color.RED;
+//        }
+
         switch (AppConstants.pipDecimalPoint) {
             case 0 -> priceLabel.setText(String.format("$ %,.0f", current));
             case 1 -> priceLabel.setText(String.format("$ %,.1f", current));

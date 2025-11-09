@@ -241,11 +241,7 @@
                                              <ToggleGroup fx:id="inputToggleGroup" />
                                           </fx:define>
                                           <HBox alignment="CENTER" spacing="0">
-                                             <JFXToggleNode fx:id="companyToggle" styleClass="left-toggle" text="회사명">
-                                                <toggleGroup>
-                                                   <ToggleGroup fx:id="inputToggleGroup" />
-                                                </toggleGroup>
-                                             </JFXToggleNode>
+                                             <JFXToggleNode fx:id="companyToggle" styleClass="left-toggle" text="회사명" toggleGroup="$inputToggleGroup" />
                                              <JFXToggleNode fx:id="tickerToggle" styleClass="right-toggle" text="티커" toggleGroup="$inputToggleGroup" />
                                           </HBox>
       

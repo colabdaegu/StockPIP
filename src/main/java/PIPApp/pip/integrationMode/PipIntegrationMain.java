@@ -102,7 +102,7 @@ public class PipIntegrationMain {
 
     // 2. 스타일 설정
     private void styleLabels(double fontSize) {
-        nameLabel.setStyle("-fx-font-size: " + (fontSize * 0.65) + "px; -fx-text-fill: white;" +
+        nameLabel.setStyle("-fx-font-size: " + (fontSize * 0.65) + "px; -fx-text-fill: WHITESMOKE;" +
                 "-fx-effect: dropshadow(gaussian, black, 2, 0.3, 0, 0);");
         priceLabel.setStyle("-fx-font-size: " + fontSize + "px;" +
                 "-fx-effect: dropshadow(gaussian, black, 2, 0.3, 0, 0);");
@@ -115,13 +115,13 @@ public class PipIntegrationMain {
         Color color;
 
         if (previousPrice < 0) {
-            color = Color.LIGHTGRAY;
+            color = Color.SNOW;
         } else if (current > previousPrice) {
             color = Color.RED;
         } else if (current < previousPrice) {
             color = Color.BLUE;
         } else {
-            color = Color.LIGHTGRAY;
+            color = Color.SNOW;
         }
 
         switch (AppConstants.pipDecimalPoint) {

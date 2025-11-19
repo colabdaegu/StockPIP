@@ -102,7 +102,7 @@ public class PipBasicMain {
         } else if (current > previousPrice) {
             color = Color.RED;
         } else if (current < previousPrice) {
-            color = Color.BLUE;
+            color = Color.DODGERBLUE;
         } else {
             color = Color.SNOW;
         }

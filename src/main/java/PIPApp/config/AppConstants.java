@@ -21,10 +21,10 @@ public final class AppConstants {
 
     // 환경설정용 변수
     public static int notificationOption = 0;       // 알림 설정
-    public static int pipModeOption = 0;        // PIP 모드
-    public static int pipModeDirectionOption = 0;     // PIP 모드 - 방향
+    public static int pipModeOption = 1;        // PIP 모드
+    public static int pipModeDirectionOption = 1;     // PIP 모드 - 방향
     public static int pipDecimalPoint = 2;        // PIP 소수점 표시
-    public static boolean pipOutlineOption = false; // PIP 테두리 고정
+    public static boolean pipOutlineOption = true; // PIP 테두리 고정
     public static double pipFontSize = 28.0;        // PIP 폰트 크기
 
     // AI 분석 - 임시 저장용 변수

@@ -216,15 +216,15 @@ public class SettingsController {
         notification_3_Button.setSelected(false);
 
         // PIP 모드
-        AppConstants.pipModeOption = 0;
-        mode_A.setSelected(true);
-        mode_B.setSelected(false);
+        AppConstants.pipModeOption = 1;
+        mode_A.setSelected(false);
+        mode_B.setSelected(true);
         // PIP 모드 - 방향
-        AppConstants.pipModeDirectionOption = 0;
-        mode_row.setSelected(true);
-        mode_column.setSelected(false);
+        AppConstants.pipModeDirectionOption = 1;
+        mode_row.setSelected(false);
+        mode_column.setSelected(true);
         // PIP 모드 - 방향 : 활성화 여부
-        setDirectionControlsEnabled(false);
+        setDirectionControlsEnabled(true);
 
         // PIP 소수점 표시
         AppConstants.pipDecimalPoint = 2;
@@ -232,8 +232,8 @@ public class SettingsController {
         decimalLabel.setText("자리");
 
         // PIP 테두리 고정 설정: 기본값으로 설정
-        AppConstants.pipOutlineOption = false;
-        pipToggle.setSelected(false);
+        AppConstants.pipOutlineOption = true;
+        pipToggle.setSelected(true);
 
         // PIP 폰트 크기 설정: 기본값 28로 설정
         AppConstants.pipFontSize = 28.0;

@@ -1,7 +1,7 @@
 # StockPIPApp
 ![Preview](src/main/resources/logo/Stock_Logo_fill.ico)
 
-## 📱 PIP 애플리케이션 구현 상세 기획서
+## 📱 PIP 애플리케이션 구현 상세 보고서
 프로젝트명: **Stock PIP**  
 개발 환경: **Java 17 이상, JavaFX, JFoenix, IntelliJ IDEA, GSON, Finnhub REST API, Gemini API**
 

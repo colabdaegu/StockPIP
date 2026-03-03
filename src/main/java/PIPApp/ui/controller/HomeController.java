@@ -135,13 +135,13 @@ public class HomeController {
             tickerToggle.setSelected(false);
             System.out.println("회사명 입력 모드");
 
-            nameList = FileLoader.loadLines("names/company_list_filtered_ok.txt");
+            nameList = FileLoader.loadLines("names/active_company_list.txt");
         } else if (option == 1) {
             tickerToggle.setSelected(true);
             companyToggle.setSelected(false);
             System.out.println("티커 입력 모드");
 
-            nameList = FileLoader.loadLines("names/ticker_list_s.txt");
+            nameList = FileLoader.loadLines("names/active_ticker_list.txt");
         }
 
         // 자동완성 연결
